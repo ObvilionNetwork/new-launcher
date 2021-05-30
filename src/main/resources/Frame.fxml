@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane fx:id="root" prefHeight="660" prefWidth="1165" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ru.obvilion.launcher.controllers.FrameController">
+    <!-- Background -->
+    <Pane fx:id="BG" layoutX="5" layoutY="5" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}" />
+    <Pane id="BG_SHADOW" layoutX="5" layoutY="5" opacity="0.75" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}" style="-fx-background-color: #040407" />
+    <Label visible="false" style="-fx-text-fill: white; -fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" prefWidth="${root.width - 10}" prefHeight="${root.height - 10}" alignment="CENTER" fx:id="LOADING" text="Загрузка... Это может занять некоторое время. Подождите, пожалуйста."/>
+
+    <!-- Window -->
+    <Pane fx:id="CONTENT" layoutX="5" layoutY="5" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}">
+        <Pane fx:id="AUTHORIZATION_PANE" visible="true">
+            <!-- Title -->
+            <Label id="auth_title1" layoutX="${105 * root.width / 1165}" layoutY="${160 * root.height / 660}" text="ВЫ В НЕСКОЛЬКИХ ШАГАХ ОТ ИГРЫ" />
+            <Label id="auth_title2" layoutX="${105 * root.width / 1165}" layoutY="${160 * root.height / 660 + 35}" text="АВТОРИЗАЦИЯ" />
+
+            <!-- Project information -->
+            <ImageView fitHeight="${50 * root.height / 660 + 100}" fitWidth="${50 * root.height / 660 + 100}" layoutX="${615 * root.width / 1165 + 223 - (50 * root.height / 660 + 100) / 2}" layoutY="${105 * root.height / 660}" pickOnBounds="true" preserveRatio="true">
+                <Image url="@./images/logo.png" />
+            </ImageView>
+            <Label id="auth_title3" layoutX="${615 * root.width / 1165}" layoutY="${270 * root.height / 660}" text="ДОБРО ПОЖАЛОВАТЬ НА КОМПЛЕКС СЕРВЕРОВ" />
+            <Label id="auth_title3" layoutX="${615 * root.width / 1165 + 130}" layoutY="${270 * root.height / 660 + 30}" text="OBVILION NETWORK" />
+            <TextArea id="auth_desc" fx:id="AUTH_DESC" editable="false" layoutX="${615 * root.width / 1165 - 25}" layoutY="${270 * root.height / 660 + 75}" pickOnBounds="false" prefHeight="200.0" prefWidth="498.0" text="Перед игрой я (Fatonn) хочу сказать Вам огромное спасибо, за то, что выбрали нас. Я и моя команда очень надеемся, что Вам очень понравится данный комплекс серверов в игре Minecraft, кроме этого, хочу обратить внимание на то, что все сервера работают исключительно благодаря Вам, игрокам. Очень надеюсь, что Вам понравится игра на наших серверах :З" wrapText="true" />
+
+            <!-- Input -->
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 15}" prefWidth="273" prefHeight="22" style="-fx-background-color: linear-gradient(rgba(65, 65, 65, 0) 0%, rgba(0, 0, 0, 0.2) 100%); -fx-background-radius: 15 15 0 0;" />
+            <TextField fx:id="AUTH_LOGIN" prefWidth="272" layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 10}" promptText="НИКНЕЙМ ИЛИ ПОЧТА" alignment="CENTER" />
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 37}" prefWidth="273" prefHeight="1.3" style="-fx-background-color: white" />
+            <Pane layoutX="${105 * root.width / 1165 - 7}" layoutY="${270 * root.height / 660 + 12}">
+                <SVGPath content="M16 0.0055542C11.3476 0.0055542 7.5625 3.79062 7.5625 8.44305C7.5625 13.0955 11.3476 16.8806 16 16.8806C20.6524 16.8806 24.4375 13.0955 24.4375 8.44305C24.4375 3.79062 20.6524 0.0055542 16 0.0055542Z M26.4979 22.3927C24.1879 20.0472 21.1256 18.7556 17.875 18.7556H14.125C10.8745 18.7556 7.81212 20.0472 5.50212 22.3927C3.20344 24.7267 1.9375 27.8076 1.9375 31.0681C1.9375 31.5858 2.35725 32.0056 2.875 32.0056H29.125C29.6427 32.0056 30.0625 31.5858 30.0625 31.0681C30.0625 27.8076 28.7966 24.7267 26.4979 22.3927" scaleX="0.6" scaleY="0.6" stroke="WHITE" fill="white" strokeWidth="0.6" />
+            </Pane>
+
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 63}" prefWidth="273" prefHeight="22" style="-fx-background-color: linear-gradient(rgba(65, 65, 65, 0) 0%, rgba(0, 0, 0, 0.2) 100%); -fx-background-radius: 15 15 0 0;" />
+            <PasswordField fx:id="AUTH_PASSWORD" prefWidth="272" layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 68}" promptText="ПАРОЛЬ" alignment="CENTER" />
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 95}" prefWidth="273" prefHeight="1.3" style="-fx-background-color: white" />
+            <Pane layoutX="${105 * root.width / 1165 - 10}" layoutY="${270 * root.height / 660 + 65.6}">
+                <SVGPath content="M29.6875 14.2556H28.5V9.50555C28.5 4.2663 24.2392 0.0055542 19 0.0055542C13.7607 0.0055542 9.49999 4.2663 9.49999 9.50555V14.2556H8.31249C6.34916 14.2556 4.74999 15.8531 4.74999 17.8181V34.4431C4.74999 36.408 6.34916 38.0056 8.31249 38.0056H29.6875C31.6508 38.0056 33.25 36.408 33.25 34.4431V17.8181C33.25 15.8531 31.6508 14.2556 29.6875 14.2556ZM12.6667 9.50555C12.6667 6.01272 15.5072 3.17222 19 3.17222C22.4928 3.17222 25.3333 6.01272 25.3333 9.50555V14.2556H12.6667V9.50555ZM20.5833 26.4821V30.0889C20.5833 30.9629 19.8756 31.6722 19 31.6722C18.1244 31.6722 17.4167 30.9629 17.4167 30.0889V26.4821C16.4746 25.9326 15.8333 24.9225 15.8333 23.7556C15.8333 22.0091 17.2536 20.5889 19 20.5889C20.7464 20.5889 22.1667 22.0091 22.1667 23.7556C22.1667 24.9225 21.5254 25.9326 20.5833 26.4821Z" scaleX="0.6" scaleY="0.6" stroke="WHITE" fill="white" strokeWidth="0.6" />
+            </Pane>
+
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 120}">
+                <Pane>
+                    <Label id="other_links" fx:id="RESTORE_PASSWORD" text="Забыли пароль?"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane layoutX="144">
+                    <Label id="other_links" fx:id="REMEMBER_PASSWORD" text="Запомнить пароль" />
+                    <SVGPath layoutX="110" layoutY="-1" content="M18.7733 19.6589H2.34667V3.23223H14.08V0.885559H2.34667C1.056 0.885559 0 1.94156 0 3.23223V19.6589C0 20.9496 1.056 22.0056 2.34667 22.0056H18.7733C20.064 22.0056 21.12 20.9496 21.12 19.6589V10.2722H18.7733V19.6589Z" scaleX="0.7" scaleY="0.7" stroke="#A0A0A0" fill="#A0A0A0" strokeWidth="0.6" />
+                    <SVGPath layoutX="110" layoutY="-1" content="M5.74933 9.21623L4.10667 10.8589L9.38667 16.1389L21.12 4.40556L19.4773 2.76289L9.38667 12.8536L5.74933 9.21623Z" scaleX="0.7" scaleY="0.7" stroke="#A0A0A0" fill="#A0A0A0" strokeWidth="0.6" />
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+            </Pane>
+
+            <Label layoutX="${105 * root.width / 1165 + 38}" layoutY="${420 * root.height / 660 + 172}" id="other_links" text="Нет аккаунта?"/>
+            <Pane layoutX="${105 * root.width / 1165 + 123}" layoutY="${420 * root.height / 660 + 172}">
+                <Label fx:id="REGISTER" text="Зарегистрироваться"/>
+
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Pane>
+
+            <!-- Authorisation button -->
+            <Pane fx:id="AUTH_BUTTON" layoutX="${105 * root.width / 1165 + 47}" layoutY="${420 * root.height / 660 + 32}">
+                <Label id="auth_go" layoutY="3" text="ВОЙТИ В АККАУНТ" />
+                <Pane layoutX="158">
+                    <SVGPath content="M16.7592 14.1823L2.8833 0.344804C2.42867 -0.108299 1.69262 -0.107538 1.23876 0.347148C0.785241 0.801775 0.786413 1.53824 1.2411 1.99169L14.291 15.0056L1.24063 28.0195C0.786003 28.473 0.784831 29.209 1.23829 29.6637C1.4658 29.8916 1.76387 30.0055 2.06194 30.0055C2.35924 30.0055 2.65613 29.8923 2.88324 29.666L16.7592 15.8288C16.9781 15.611 17.101 15.3145 17.101 15.0056C17.101 14.6967 16.9778 14.4006 16.7592 14.1823Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" fill="white" strokeWidth="0.6" />
+                </Pane>
+
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Pane>
+        </Pane>
+
+        <Pane fx:id="MAIN_PANE" visible="false">
+            <!-- Buttons -->
+            <Pane layoutY="${600 * root.height / 660}">
+                <Pane fx:id="TO_GAME" layoutY="-25" layoutX="${526 * root.width / 1165}">
+                    <Label fx:id="TO_GAME_TEXT" id="TO_GAME_text" text="ИГРАТЬ"/>
+                    <Pane layoutX="80" layoutY="2">
+                        <SVGPath content="M22.8603 14.1768L8.98437 0.33925C8.52975 -0.113854 7.79369 -0.113092 7.33983 0.341594C6.88632 0.796221 6.88749 1.53268 7.34217 1.98614L20.3921 15.0001L7.3417 28.0139C6.88708 28.4674 6.88591 29.2034 7.33936 29.6581C7.56688 29.886 7.86494 30 8.16301 30C8.46031 30 8.75721 29.8868 8.98432 29.6604L22.8603 15.8233C23.0792 15.6054 23.2021 15.309 23.2021 15.0001C23.2021 14.6911 23.0789 14.395 22.8603 14.1768Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" fill="white" strokeWidth="0.9" />
+                    </Pane>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane>
+                    <Label layoutX="${70 * root.width / 1165}" id="buttons_main" fx:id="TO_SITE" text="НА САЙТ"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane>
+                    <Label layoutX="${190 * root.width / 1165}" id="buttons_main" fx:id="TO_CABINET" text="ЛИЧНЫЙ КАБИНЕТ"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane layoutX="${391 * root.width / 1165}">
+                    <Label id="buttons_main" fx:id="TO_NEWS" text="НОВОСТИ"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane layoutX="${682 * root.width / 1165}">
+                    <Label id="buttons_main" fx:id="TO_FORUM" text="ФОРУМ"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane layoutX="${791 * root.width / 1165}">
+                    <Label id="buttons_main" fx:id="TO_SETTINGS" text="НАСТРОЙКИ"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+
+                <Pane layoutX="${933 * root.width / 1165}">
+                    <Label id="buttons_main" fx:id="TO_RULES" text="ПРАВИЛА ПРОЕКТА"/>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+            </Pane>
+
+            <!-- User info -->
+            <Circle layoutX="${62 * root.width / 1165}" layoutY="${59 * root.height / 660 + 20}" radius="27" fill="#E1E1E1" id="AVATAR_bg" />
+            <Circle layoutX="${62 * root.width / 1165}" layoutY="${59 * root.height / 660 + 20}" radius="25" fx:id="AVATAR" />
+            <Label fx:id="NICKNAME" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660}" text="Player" />
+            <Label fx:id="BALANCE" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660 + 20}" text="Баланс: 0р." />
+
+            <!-- Selected server -->
+            <Label fx:id="SELECTED_SERVER_NAME" layoutX="${62 * root.width / 1165 + 190}" layoutY="${59 * root.height / 660 - 26}" text="HiTech" />
+            <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
+            <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
+            <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
+            <Label id="wipe_date" layoutX="${62 * root.width / 1165 + 194}" layoutY="${59 * root.height / 660 + 48}" text="Дата вайпа:" />
+            <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${62 * root.width / 1165 + 282}" layoutY="${59 * root.height / 660 + 46}" text="01.04.2021" />
+            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${62 * root.width / 1165 + 225}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="744.0" wrapText="true" />
+
+            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 238}" layoutY="${59 * root.height / 660 + 310}" >
+                <Label fx:id="MODS_LIST_BUTTON" text="Список модов" />
+            </Pane>
+            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 395}" layoutY="${59 * root.height / 660 + 310}" >
+                <Label fx:id="CLIENT_SETTINGS_BUTTON" text="Настройки клиента" />
+            </Pane>
+            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 591}" layoutY="${59 * root.height / 660 + 310}" >
+                <Label fx:id="ONLINE_MAP_BUTTON" text="Онлайн карта" />
+            </Pane>
+
+            <!-- Servers -->
+            <Label id="servers_label" layoutX="${62 * root.width / 1165 - 25}" layoutY="${131 * root.height / 660}" text="Сервера:" />
+            <VBox fx:id="SERVERS" layoutX="${62 * root.width / 1165 - 18}" layoutY="${131 * root.height / 660 + 38}" prefWidth="200" prefHeight="400"/>
+        </Pane>
+    </Pane>
+
+    <!-- Top bar -->
+    <Pane fx:id="TOP_BAR" layoutX="5" layoutY="5" prefHeight="30.0" prefWidth="${root.width - 10}">
+        <Pane fx:id="CLOSE_BUTTON" layoutX="${root.width - 58}" prefHeight="36" prefWidth="47">
+            <Pane layoutX="15" layoutY="11">
+                <SVGPath content="M8.22 8L14.8089 1.3798C14.897 1.29164 14.897 1.14873 14.8089 1.06057C14.7207 0.972436 14.5778 0.972436 14.4897 1.06057L7.87641 7.58586L4.56978 4.3672L1.26315 1.06057C1.17346 0.97396 1.03056 0.976443 0.94392 1.06613C0.859428 1.15361 0.859428 1.29231 0.94392 1.3798L7.5 7.99306L0.94392 14.6063C0.854236 14.693 0.851752 14.8359 0.938389 14.9255C1.02503 15.0152 1.16793 15.0177 1.25762 14.9311C1.25951 14.9293 1.26134 14.9274 1.26315 14.9255L7.87641 8.39288L14.4897 14.9255C14.5794 15.0122 14.7223 15.0097 14.8089 14.92C14.8934 14.8325 14.8934 14.6938 14.8089 14.6063L8.22 8Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" strokeWidth="0.9" />
+            </Pane>
+
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Pane>
+
+        <Pane fx:id="MAXIMISE_BUTTON" layoutX="${root.width - 104}" prefHeight="36" prefWidth="46">
+            <Pane layoutX="15" layoutY="11">
+                <SVGPath content="M3.24981 0V3.24966H0V14H10.7505V10.7502H14V0H3.24981ZM10.1905 13.44H0.559991V3.80966H10.1905V13.44ZM13.44 10.1902H10.7504V3.24966H3.8098V0.559991H13.44V10.1902Z" layoutY="1" scaleX="0.71" scaleY="0.71" stroke="WHITE" strokeWidth="0.7" />
+            </Pane>
+
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Pane>
+
+        <Pane fx:id="HIDE_BUTTON" layoutX="${root.width - 150}" prefHeight="36" prefWidth="46">
+            <Pane layoutX="17" layoutY="21" prefHeight="0.9" prefWidth="10.5" style="-fx-background-color: white" />
+
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Pane>
+    </Pane>
+</AnchorPane>

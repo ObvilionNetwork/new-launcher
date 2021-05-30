@@ -1,0 +1,37 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.9' apply false
+}
+
+apply plugin: 'org.openjfx.javafxplugin'
+javafx {
+    version = "11"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
+group 'ru.obvilion'
+version '0.1'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    implementation 'com.github.ObvilionNetwork:JSONLib:1.0'
+}

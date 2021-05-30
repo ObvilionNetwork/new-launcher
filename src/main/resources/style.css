@@ -1,0 +1,147 @@
+@font-face {
+    src: url("fonts/IstokWeb-Bold.ttf");
+}
+@font-face {
+    src: url("fonts/IstokWeb-Regular.ttf");
+}
+
+#root {
+    -fx-background-color: transparent;
+}
+* {
+    -fx-font-smoothing-type: gray;
+}
+
+#BG {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
+    -fx-background-position: center center;
+}
+
+#auth_title1 {
+    -fx-font-size: 19;
+    -fx-text-fill: #C0C0C0;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+#auth_title2 {
+    -fx-font-size: 21.5;
+    -fx-text-fill: white;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+#auth_title3 {
+    -fx-font-size: 18;
+    -fx-text-fill: white;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+#auth_desc {
+    -fx-font-size: 14.5;
+    -fx-text-fill: white;
+    -fx-opacity: 0.85;
+    -fx-background-color: transparent;
+}
+#auth_desc .text {
+    -fx-text-alignment: justify;
+    -fx-line-spacing: 0.7;
+}
+#auth_desc .content {
+    -fx-cursor: default;
+}
+#auth_go {
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+
+#other_links {
+    -fx-font-size: 12.5;
+    -fx-text-fill: #989898;
+}
+#REGISTER {
+    -fx-text-fill: #D6D6D6;
+}
+#TO_GAME_text {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-font-size: 21;
+    -fx-text-fill: white;
+}
+#buttons_main {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-font-size: 16;
+    -fx-text-fill: #CECECE;
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #B7B7B7;
+    -fx-font-size: 13;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+.text-field:focused {
+    -fx-text-fill: white;
+}
+
+#CLOSE_BUTTON:hover {
+    -fx-background-color: rgba(240, 122, 122, 0.5);
+}
+#HIDE_BUTTON:hover, #MAXIMISE_BUTTON:hover {
+    -fx-background-color: rgba(256, 256, 256, 0.1);
+}
+
+#AVATAR_bg {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#NICKNAME {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: #E2E5ED;
+    -fx-font-size: 16;
+}
+#BALANCE {
+    -fx-text-fill: #D4D7DF;
+    -fx-font-size: 13;
+}
+#SELECTED_SERVER_NAME {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: white;
+    -fx-font-size: 60;
+}
+#wipe_date {
+    -fx-text-fill: #BDBDBD;
+    -fx-font-size: 15;
+}
+#SELECTED_SERVER_WIPE_DATE {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: #C7CBCF;
+    -fx-font-size: 15;
+}
+#SELECTED_SERVER_ONLINE {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: #F1F2F5;
+    -fx-font-size: 16;
+}
+#SELECTED_SERVER_IMAGE {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;
+    -fx-background-position: center center;
+}
+#server_button {
+    -fx-background-color: rgba(75, 77, 80, 0.47);
+    -fx-background-radius: 100;
+}
+#MODS_LIST_BUTTON, #CLIENT_SETTINGS_BUTTON, #ONLINE_MAP_BUTTON {
+    -fx-text-fill: white;
+    -fx-font-size: 17;
+    -fx-padding: 4 15 5 15;
+}
+#servers_label {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: white;
+    -fx-font-size: 17;
+}
