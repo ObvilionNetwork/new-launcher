@@ -169,6 +169,11 @@ public class FrameController implements Initializable {
         Pane p = null;
         for (Node n : SERVERS.getChildren()) {
             Pane pane = (Pane) n;
+            if (pane.getChildren().get(0).isVisible()) {
+                pane.getChildren().get(0).setVisible(false);
+                pane.getChildren().get(1).setVisible(false);
+            }
+
             if (pane.getId().equals(server.getString("name"))) {
                 p = pane;
             }
@@ -189,7 +194,7 @@ public class FrameController implements Initializable {
         }
     }
 
-    public static Pane getServer(JSONObject serv) {
+    public Pane getServer(JSONObject serv) {
         Pane server = new Pane();
         server.setId(serv.getString("name"));
 
@@ -243,6 +248,10 @@ public class FrameController implements Initializable {
             selected, selected_bg, name, online_label, status, online, statusG
         );
         server.setPadding(new Insets(10, 0, 10, 0));
+
+        server.setOnMouseClicked(event -> {
+            setSelectedServer(serv);
+        });
 
         return server;
     }

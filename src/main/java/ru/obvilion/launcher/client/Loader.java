@@ -47,7 +47,7 @@ public class Loader {
 
             boolean finalFirst = first;
             Platform.runLater(() -> {
-                c.SERVERS.getChildren().add(FrameController.getServer(tec));
+                c.SERVERS.getChildren().add(Vars.frameController.getServer(tec));
                 if (finalFirst) {
                     c.setSelectedServer(tec);
                 }
