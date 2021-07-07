@@ -8,6 +8,7 @@ import ru.obvilion.launcher.api.Request;
 import ru.obvilion.launcher.api.RequestType;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.controllers.FrameController;
+import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 
@@ -40,6 +41,9 @@ public class Loader {
             Log.err("Unable to get the list of servers");
         }
 
+        /* Add controller */
+        new ServersController().init();
+
         /* Add servers to list */
         boolean first = true;
         for (Object obj : Vars.servers) {
@@ -47,9 +51,9 @@ public class Loader {
 
             boolean finalFirst = first;
             Platform.runLater(() -> {
-                c.SERVERS.getChildren().add(Vars.frameController.getServer(tec));
+                c.SERVERS.getChildren().add(Vars.serversController.getServer(tec));
                 if (finalFirst) {
-                    c.setSelectedServer(tec);
+                    Vars.serversController.setSelectedServer(tec);
                 }
             });
 
