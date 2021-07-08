@@ -12,6 +12,8 @@ import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 
+import java.lang.management.ManagementFactory;
+
 public class Loader {
     public static void load() {
         final FrameController c = Vars.frameController;
@@ -118,5 +120,26 @@ public class Loader {
                 Vars.minecraft.destroy();
             }
         }));
+
+
+        new Thread(() -> {
+            int old = 0;
+            while (true) {
+                int tec = (int) (ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024 / 1024);
+                if (old != tec) {
+                    Log.debug(tec + "mb - heap");
+                }
+
+                old = tec;
+
+                if (old > 40) System.gc();
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
