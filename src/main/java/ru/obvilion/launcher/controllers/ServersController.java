@@ -13,6 +13,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
+import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
 
 import java.text.DateFormat;
@@ -62,6 +63,10 @@ public class ServersController {
         } catch (Exception e) {
             Log.err("Error loading main server");
         }
+
+        Text t = (Text) c.SERVER_DESC.lookup(".text");
+        double f = t.getBoundsInLocal().getHeight();
+        c.server_button.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
     }
 
     public Pane getServer(JSONObject serv) {
