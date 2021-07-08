@@ -8,7 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ru.obvilion.launcher.Vars;
 
 public class WindowResizeUtil {
     public static boolean isResize = false;

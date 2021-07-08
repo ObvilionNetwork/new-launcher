@@ -10,6 +10,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.utils.Log;

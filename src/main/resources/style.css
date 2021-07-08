@@ -41,7 +41,7 @@
 }
 #auth_desc .text {
     -fx-text-alignment: justify;
-    -fx-line-spacing: 0.7;
+    -fx-line-spacing: 0.6;
 }
 #auth_desc .content {
     -fx-cursor: default;

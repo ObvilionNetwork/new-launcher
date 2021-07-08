@@ -39,12 +39,14 @@ public class Gui extends Application {
         stage.setScene(new Scene(root));
         stage.show();
 
-        stage.setMinWidth(850);
-        stage.setMinHeight(500);
+        stage.setMinWidth(900);
+        stage.setMinHeight(520);
         stage.getScene().setFill(Color.TRANSPARENT);
 
         stage.getScene().getRoot().setEffect(new DropShadow(5, Color.color(0.1, 0.1, 0.1,0.93f)));
 
+        stage.heightProperty().addListener(o -> ResizeListener.onHeightResize());
+        stage.widthProperty().addListener(observable -> ResizeListener.onWidthResize());
         WindowResizeUtil.addResizeListener(stage);
     }
 

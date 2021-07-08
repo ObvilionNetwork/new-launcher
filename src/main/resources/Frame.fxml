@@ -161,21 +161,21 @@
             <Label fx:id="BALANCE" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660 + 20}" text="Баланс: 0р." />
 
             <!-- Selected server -->
-            <Label fx:id="SELECTED_SERVER_NAME" layoutX="${62 * root.width / 1165 + 190}" layoutY="${59 * root.height / 660 - 26}" text="HiTech" />
-            <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
-            <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
-            <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${62 * root.width / 1165 + 215 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
-            <Label id="wipe_date" layoutX="${62 * root.width / 1165 + 194}" layoutY="${59 * root.height / 660 + 48}" text="Дата вайпа:" />
-            <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${62 * root.width / 1165 + 282}" layoutY="${59 * root.height / 660 + 46}" text="01.04.2021" />
-            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${62 * root.width / 1165 + 225}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="744.0" wrapText="true" />
+            <Label fx:id="SELECTED_SERVER_NAME" layoutX="${152 * root.width / 1165 + 100}" layoutY="${59 * root.height / 660 - 26}" text="HiTech" />
+            <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
+            <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
+            <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
+            <Label id="wipe_date" layoutX="${152 * root.width / 1165 + 104}" layoutY="${59 * root.height / 660 + 48}" text="Дата вайпа:" />
+            <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 46}" text="01.04.2021" />
+            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
 
-            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 238}" layoutY="${59 * root.height / 660 + 310}" >
+            <Pane fx:id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
                 <Label fx:id="MODS_LIST_BUTTON" text="Список модов" />
             </Pane>
-            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 395}" layoutY="${59 * root.height / 660 + 310}" >
+            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 290}" layoutY="${server_button.layoutY}" >
                 <Label fx:id="CLIENT_SETTINGS_BUTTON" text="Настройки клиента" />
             </Pane>
-            <Pane id="server_button" layoutX="${62 * root.width / 1165 + 591}" layoutY="${59 * root.height / 660 + 310}" >
+            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 486}" layoutY="${server_button.layoutY}" >
                 <Label fx:id="ONLINE_MAP_BUTTON" text="Онлайн карта" />
             </Pane>
 

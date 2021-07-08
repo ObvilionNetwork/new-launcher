@@ -64,6 +64,7 @@ public class FrameController implements Initializable {
     public Label NICKNAME;
     public Label TO_GAME_TEXT;
     public Pane LOADING_PANE;
+    public Pane server_button;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
