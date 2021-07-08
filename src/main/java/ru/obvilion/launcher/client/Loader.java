@@ -61,30 +61,37 @@ public class Loader {
         }
 
         /* Auto login */
-        Request r1 = new Request(RequestType.POST, "https://obvilionnetwork.ru/api/auth/login");
-        r1.setBody(new JSONObject().put("name", Config.getValue("login")).put("password", Config.getPasswordValue("password")));
-        JSONObject result = r1.connectAndGetJSON();
+        if (!Config.getValue("login").equals("") && !Config.getValue("password").equals("")) {
+            c.AUTHORIZATION_PANE.setVisible(false);
+            c.LOADING_PANE.setVisible(true);
 
-        if (result != null && result.has("token")) {
-            Log.info("Automatic login to account is successful");
-            Platform.runLater(() -> {
-                StyleUtil.createFadeAnimation(c.AUTHORIZATION_PANE, 600, 0);
+            Request r1 = new Request(RequestType.POST, "https://obvilionnetwork.ru/api/auth/login");
+            r1.setBody(new JSONObject().put("name", Config.getValue("login")).put("password", Config.getPasswordValue("password")));
+            JSONObject result = r1.connectAndGetJSON();
 
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            if (result != null && result.has("token")) {
+                Log.info("Automatic login to account is successful");
+                Platform.runLater(() -> {
+                    StyleUtil.createFadeAnimation(c.LOADING_PANE, 600, 0);
 
-                    Platform.runLater(() -> {
-                        c.AUTHORIZATION_PANE.setVisible(false);
-                        c.MAIN_PANE.setVisible(true);
-                    });
-                }).start();
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
-                c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
-            });
+                        Platform.runLater(() -> {
+                            c.MAIN_PANE.setOpacity(0);
+                            c.LOADING_PANE.setVisible(false);
+                            c.MAIN_PANE.setVisible(true);
+                            StyleUtil.createFadeAnimation(c.MAIN_PANE, 600, 1);
+                        });
+                    }).start();
+
+                    c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
+                });
+            }
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
