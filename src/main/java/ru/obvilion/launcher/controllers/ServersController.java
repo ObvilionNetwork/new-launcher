@@ -114,7 +114,7 @@ public class ServersController {
         online.setAlignment(Pos.CENTER);
 
         server.getChildren().addAll(
-                selected, selected_bg, name, online_label, status, online, statusG
+                selected, selected_bg, name, online_label, online, statusG, status
         );
         server.setPadding(new Insets(10, 0, 10, 0));
 
