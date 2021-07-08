@@ -64,10 +64,10 @@ public class Gui extends Application {
         final double y = width > height ? height * 0.61 : width * 0.5;
 
         if (maximised) {
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(height);
+            stage.setX(bounds.getMinX() - 5);
+            stage.setY(bounds.getMinY() - 5);
+            stage.setWidth(bounds.getWidth() + 10);
+            stage.setHeight(height + 10);
         } else {
             stage.setX((bounds.getWidth() - x) / 2);
             stage.setY((height - y) / 2);
