@@ -91,6 +91,25 @@ public class Loader {
 
                     c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
                 });
+            } else {
+                Platform.runLater(() -> {
+                    StyleUtil.createFadeAnimation(c.LOADING_PANE, 600, 0);
+                });
+
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Platform.runLater(() -> {
+                        c.AUTHORIZATION_PANE.setOpacity(0);
+                        c.LOADING_PANE.setVisible(false);
+                        c.AUTHORIZATION_PANE.setVisible(true);
+                        StyleUtil.createFadeAnimation(c.AUTHORIZATION_PANE, 600, 1);
+                    });
+                }).start();
             }
         }
 

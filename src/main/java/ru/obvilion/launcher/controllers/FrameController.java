@@ -1,5 +1,6 @@
 package ru.obvilion.launcher.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -20,6 +21,7 @@ import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
 
 import java.awt.*;
@@ -98,8 +100,25 @@ public class FrameController implements Initializable {
                 AVATAR.setFill(new ImagePattern(avatar));
             NICKNAME.setText(Config.getValue("login"));
 
-            AUTHORIZATION_PANE.setVisible(false);
-            MAIN_PANE.setVisible(true);
+            Platform.runLater(() -> {
+                StyleUtil.createFadeAnimation(AUTHORIZATION_PANE, 600, 0);
+            });
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+                Platform.runLater(() -> {
+                    MAIN_PANE.setOpacity(0);
+                    AUTHORIZATION_PANE.setVisible(false);
+                    MAIN_PANE.setVisible(true);
+                    StyleUtil.createFadeAnimation(MAIN_PANE, 500, 1);
+                });
+            }).start();
+
             BG.setStyle("-fx-background-image: url(\"" + selectedServerImage + "\");");
         });
 
