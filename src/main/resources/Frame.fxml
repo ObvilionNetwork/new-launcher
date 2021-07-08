@@ -14,6 +14,7 @@
 
     <!-- Window -->
     <Pane fx:id="CONTENT" layoutX="5" layoutY="5" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}">
+        <!-- Authorisation -->
         <Pane fx:id="AUTHORIZATION_PANE" visible="true">
             <!-- Title -->
             <Label id="auth_title1" layoutX="${105 * root.width / 1165}" layoutY="${160 * root.height / 660}" text="ВЫ В НЕСКОЛЬКИХ ШАГАХ ОТ ИГРЫ" />
@@ -82,6 +83,12 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Pane>
+        </Pane>
+
+        <Pane fx:id="LOADING_PANE" visible="false">
+            <!-- Title -->
+            <Label id="auth_title1" layoutX="${105 * root.width / 1165}" layoutY="${160 * root.height / 660}" text="ИДЁТ АВТОМАТИЧЕСКАЯ АВТОРИЗАЦИЯ" />
+            <Label id="auth_title2" layoutX="${105 * root.width / 1165}" layoutY="${160 * root.height / 660 + 35}" text="ПОДОЖДИТЕ, ПОЖАЛУЙСТА" />
         </Pane>
 
         <Pane fx:id="MAIN_PANE" visible="false">
