@@ -1,6 +1,7 @@
 package ru.obvilion.launcher.client;
 
 import javafx.application.Platform;
+import javafx.scene.text.Font;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -9,6 +10,8 @@ import ru.obvilion.launcher.api.RequestType;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
+import ru.obvilion.launcher.gui.Gui;
+import ru.obvilion.launcher.gui.ResizeListener;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 
@@ -84,6 +87,8 @@ public class Loader {
                         }
 
                         Platform.runLater(() -> {
+                            ResizeListener.textMarginUpdate();
+
                             c.MAIN_PANE.setOpacity(0);
                             c.LOADING_PANE.setVisible(false);
                             c.MAIN_PANE.setVisible(true);

@@ -13,13 +13,16 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import ru.obvilion.json.JSONObject;
+import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.api.Request;
 import ru.obvilion.launcher.api.RequestType;
 import ru.obvilion.launcher.client.Client;
 import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
+import ru.obvilion.launcher.gui.ResizeListener;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
@@ -65,6 +68,12 @@ public class FrameController implements Initializable {
     public Label TO_GAME_TEXT;
     public Pane LOADING_PANE;
     public Pane server_button;
+    public Label TO_SITE;
+    public Label TO_CABINET;
+    public Label TO_NEWS;
+    public Label TO_FORUM;
+    public Label TO_SETTINGS;
+    public Label TO_RULES;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,6 +122,8 @@ public class FrameController implements Initializable {
                 }
 
                 Platform.runLater(() -> {
+                    ResizeListener.textMarginUpdate();
+
                     MAIN_PANE.setOpacity(0);
                     AUTHORIZATION_PANE.setVisible(false);
                     MAIN_PANE.setVisible(true);

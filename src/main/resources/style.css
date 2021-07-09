@@ -60,13 +60,9 @@
     -fx-text-fill: #D6D6D6;
 }
 #TO_GAME_text {
-    -fx-font-family: 'Istok Web Bold', sans-serif;
-    -fx-font-size: 21;
     -fx-text-fill: white;
 }
 #buttons_main {
-    -fx-font-family: 'Istok Web Bold', sans-serif;
-    -fx-font-size: 16;
     -fx-text-fill: #CECECE;
 }
 
