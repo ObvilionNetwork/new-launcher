@@ -65,6 +65,10 @@ public class Loader {
             first = false;
         }
 
+        if (!Config.getBooleanValue("savePass")) {
+            Config.setValue("password", "");
+        }
+
         /* Auto login */
         if (!Config.getValue("login").equals("") && !Config.getValue("password").equals("")) {
             c.AUTHORIZATION_PANE.setVisible(false);
@@ -135,12 +139,11 @@ public class Loader {
                     Log.debug(tec + "mb - heap");
                 }
 
+                if (old != tec || old <= 40) System.gc();
                 old = tec;
 
-                if (old > 40) System.gc();
-
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
