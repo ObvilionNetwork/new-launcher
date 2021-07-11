@@ -1,5 +1,6 @@
 package ru.obvilion.launcher.controllers;
 
+import com.sun.management.OperatingSystemMXBean;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +14,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.api.Request;
@@ -23,12 +23,14 @@ import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.gui.ResizeListener;
+import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
 
 import java.awt.*;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,27 +55,44 @@ public class FrameController implements Initializable {
     @FXML public Label REMEMBER_PASSWORD;
 
     @FXML public Pane MAIN_PANE;
+
+    @FXML public Label NICKNAME;
     @FXML public Circle AVATAR;
+    @FXML public Label BALANCE;
+
     @FXML public TextArea SERVER_DESC;
     @FXML public Arc SELECTED_SERVER_ONLINE_ARC;
     @FXML public VBox SERVERS;
     @FXML public Label SELECTED_SERVER_WIPE_DATE;
     @FXML public Label SELECTED_SERVER_NAME;
     @FXML public Label SELECTED_SERVER_ONLINE;
+
     @FXML public Pane TO_GAME;
-    @FXML public Label LOADING;
+    @FXML public Label TO_GAME_TEXT;
+    @FXML public Label TO_SITE;
+    @FXML public Label TO_CABINET;
+    @FXML public Label TO_NEWS;
+    @FXML public Label TO_FORUM;
+    @FXML public Label TO_SETTINGS;
+    @FXML public Label TO_RULES;
+
+    @FXML public Pane LOADING_PANE;
+    @FXML public Pane SETTINGS_PANE;
+    @FXML public Pane SERVER_BUTTON;
 
     public String selectedServerImage = "";
-    public Label NICKNAME;
-    public Label TO_GAME_TEXT;
-    public Pane LOADING_PANE;
-    public Pane server_button;
-    public Label TO_SITE;
-    public Label TO_CABINET;
-    public Label TO_NEWS;
-    public Label TO_FORUM;
-    public Label TO_SETTINGS;
-    public Label TO_RULES;
+    public Circle curRamMin;
+    public Label RAM_MIN;
+    public Circle curRamMax;
+    public Label RAM_MAX;
+    public Pane RAM_WIDTH;
+    public Pane RAM_SELECTOR;
+    public Label SETTINGS_BACK;
+    public CheckBox DEBUG_CB;
+    public CheckBox AUTOUPDATE_CB;
+    public CheckBox SAVEPASS_CB;
+    public Pane DEBUG_PANE;
+    public TextArea DEBUG_TEXT;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,6 +100,47 @@ public class FrameController implements Initializable {
         CLOSE_BUTTON.setOnMouseClicked(e -> Runtime.getRuntime().exit(0));
         MAXIMISE_BUTTON.setOnMouseClicked(e -> Gui.maximise());
         HIDE_BUTTON.setOnMouseClicked(e -> Gui.getStage().setIconified(true));
+
+        /* Menu buttons */
+        TO_SITE.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru"));
+        TO_CABINET.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/cabinet"));
+        TO_NEWS.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/news"));
+        TO_FORUM.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://forum.obvilionnetwork.ru"));
+        TO_SETTINGS.setOnMouseClicked(e -> {
+            StyleUtil.createFadeAnimation(MAIN_PANE, 400, 0);
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(400);
+                } catch (Exception ex) { }
+
+                Platform.runLater(() -> {
+                    MAIN_PANE.setVisible(false);
+                    SETTINGS_PANE.setOpacity(0);
+                    SETTINGS_PANE.setVisible(true);
+                    StyleUtil.createFadeAnimation(SETTINGS_PANE, 400, 1);
+                });
+                Thread.currentThread().interrupt();
+            }).start();
+        });
+        TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/rules"));
+        SETTINGS_BACK.setOnMouseClicked(e -> {
+            StyleUtil.createFadeAnimation(SETTINGS_PANE, 400, 0);
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(400);
+                } catch (Exception ex) { }
+
+                Platform.runLater(() -> {
+                    SETTINGS_PANE.setVisible(false);
+                    MAIN_PANE.setOpacity(0);
+                    MAIN_PANE.setVisible(true);
+                    StyleUtil.createFadeAnimation(MAIN_PANE, 400, 1);
+                });
+                Thread.currentThread().interrupt();
+            }).start();
+        });
 
         /* Authorisation */
         AUTH_DESC.setTextFormatter(new TextFormatter<String>((change) -> {
@@ -155,7 +215,7 @@ public class FrameController implements Initializable {
         }));
 
         TO_GAME.setOnMouseClicked(event -> {
-            Downloader.setClient("HiTech");
+            Downloader.setClient(SELECTED_SERVER_NAME.getText());
             new Thread(() -> {
                 Client client = Downloader.load();
                 client.run();
@@ -164,6 +224,55 @@ public class FrameController implements Initializable {
             TO_GAME.setDisable(true);
             TO_GAME_TEXT.setText("Загрузка");
         });
+
+        int min = Config.getIntValue("minRam");
+        int max =  Config.getIntValue("maxRam");
+        int maxRam = (int) (((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / 1024 / 1024);
+        Vars.maxRam = maxRam;
+
+        RAM_MIN.setText("от " + (float)((int) (min / 1024f * 100)) / 100 + "ГБ");
+        RAM_MAX.setText("до " + (float)((int) (max / 1024f * 100)) / 100 + "ГБ");
+        curRamMin.setLayoutX((float)(min) / maxRam * RAM_WIDTH.getWidth());
+        curRamMax.setLayoutX((float)(max) / maxRam * RAM_WIDTH.getWidth());
+
+        curRamMin.setOnMouseDragged(event -> {
+            double newX = event.getSceneX() - RAM_SELECTOR.getLayoutX();
+
+            if (newX < 0) {
+                newX = 0;
+            } else if (newX > curRamMax.getLayoutX() - 20) {
+                newX = curRamMax.getLayoutX() - 20;
+            }
+
+            curRamMin.setLayoutX(newX);
+            int size = (int) (newX / RAM_WIDTH.getWidth() * (maxRam - 200)) + 200;
+
+            Config.setValue("minRam", size + "");
+            RAM_MIN.setText("от " + (float)((int) (size / 1024f * 100)) / 100 + "ГБ");
+        });
+        curRamMax.setOnMouseDragged(event -> {
+            double newX = event.getSceneX() - RAM_SELECTOR.getLayoutX();
+
+            if (newX < curRamMin.getLayoutX() + 20) {
+                newX = curRamMin.getLayoutX() + 20;
+            } else if (newX > RAM_WIDTH.getWidth()) {
+                newX = RAM_WIDTH.getWidth();
+            }
+
+            curRamMax.setLayoutX(newX);
+            int size = (int) (newX / RAM_WIDTH.getWidth() * (maxRam - 200)) + 200;
+
+            Config.setValue("maxRam", size + "");
+            RAM_MAX.setText("до " + (float)((int) (size / 1024f * 100)) / 100 + "ГБ");
+        });
+
+        SAVEPASS_CB.setSelected(Config.getBooleanValue("savePass"));
+        DEBUG_CB.setSelected(Config.getBooleanValue("debug"));
+        AUTOUPDATE_CB.setSelected(Config.getBooleanValue("autoupdate"));
+
+        DEBUG_CB.setOnMouseClicked(e -> Config.setValue("debug", DEBUG_CB.isSelected() ? "true" : "false"));
+        AUTOUPDATE_CB.setOnMouseClicked(e -> Config.setValue("autoupdate", AUTOUPDATE_CB.isSelected() ? "true" : "false"));
+        SAVEPASS_CB.setOnMouseClicked(e -> Config.setValue("savePass", SAVEPASS_CB.isSelected() ? "true" : "false"));
     }
 
     public static void openWebsite(Node node, String url) {
