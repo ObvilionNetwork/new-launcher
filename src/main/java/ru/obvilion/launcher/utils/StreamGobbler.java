@@ -1,5 +1,8 @@
 package ru.obvilion.launcher.utils;
 
+import javafx.application.Platform;
+import ru.obvilion.launcher.Vars;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +11,7 @@ import java.io.InputStreamReader;
 public class StreamGobbler extends Thread {
     InputStream is;
     String type;
+    String log = "";
 
     public StreamGobbler(InputStream is, String type) {
         this.is = is;
@@ -16,6 +20,21 @@ public class StreamGobbler extends Thread {
 
     @Override
     public void run() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(() -> {
+                    Vars.frameController.DEBUG_TEXT.appendText(log);
+                    log = "";
+                });
+            }
+        }).start();
+
         try {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
@@ -23,6 +42,8 @@ public class StreamGobbler extends Thread {
             String line = null;
             while ((line = br.readLine()) != null) {
                 Log.custom(type, line);
+
+                log += (line + "\n");
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

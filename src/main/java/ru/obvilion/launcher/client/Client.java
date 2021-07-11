@@ -1,11 +1,14 @@
 package ru.obvilion.launcher.client;
 
+import javafx.application.Platform;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
+import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StreamGobbler;
+import ru.obvilion.launcher.utils.StyleUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +82,26 @@ public class Client {
         StreamGobbler outputGobbler = new StreamGobbler(ps.getInputStream(), "MC");
         errorGobbler.start();
         outputGobbler.start();
+
+        if (Config.getBooleanValue("debug")) {
+            StyleUtil.createFadeAnimation(Vars.frameController.MAIN_PANE, 400, 0);
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(400);
+                } catch (Exception ex) { }
+
+                Platform.runLater(() -> {
+                    Vars.frameController.MAIN_PANE.setVisible(false);
+                    Vars.frameController.DEBUG_PANE.setOpacity(0);
+                    Vars.frameController.DEBUG_PANE.setVisible(true);
+                    StyleUtil.createFadeAnimation(Vars.frameController.DEBUG_PANE, 400, 1);
+                });
+                Thread.currentThread().interrupt();
+            }).start();
+        } else {
+            Platform.runLater(() -> Gui.getStage().close());
+        }
 
         try {
             exit.set(ps.waitFor()); // Ждем когда майн закроется

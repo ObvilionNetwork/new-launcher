@@ -94,80 +94,73 @@
         <Pane fx:id="MAIN_PANE" visible="false">
             <!-- Buttons -->
             <HBox layoutY="${600 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER">
-                <Region prefHeight="200.0" prefWidth="${140 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${140 * root.width / 1165}" />
 
                 <Pane>
-                    <Label id="buttons_main" textAlignment="CENTER" fx:id="TO_SITE" text="НА САЙТ"/>
-
+                    <Label id="buttons_main" textAlignment="CENTER" fx:id="TO_SITE" text="НА САЙТ" />
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${205 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${205 * root.width / 1165}"  />
 
                 <Pane>
                     <Label id="buttons_main" fx:id="TO_CABINET" text="ЛИЧНЫЙ КАБИНЕТ"/>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${205 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${205 * root.width / 1165}" />
 
                 <Pane>
                     <Label id="buttons_main" fx:id="TO_NEWS" text="НОВОСТИ"/>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${209 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${209 * root.width / 1165}" />
 
                 <Pane fx:id="TO_GAME">
                     <Label layoutY="${-22 * root.width / 1165}" fx:id="TO_GAME_TEXT" id="TO_GAME_text" text="ИГРАТЬ"/>
                     <Pane layoutX="${TO_GAME_TEXT.width + 5}" layoutY="${TO_GAME_TEXT.height / 2 - 15 - 22 * root.width / 1165}">
                         <SVGPath content="M22.8603 14.1768L8.98437 0.33925C8.52975 -0.113854 7.79369 -0.113092 7.33983 0.341594C6.88632 0.796221 6.88749 1.53268 7.34217 1.98614L20.3921 15.0001L7.3417 28.0139C6.88708 28.4674 6.88591 29.2034 7.33936 29.6581C7.56688 29.886 7.86494 30 8.16301 30C8.46031 30 8.75721 29.8868 8.98432 29.6604L22.8603 15.8233C23.0792 15.6054 23.2021 15.309 23.2021 15.0001C23.2021 14.6911 23.0789 14.395 22.8603 14.1768Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" fill="white" strokeWidth="0.9" />
                     </Pane>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${200 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
 
                 <Pane>
                     <Label id="buttons_main" fx:id="TO_FORUM" text="ФОРУМ"/>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${200 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
 
                 <Pane>
                     <Label id="buttons_main" fx:id="TO_SETTINGS" text="НАСТРОЙКИ"/>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${200 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
 
                 <Pane>
                     <Label id="buttons_main" fx:id="TO_RULES" text="ПРАВИЛА ПРОЕКТА"/>
-
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region prefHeight="200.0" prefWidth="${200 * root.width / 1165}" HBox.hgrow="ALWAYS" />
+                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
             </HBox>
 
             <!-- User info -->
@@ -185,19 +178,54 @@
             <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 46}" text="01.04.2021" />
             <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
 
-            <Pane fx:id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
+            <Pane fx:id="SERVER_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
                 <Label fx:id="MODS_LIST_BUTTON" text="Список модов" />
             </Pane>
-            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 290}" layoutY="${server_button.layoutY}" >
+            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 290}" layoutY="${SERVER_BUTTON.layoutY}" >
                 <Label fx:id="CLIENT_SETTINGS_BUTTON" text="Настройки клиента" />
             </Pane>
-            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 486}" layoutY="${server_button.layoutY}" >
+            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 486}" layoutY="${SERVER_BUTTON.layoutY}" >
                 <Label fx:id="ONLINE_MAP_BUTTON" text="Онлайн карта" />
             </Pane>
 
             <!-- Servers -->
             <Label id="servers_label" layoutX="${62 * root.width / 1165 - 25}" layoutY="${131 * root.height / 660}" text="Сервера:" />
             <VBox fx:id="SERVERS" layoutX="${62 * root.width / 1165 - 18}" layoutY="${131 * root.height / 660 + 38}" prefWidth="200" prefHeight="400"/>
+        </Pane>
+
+        <Pane fx:id="SETTINGS_PANE" visible="false">
+            <!-- Title -->
+            <Label id="auth_title2" layoutX="${90 * root.width / 1165}" layoutY="${75 * root.height / 660 + 10}" text="НАСТРОЙКИ ЛАУНЧЕРА" />
+
+            <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" fx:id="DEBUG_CB" text="Режим отладки" />
+            <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${154 * root.height / 660 + 38}" fx:id="AUTOUPDATE_CB" text="Автоматическое обновление лаунчера (его нет)" />
+            <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${158 * root.height / 660 + 66}" fx:id="SAVEPASS_CB" text="Запоминать пароль" />
+
+            <Label id="ramValueTitle" layoutX="${90 * root.width / 1165}" layoutY="${490 * root.height / 660 + 30}" text="Количество ОЗУ" />
+            <Pane fx:id="RAM_SELECTOR" layoutX="${90 * root.width / 1165}" layoutY="${530 * root.height / 660 + 30}" prefHeight="14.0" prefWidth="390.0">
+                <Pane fx:id="RAM_WIDTH" prefHeight="2.0" prefWidth="${400 * root.width / 1165 + 50}" style="-fx-background-color: #494949" />
+
+                <Circle fx:id="curRamMin" fill="#E2E2E2" layoutX="25" radius="7.0" />
+                <Label id="ramValue" fx:id="RAM_MIN" alignment="CENTER_RIGHT" layoutX="${curRamMin.layoutX - 73}" layoutY="9.0" prefWidth="80" text="от xGB" />
+
+                <Circle fx:id="curRamMax" fill="#E2E2E2" layoutX="180" radius="7.0" />
+                <Label id="ramValue" fx:id="RAM_MAX" layoutX="${curRamMax.layoutX - 8}" layoutY="9.0" prefWidth="80" text="до yGB" />
+
+                <Pane layoutX="${curRamMin.layoutX + 7}" prefHeight="2" prefWidth="${curRamMax.layoutX - curRamMin.layoutX - 14}" style="-fx-background-color: #b0b0b0" />
+            </Pane>
+
+            <Label fx:id="SETTINGS_BACK" id="auth_title1" layoutX="${1020 * root.width / 1165}" layoutY="${552 * root.height / 660}" text="Назад">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Label>
+        </Pane>
+
+        <Pane fx:id="DEBUG_PANE" visible="false">
+            <!-- Title -->
+            <Label id="auth_title2" layoutX="${20 * root.width / 1165 + 20}" layoutY="${65 * root.height / 660 + 10}" text="РЕЖИМ ОТЛАДКИ" />
+
+            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="DEBUG_TEXT" editable="false" layoutX="${20 * root.width / 1165 + 20}" layoutY="${85 * root.height / 660 + 50}" pickOnBounds="false" prefWidth="${root.width - 90 * root.width / 1165}" prefHeight="${root.height - 180 * root.height / 660}" wrapText="true" />
         </Pane>
     </Pane>
 

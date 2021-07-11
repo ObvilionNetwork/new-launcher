@@ -73,6 +73,17 @@
     -fx-background-color: transparent;
 }
 
+#ramValue {
+    -fx-text-fill: #B7B7B7;
+    -fx-font-size: 13;
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+}
+#ramValueTitle {
+    -fx-text-fill: #F1F1F1;
+    -fx-font-size: 15;
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+}
+
 .text-field {
     -fx-background-color: transparent;
     -fx-text-fill: #B7B7B7;
@@ -140,4 +151,22 @@
     -fx-font-family: 'Istok Web Bold', sans-serif;
     -fx-text-fill: white;
     -fx-font-size: 17;
+}
+
+.check-box .box {
+    -fx-background-color: #ffffff66;
+    -fx-background-radius: 2;
+}
+
+.check-box {
+    -fx-text-fill: #fafafa;
+}
+
+.check-box .text {
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+    -fx-font-size: 15;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #ffffffe0;
 }
