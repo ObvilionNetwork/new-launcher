@@ -2,6 +2,7 @@ package ru.obvilion.launcher.controllers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -43,6 +44,7 @@ public class ServersController {
             if (pane.getChildren().get(0).isVisible()) {
                 pane.getChildren().get(0).setVisible(false);
                 pane.getChildren().get(1).setVisible(false);
+                pane.setCursor(Cursor.HAND);
             }
 
             if (pane.getId().equals(server.getString("name"))) {
@@ -66,7 +68,7 @@ public class ServersController {
 
         Text t = (Text) c.SERVER_DESC.lookup(".text");
         double f = t.getBoundsInLocal().getHeight();
-        c.server_button.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
+        c.SERVER_BUTTON.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
     }
 
     public Pane getServer(JSONObject serv) {
@@ -124,6 +126,7 @@ public class ServersController {
         );
         server.setPadding(new Insets(10, 0, 10, 0));
 
+        server.setCursor(Cursor.DEFAULT);
         server.setOnMouseClicked(event -> {
             setSelectedServer(serv);
         });

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import ru.obvilion.launcher.Vars;
+import ru.obvilion.launcher.config.Config;
 
 public class ResizeListener {
     public static void onHeightResize() {
@@ -30,7 +31,7 @@ public class ResizeListener {
 
         Text t = (Text) Vars.frameController.SERVER_DESC.lookup(".text");
         double f = t.getBoundsInLocal().getHeight();
-        Vars.frameController.server_button.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
+        Vars.frameController.SERVER_BUTTON.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
 
         new Thread(() -> {
             try {
@@ -41,7 +42,12 @@ public class ResizeListener {
 
             Platform.runLater(() -> {
                 double f1 = t.getBoundsInLocal().getHeight();
-                Vars.frameController.server_button.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f1 + 110);
+                Vars.frameController.SERVER_BUTTON.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f1 + 110);
+
+                Vars.frameController.RAM_MIN.setText("от " + (float)((int) (Config.getIntValue("minRam") / 1024f * 100)) / 100 + "ГБ");
+                Vars.frameController.RAM_MAX.setText("до " + (float)((int) (Config.getIntValue("maxRam") / 1024f * 100)) / 100 + "ГБ");
+                Vars.frameController.curRamMin.setLayoutX((float)(Config.getIntValue("minRam")) / Vars.maxRam * Vars.frameController.RAM_WIDTH.getWidth());
+                Vars.frameController.curRamMax.setLayoutX((float)(Config.getIntValue("maxRam")) / Vars.maxRam * Vars.frameController.RAM_WIDTH.getWidth());
             });
 
             Thread.currentThread().interrupt();

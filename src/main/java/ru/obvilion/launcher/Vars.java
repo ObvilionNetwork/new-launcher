@@ -10,4 +10,5 @@ public class Vars {
     public static JSONArray servers;
     public static boolean useCustomJRE = false;
     public static Process minecraft;
+    public static int maxRam;
 }
