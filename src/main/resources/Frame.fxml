@@ -221,6 +221,31 @@
             </Label>
         </Pane>
 
+        <Pane fx:id="DOWNLOADING_PANE" visible="false">
+            <!-- Title -->
+            <Label id="title2" layoutY="${105 * root.height / 660 + 10}" prefWidth="${root.width - 10}" alignment="CENTER" text="OBVILION NETWORK" />
+
+            <Label id="title3" layoutY="${160 * root.height / 660 + 10}" layoutX="${58 * root.width / 1165}" text="О НАС" />
+            <TextArea style="-fx-font-size: 17.5; -fx-background-color: #ffffff20;" id="auth_desc" editable="false" layoutX="${58 * root.width / 1165}" layoutY="${165 * root.height / 660 + 50}" pickOnBounds="false" prefWidth="${490 * root.width / 1165}" prefHeight="${250 * root.height / 660}" wrapText="true" text="На сервере вы сможете окунуться в мир игры Minecraft и создать любое строение, а также открыть доступ к различным модам. Мы создали сервер для того, чтобы каждый игрок чувствовал себя комфортно. Качественные сборки, оптимизированные сервера, нет ограничений механизмов донатом, и это всё для вас! " />
+            <Label id="title3" layoutY="${160 * root.height / 660 + 10}" layoutX="${root.width - 10 - 58 * root.width / 1165 - 118}" text="НОВОСТИ" />
+            <Pane prefHeight="${110 * root.height / 660}" style="-fx-background-color: #ffffff20;" layoutX="${root.width - 10 - 58 * root.width / 1165 - 390 * root.width / 1165}" layoutY="${165 * root.height / 660 + 50}">
+                <TextArea style="-fx-font-size: 17.5;" id="auth_desc" editable="false" pickOnBounds="false" prefWidth="${390 * root.width / 1165}" prefHeight="${80 * root.height / 660}" wrapText="true" text="Новое обновление лаунчера 2.6 уже здесь!" />
+                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1_GO" layoutX="14" text="Перейти >"/>
+                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1" layoutX="${390 * root.width / 1165 - 14 - INFO_1.width}" text="17.07.21 в 10:00"/>
+            </Pane>
+
+            <Pane prefHeight="${110 * root.height / 660}" style="-fx-background-color: #ffffff20;" layoutX="${root.width - 10 - 58 * root.width / 1165 - 390 * root.width / 1165}" layoutY="${305 * root.height / 660 + 50}">
+                <TextArea style="-fx-font-size: 17.5;" id="auth_desc" editable="false" pickOnBounds="false" prefWidth="${390 * root.width / 1165}" prefHeight="${80 * root.height / 660}" wrapText="true" text="Произошёл вайп на сервере HiTech 1.12.2" />
+                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1_GO" layoutX="14" text="Перейти >"/>
+                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1" layoutX="${390 * root.width / 1165 - 14 - INFO_1.width}" text="17.07.21 в 10:00"/>
+            </Pane>
+
+            <Label fx:id="PERSENT" id="title4" layoutY="${590 * root.height / 660 - 39}" prefWidth="${root.width - 10}" alignment="CENTER" text="15%" />
+            <Label fx:id="STATUS" id="title5" layoutY="${597 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER" text="Загрузка файла: /mods/ClientFixer-1.12.2-1.9.jar" />
+            <Pane layoutY="${590 * root.height / 660}" layoutX="${54 * root.width / 1165}" prefHeight="${3 * root.height / 660 + 2}" prefWidth="${1040 * root.width / 1165}" style="-fx-background-color: #ffffff20;" />
+            <Pane fx:id="STATUS_L" layoutY="${590 * root.height / 660}" layoutX="${54 * root.width / 1165}" prefHeight="${3 * root.height / 660 + 2}" prefWidth="0" style="-fx-background-color: #ffffffaa;" />
+        </Pane>
+
         <Pane fx:id="DEBUG_PANE" visible="false">
             <!-- Title -->
             <Label id="auth_title2" layoutX="${20 * root.width / 1165 + 20}" layoutY="${65 * root.height / 660 + 10}" text="РЕЖИМ ОТЛАДКИ" />

@@ -170,3 +170,33 @@
 .check-box:selected .box {
     -fx-background-color: #ffffffe0;
 }
+
+#title2 {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-font-size: 26;
+    -fx-text-fill: white;
+}
+
+#title3 {
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+    -fx-font-size: 24;
+    -fx-text-fill: #ffffffe0;
+}
+
+#title4 {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-font-size: 21;
+    -fx-text-fill: white;
+}
+
+#title5 {
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+    -fx-font-size: 16;
+    -fx-text-fill: #ffffffd0;
+}
+
+#newsInfo {
+    -fx-font-family: 'Istok Web Regular', sans-serif;
+    -fx-text-fill: #919295;
+    -fx-font-size: 14;
+}

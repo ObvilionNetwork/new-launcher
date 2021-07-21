@@ -1,5 +1,6 @@
 package ru.obvilion.launcher.client;
 
+import javafx.application.Platform;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -9,6 +10,7 @@ import ru.obvilion.launcher.utils.FileUtil;
 import ru.obvilion.launcher.utils.Log;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Downloader {
     public static String id;
@@ -45,6 +47,35 @@ public class Downloader {
         CLIENT_DIR = new File(Global.LAUNCHER_CLIENTS, server.getString("id"));
         CLIENT_DIR.mkdir();
 
+        long size = 0;
+        size += server.getJSONObject("core").getLong("size");
+        size += getModulesSize(server.getJSONArray("libraries"));
+        size += getModulesSize(server.getJSONArray("natives"));
+        size += getModulesSize(server.getJSONArray("mods"));
+        size += getModulesSize(server.getJSONArray("assets"));
+        size += getModulesSize(server.getJSONArray("other"));
+
+        AtomicReference<Long> s = new AtomicReference<>();
+        s.set(size);
+
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                long se = FileUtil.getSize(CLIENT_DIR);
+
+                float persent = (float) ((double) se / (double) s.get());
+                Platform.runLater(() -> {
+                    Vars.frameController.PERSENT.setText((int) (persent * 100) + "%");
+                    Vars.frameController.STATUS_L.setPrefWidth((1040 * persent) * Vars.frameController.root.getWidth() / 1165);
+                });
+            }
+        }).start();
+
         downloadModule(server.getJSONObject("core"));
         downloadAllModules(server.getJSONArray("libraries"));
         downloadAllModules(server.getJSONArray("natives"));
@@ -76,6 +107,9 @@ public class Downloader {
 
                 Vars.useCustomJRE = true;
                 downloadAllModules(java.getJSONArray(os));
+
+                size += getModulesSize(java.getJSONArray(os));
+                s.set(size);
             } else {
                 Log.err("Error downloading Java version {0} for OS {1}({2})!", server.getString("javaVersion"), os, Global.OS);
             }
@@ -83,6 +117,16 @@ public class Downloader {
 
         Log.info("Download ended. Starting client...");
         return new Client(server);
+    }
+
+    private static long getModulesSize(JSONArray modules) {
+        long s = 0;
+        for (Object m : modules) {
+            JSONObject module = (JSONObject) m;
+            s += module.getLong("size");
+        }
+
+        return s;
     }
 
     private static void downloadModule(JSONObject module) {
@@ -101,6 +145,8 @@ public class Downloader {
         if (FileUtil.getSize(target) != module.getLong("size")) {
             try {
                 Log.debug("Downloading file {0} ({1}KB)", module.getString("link"), module.getLong("size") / 1024 + "");
+
+                Platform.runLater(() -> Vars.frameController.STATUS.setText("Загрузка файла " + module.getString("link")));
 
                 int threads;
                 if (module.getLong("size") / 1024 > 4096) {

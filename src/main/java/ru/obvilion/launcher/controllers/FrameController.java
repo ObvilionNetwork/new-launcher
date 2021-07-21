@@ -93,6 +93,10 @@ public class FrameController implements Initializable {
     public CheckBox SAVEPASS_CB;
     public Pane DEBUG_PANE;
     public TextArea DEBUG_TEXT;
+    public Label PERSENT;
+    public Label STATUS;
+    public Pane STATUS_L;
+    public Pane DOWNLOADING_PANE;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -221,8 +225,24 @@ public class FrameController implements Initializable {
                 client.run();
             }).start();
 
-            TO_GAME.setDisable(true);
-            TO_GAME_TEXT.setText("Загрузка");
+            Platform.runLater(() -> {
+                StyleUtil.createFadeAnimation(MAIN_PANE, 600, 0);
+            });
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+                Platform.runLater(() -> {
+                    DOWNLOADING_PANE.setOpacity(0);
+                    MAIN_PANE.setVisible(false);
+                    DOWNLOADING_PANE.setVisible(true);
+                    StyleUtil.createFadeAnimation(DOWNLOADING_PANE, 500, 1);
+                });
+            }).start();
         });
 
         int min = Config.getIntValue("minRam");

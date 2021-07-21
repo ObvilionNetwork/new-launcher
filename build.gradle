@@ -15,7 +15,7 @@ repositories {
 
 String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
 group 'ru.obvilion'
-version '0.1'
+version '0.2.3'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
@@ -24,6 +24,8 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 jar {
+    baseName("obvilion-launcher")
+
     manifest {
         attributes 'Main-Class': mainClassName
     }
