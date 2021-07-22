@@ -152,8 +152,8 @@ public class FrameController implements Initializable {
             AVATAR.setFill(new ImagePattern(avatar));
         NICKNAME.setText(Config.getValue("login"));
 
-        openWebsite(REGISTER, "https://obvilionnetwork.ru/register");
-        openWebsite(RESTORE_PASSWORD, "https://obvilionnetwork.ru/restore");
+        openWebsite(REGISTER, "https://obvilionnetwork.ru/auth/signup");
+        openWebsite(RESTORE_PASSWORD, "https://obvilionnetwork.ru/auth/restore");
         WindowMoveUtil.addMoveListener(TOP_BAR);
 
         /* Main */
