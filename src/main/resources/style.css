@@ -195,6 +195,12 @@
     -fx-text-fill: #ffffffd0;
 }
 
+#title6 {
+    -fx-font-size: 22;
+    -fx-text-fill: #C0C0C0;
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+}
+
 #newsInfo {
     -fx-font-family: 'Istok Web Regular', sans-serif;
     -fx-text-fill: #919295;

@@ -91,6 +91,7 @@ public class FrameController implements Initializable {
     public Label STATUS;
     public Pane STATUS_L;
     public Pane DOWNLOADING_PANE;
+    public Label DEBUG_BACK;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,6 +110,7 @@ public class FrameController implements Initializable {
         TO_SETTINGS.setOnMouseClicked(e -> Gui.openPane(SETTINGS_PANE));
         TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/rules"));
         SETTINGS_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
+        DEBUG_BACK.setOnMouseClicked(e ->  Gui.openPane(MAIN_PANE));
 
         /* Authorisation */
         AUTH_DESC.setTextFormatter(new TextFormatter<String>((change) -> {

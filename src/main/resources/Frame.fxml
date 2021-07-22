@@ -250,7 +250,13 @@
             <!-- Title -->
             <Label id="auth_title2" layoutX="${20 * root.width / 1165 + 20}" layoutY="${65 * root.height / 660 + 10}" text="РЕЖИМ ОТЛАДКИ" />
 
-            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="DEBUG_TEXT" editable="false" layoutX="${20 * root.width / 1165 + 20}" layoutY="${85 * root.height / 660 + 50}" pickOnBounds="false" prefWidth="${root.width - 90 * root.width / 1165}" prefHeight="${root.height - 180 * root.height / 660}" wrapText="true" />
+            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="DEBUG_TEXT" editable="false" layoutX="${20 * root.width / 1165 + 20}" layoutY="${85 * root.height / 660 + 50}" pickOnBounds="false" prefWidth="${root.width - 90 * root.width / 1165}" prefHeight="${root.height - 85 * root.height / 660 - 130}" wrapText="true" />
+
+            <Label fx:id="DEBUG_BACK" id="title6" layoutX="${1020 * root.width / 1165}" layoutY="${594 * root.height / 660}" text="Назад">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Label>
         </Pane>
     </Pane>
 

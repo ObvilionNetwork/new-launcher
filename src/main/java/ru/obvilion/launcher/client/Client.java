@@ -92,6 +92,7 @@ public class Client {
         Platform.runLater(() -> {
             if (Config.getBooleanValue("debug")) {
                 Gui.openPane(Vars.frameController.DEBUG_PANE);
+                Vars.frameController.DEBUG_BACK.setVisible(false);
             } else {
                 Gui.getStage().close();
             }
@@ -109,10 +110,10 @@ public class Client {
         Log.info("Process closed");
         Platform.runLater(() -> {
             if (Config.getBooleanValue("debug")) {
-                // TODO: добавить кнопку выхода из панели дебага
-                Gui.openPane(Vars.frameController.MAIN_PANE);
+                Vars.frameController.DEBUG_BACK.setVisible(true);
             } else {
                 Gui.getStage().show();
+                Vars.selectedPane.setOpacity(0);
                 Gui.openPane(Vars.frameController.MAIN_PANE);
             }
         });
