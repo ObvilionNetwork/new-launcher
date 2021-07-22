@@ -58,6 +58,7 @@ public class Downloader {
         AtomicReference<Long> s = new AtomicReference<>();
         s.set(size);
 
+        JSONObject finalServer = server;
         new Thread(() -> {
             while (true) {
                 try {
@@ -66,12 +67,20 @@ public class Downloader {
                     e.printStackTrace();
                 }
 
+                // TODO: фильтр лишних файлов
                 long se = FileUtil.getSize(CLIENT_DIR);
+                se += FileUtil.getSize(new File(CLIENT_DIR, "../assets/" + finalServer.getString("version")));
+
+                if (!System.getProperty("java.version").startsWith("1.8"))
+                se += FileUtil.getSize(new File(CLIENT_DIR, "../../common/java/" + finalServer.getString("javaVersion")));
 
                 float persent = (float) ((double) se / (double) s.get());
+                if (persent > 1) persent = 1;
+
+                float finalPersent = persent;
                 Platform.runLater(() -> {
-                    Vars.frameController.PERSENT.setText((int) (persent * 100) + "%");
-                    Vars.frameController.STATUS_L.setPrefWidth((1040 * persent) * Vars.frameController.root.getWidth() / 1165);
+                    Vars.frameController.PERSENT.setText((int) (finalPersent * 100) + "%");
+                    Vars.frameController.STATUS_L.setPrefWidth((1040 * finalPersent) * Vars.frameController.root.getWidth() / 1165);
                 });
             }
         }).start();
