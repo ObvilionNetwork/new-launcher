@@ -13,9 +13,7 @@ public class DesktopUtil {
 
         Runtime rt = Runtime.getRuntime();
 
-        new Thread(() -> {
-            Thread.currentThread().setDaemon(true);
-
+        Thread th = new Thread(() -> {
             try {
                 String os = Global.OS.toLowerCase();
 
@@ -31,7 +29,11 @@ public class DesktopUtil {
             }
 
             Thread.currentThread().interrupt();
-        }).start();
+        });
+
+        th.setDaemon(true);
+        th.start();
+
         return true;
     }
 }
