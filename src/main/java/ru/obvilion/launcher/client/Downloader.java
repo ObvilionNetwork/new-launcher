@@ -60,6 +60,7 @@ public class Downloader {
 
         JSONObject finalServer = server;
         new Thread(() -> {
+            // TODO: показывать скорость загрузки
             while (true) {
                 try {
                     Thread.sleep(100);

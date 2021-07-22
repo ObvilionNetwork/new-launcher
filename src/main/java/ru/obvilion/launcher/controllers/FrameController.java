@@ -1,7 +1,6 @@
 package ru.obvilion.launcher.controllers;
 
 import com.sun.management.OperatingSystemMXBean;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -22,16 +21,11 @@ import ru.obvilion.launcher.client.Client;
 import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
-import ru.obvilion.launcher.gui.ResizeListener;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
-import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
 
-import java.awt.*;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -229,12 +223,6 @@ public class FrameController implements Initializable {
     }
 
     public static void openWebsite(Node node, String url) {
-        node.setOnMouseClicked(event -> {
-            try {
-                Desktop.getDesktop().browse(URI.create(url));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        node.setOnMouseClicked(event -> DesktopUtil.openWebpage(url));
     }
 }
