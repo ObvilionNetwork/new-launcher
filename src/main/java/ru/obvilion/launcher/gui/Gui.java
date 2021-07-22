@@ -66,8 +66,16 @@ public class Gui extends Application {
 
         final double height = bounds.getHeight();
         final double width = bounds.getWidth();
-        final double x = width > height ? height * 1.078 : width * 0.8;
-        final double y = width > height ? height * 0.61 : width * 0.5;
+
+        double x = width > height ? height * 1.078 : width * 0.8;
+        if (x > stage.getMinWidth()) {
+            x = stage.getMinWidth();
+        }
+        
+        double y = width > height ? height * 0.61 : width * 0.5;
+        if (y > stage.getMinHeight()) {
+            y = stage.getMinHeight();
+        }
 
         if (maximised) {
             stage.setX(bounds.getMinX() - 5);
