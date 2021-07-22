@@ -37,7 +37,8 @@ public class Client {
         String cmd;
 
         if (!Vars.useCustomJRE) {
-            cmd = "java ";
+            cmd = new File(System.getProperty("java.home"), "bin/java")
+                    + (Global.OS.toLowerCase().contains("win") ? ".exe " : " ");
         } else {
             cmd = javaFile + " ";
         }

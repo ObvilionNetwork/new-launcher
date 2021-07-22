@@ -8,6 +8,7 @@ import ru.obvilion.launcher.utils.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Logger;
 
 public class ClientLauncherWrapper {
     public static void main(String[] args) {

@@ -71,7 +71,7 @@ public class Gui extends Application {
         if (x > stage.getMinWidth()) {
             x = stage.getMinWidth();
         }
-        
+
         double y = width > height ? height * 0.61 : width * 0.5;
         if (y > stage.getMinHeight()) {
             y = stage.getMinHeight();
