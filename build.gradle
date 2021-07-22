@@ -15,7 +15,7 @@ repositories {
 
 String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
 group 'ru.obvilion'
-version '0.2.3'
+version '0.2.4'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"

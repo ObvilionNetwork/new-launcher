@@ -8,11 +8,11 @@ import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StreamGobbler;
-import ru.obvilion.launcher.utils.StyleUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Client {
     public String name;
@@ -83,34 +83,32 @@ public class Client {
         errorGobbler.start();
         outputGobbler.start();
 
-        if (Config.getBooleanValue("debug")) {
-            StyleUtil.createFadeAnimation(Vars.frameController.MAIN_PANE, 400, 0);
+        Process finalPs = ps;
+        Platform.runLater(() -> {
+            if (Config.getBooleanValue("debug")) {
+                Gui.openPane(Vars.frameController.DEBUG_PANE);
+            } else {
+                Gui.getStage().hide();
+            }
 
-            new Thread(() -> {
-                try {
-                    Thread.sleep(400);
-                } catch (Exception ex) { }
+            try {
+                exit.set(finalPs.waitFor()); // Ждем когда майн закроется
 
-                Platform.runLater(() -> {
-                    Vars.frameController.MAIN_PANE.setVisible(false);
-                    Vars.frameController.DEBUG_PANE.setOpacity(0);
-                    Vars.frameController.DEBUG_PANE.setVisible(true);
-                    StyleUtil.createFadeAnimation(Vars.frameController.DEBUG_PANE, 400, 1);
-                });
-                Thread.currentThread().interrupt();
-            }).start();
-        } else {
-            Platform.runLater(() -> Gui.getStage().close());
-        }
+                errorGobbler.stop();
+                outputGobbler.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        try {
-            exit.set(ps.waitFor()); // Ждем когда майн закроется
-
-            errorGobbler.stop();
-            outputGobbler.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            Log.info("Process closed");
+            if (Config.getBooleanValue("debug")) {
+                // TODO: добавить кнопку выхода из панели дебага
+                Gui.openPane(Vars.frameController.MAIN_PANE);
+            } else {
+                Gui.getStage().show();
+                Gui.openPane(Vars.frameController.MAIN_PANE);
+            }
+        });
     }
 }
 

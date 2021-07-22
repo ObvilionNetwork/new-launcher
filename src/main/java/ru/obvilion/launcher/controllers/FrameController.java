@@ -100,6 +100,8 @@ public class FrameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Vars.selectedPane = MAIN_PANE;
+
         /* Top bar */
         CLOSE_BUTTON.setOnMouseClicked(e -> Runtime.getRuntime().exit(0));
         MAXIMISE_BUTTON.setOnMouseClicked(e -> Gui.maximise());
@@ -110,41 +112,9 @@ public class FrameController implements Initializable {
         TO_CABINET.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/cabinet"));
         TO_NEWS.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/news"));
         TO_FORUM.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://forum.obvilionnetwork.ru"));
-        TO_SETTINGS.setOnMouseClicked(e -> {
-            StyleUtil.createFadeAnimation(MAIN_PANE, 400, 0);
-
-            new Thread(() -> {
-                try {
-                    Thread.sleep(400);
-                } catch (Exception ex) { }
-
-                Platform.runLater(() -> {
-                    MAIN_PANE.setVisible(false);
-                    SETTINGS_PANE.setOpacity(0);
-                    SETTINGS_PANE.setVisible(true);
-                    StyleUtil.createFadeAnimation(SETTINGS_PANE, 400, 1);
-                });
-                Thread.currentThread().interrupt();
-            }).start();
-        });
+        TO_SETTINGS.setOnMouseClicked(e -> Gui.openPane(SETTINGS_PANE));
         TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/rules"));
-        SETTINGS_BACK.setOnMouseClicked(e -> {
-            StyleUtil.createFadeAnimation(SETTINGS_PANE, 400, 0);
-
-            new Thread(() -> {
-                try {
-                    Thread.sleep(400);
-                } catch (Exception ex) { }
-
-                Platform.runLater(() -> {
-                    SETTINGS_PANE.setVisible(false);
-                    MAIN_PANE.setOpacity(0);
-                    MAIN_PANE.setVisible(true);
-                    StyleUtil.createFadeAnimation(MAIN_PANE, 400, 1);
-                });
-                Thread.currentThread().interrupt();
-            }).start();
-        });
+        SETTINGS_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
 
         /* Authorisation */
         AUTH_DESC.setTextFormatter(new TextFormatter<String>((change) -> {
@@ -174,27 +144,7 @@ public class FrameController implements Initializable {
                 AVATAR.setFill(new ImagePattern(avatar));
             NICKNAME.setText(Config.getValue("login"));
 
-            Platform.runLater(() -> {
-                StyleUtil.createFadeAnimation(AUTHORIZATION_PANE, 600, 0);
-            });
-
-            new Thread(() -> {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
-                Platform.runLater(() -> {
-                    ResizeListener.textMarginUpdate();
-
-                    MAIN_PANE.setOpacity(0);
-                    AUTHORIZATION_PANE.setVisible(false);
-                    MAIN_PANE.setVisible(true);
-                    StyleUtil.createFadeAnimation(MAIN_PANE, 500, 1);
-                });
-            }).start();
-
+            Gui.openPane(MAIN_PANE);
             BG.setStyle("-fx-background-image: url(\"" + selectedServerImage + "\");");
         });
 
@@ -225,24 +175,7 @@ public class FrameController implements Initializable {
                 client.run();
             }).start();
 
-            Platform.runLater(() -> {
-                StyleUtil.createFadeAnimation(MAIN_PANE, 600, 0);
-            });
-
-            new Thread(() -> {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
-                Platform.runLater(() -> {
-                    DOWNLOADING_PANE.setOpacity(0);
-                    MAIN_PANE.setVisible(false);
-                    DOWNLOADING_PANE.setVisible(true);
-                    StyleUtil.createFadeAnimation(DOWNLOADING_PANE, 500, 1);
-                });
-            }).start();
+            Gui.openPane(DOWNLOADING_PANE);
         });
 
         int min = Config.getIntValue("minRam");

@@ -69,10 +69,13 @@ public class Loader {
             Config.setValue("password", "");
         }
 
+        Vars.selectedPane = c.AUTHORIZATION_PANE;
+
         /* Auto login */
         if (!Config.getValue("login").equals("") && !Config.getValue("password").equals("")) {
             c.AUTHORIZATION_PANE.setVisible(false);
             c.LOADING_PANE.setVisible(true);
+            Vars.selectedPane = c.LOADING_PANE;
 
             Request r1 = new Request(RequestType.POST, "https://obvilionnetwork.ru/api/auth/login");
             r1.setBody(new JSONObject().put("name", Config.getValue("login")).put("password", Config.getPasswordValue("password")));
@@ -80,47 +83,13 @@ public class Loader {
 
             if (result != null && result.has("token")) {
                 Log.info("Automatic login to account is successful");
+
+                Gui.openPane(c.MAIN_PANE);
                 Platform.runLater(() -> {
-                    StyleUtil.createFadeAnimation(c.LOADING_PANE, 600, 0);
-
-                    new Thread(() -> {
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        Platform.runLater(() -> {
-                            ResizeListener.textMarginUpdate();
-
-                            c.MAIN_PANE.setOpacity(0);
-                            c.LOADING_PANE.setVisible(false);
-                            c.MAIN_PANE.setVisible(true);
-                            StyleUtil.createFadeAnimation(c.MAIN_PANE, 600, 1);
-                        });
-                    }).start();
-
                     c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
                 });
             } else {
-                Platform.runLater(() -> {
-                    StyleUtil.createFadeAnimation(c.LOADING_PANE, 600, 0);
-                });
-
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    Platform.runLater(() -> {
-                        c.AUTHORIZATION_PANE.setOpacity(0);
-                        c.LOADING_PANE.setVisible(false);
-                        c.AUTHORIZATION_PANE.setVisible(true);
-                        StyleUtil.createFadeAnimation(c.AUTHORIZATION_PANE, 600, 1);
-                    });
-                }).start();
+                Gui.openPane(c.AUTHORIZATION_PANE);
             }
         }
 
