@@ -1,5 +1,7 @@
 package ru.obvilion.launcher.client;
 
+import com.sun.javafx.application.PlatformImpl;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -85,23 +87,27 @@ public class Client {
         outputGobbler.start();
 
         Process finalPs = ps;
+
+        Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             if (Config.getBooleanValue("debug")) {
                 Gui.openPane(Vars.frameController.DEBUG_PANE);
             } else {
-                Gui.getStage().hide();
+                Gui.getStage().close();
             }
+        });
 
-            try {
-                exit.set(finalPs.waitFor()); // Ждем когда майн закроется
+        try {
+            exit.set(finalPs.waitFor()); // Ждем когда майн закроется
 
-                errorGobbler.stop();
-                outputGobbler.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            errorGobbler.stop();
+            outputGobbler.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            Log.info("Process closed");
+        Log.info("Process closed");
+        Platform.runLater(() -> {
             if (Config.getBooleanValue("debug")) {
                 // TODO: добавить кнопку выхода из панели дебага
                 Gui.openPane(Vars.frameController.MAIN_PANE);
