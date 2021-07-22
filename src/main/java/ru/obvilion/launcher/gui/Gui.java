@@ -68,12 +68,12 @@ public class Gui extends Application {
         final double width = bounds.getWidth();
 
         double x = width > height ? height * 1.078 : width * 0.8;
-        if (x > stage.getMinWidth()) {
+        if (x < stage.getMinWidth()) {
             x = stage.getMinWidth();
         }
 
         double y = width > height ? height * 0.61 : width * 0.5;
-        if (y > stage.getMinHeight()) {
+        if (y < stage.getMinHeight()) {
             y = stage.getMinHeight();
         }
 
