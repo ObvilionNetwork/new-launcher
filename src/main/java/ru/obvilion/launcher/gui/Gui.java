@@ -1,18 +1,21 @@
 package ru.obvilion.launcher.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.client.Loader;
+import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowResizeUtil;
 
 public class Gui extends Application {
@@ -22,6 +25,7 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Vars.app = this;
         stage = primaryStage;
 
         final ClassLoader loader = getClass().getClassLoader();
@@ -76,6 +80,34 @@ public class Gui extends Application {
             stage.setWidth(x);
             stage.setHeight(y);
         }
+    }
+
+    public static void openPane(Pane newPane) {
+        final Pane p = Vars.selectedPane;
+
+        Platform.runLater(() -> {
+            StyleUtil.createFadeAnimation(p, 400, 0);
+        });
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Vars.selectedPane = newPane;
+            Platform.runLater(() -> {
+                ResizeListener.textMarginUpdate();
+
+                newPane.setOpacity(0);
+                p.setVisible(false);
+                newPane.setVisible(true);
+                StyleUtil.createFadeAnimation(newPane, 400, 1);
+            });
+
+            Thread.currentThread().interrupt();
+        }).start();
     }
 
     public static void load() {
