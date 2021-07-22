@@ -198,6 +198,12 @@
             <Label id="auth_title2" layoutX="${90 * root.width / 1165}" layoutY="${75 * root.height / 660 + 10}" text="НАСТРОЙКИ ЛАУНЧЕРА" />
 
             <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" fx:id="DEBUG_CB" text="Режим отладки" />
+            <Label fx:id="DEBUG_GO" id="title5" layoutX="${890 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" text="Открыть журнал отладки">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Label>
+
             <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${154 * root.height / 660 + 38}" fx:id="AUTOUPDATE_CB" text="Автоматическое обновление лаунчера (его нет)" />
             <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${158 * root.height / 660 + 66}" fx:id="SAVEPASS_CB" text="Запоминать пароль" />
 
