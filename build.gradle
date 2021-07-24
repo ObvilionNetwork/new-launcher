@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9' apply false
 }
@@ -36,4 +38,19 @@ jar {
 
 dependencies {
     implementation 'com.github.ObvilionNetwork:JSONLib:1.0'
+
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        implementation (files('javafx-graphics-11.0.2-win.jar'))
+    }
+
+    if (!Os.isFamily(Os.FAMILY_UNIX)) {
+        implementation (files('javafx-graphics-11.0.2-linux.jar'))
+    }
+
+    if (!Os.isFamily(Os.FAMILY_MAC)) {
+        implementation (files('javafx-graphics-11.0.2-mac.jar'))
+    }
+
+    /* Данная библиотека включена по дефолту в плагине javafx */
+    //implementation (files('javafx-graphics-11.0.2-base.jar'))
 }

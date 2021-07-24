@@ -4,13 +4,10 @@ import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.DualStream;
 import ru.obvilion.launcher.utils.Log;
-import ru.obvilion.launcher.utils.StreamGobbler;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.logging.Logger;
 
 public class ClientLauncherWrapper {
     public static void main(String[] args) {
