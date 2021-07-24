@@ -13,8 +13,12 @@ import ru.obvilion.launcher.utils.StreamGobbler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Client {
     public String name;
@@ -39,11 +43,23 @@ public class Client {
         String cmd;
 
         if (!Vars.useCustomJRE) {
-            cmd = new File(System.getProperty("java.home"), "bin/java")
-                    + (Global.OS.toLowerCase().contains("win") ? ".exe " : " ");
-        } else {
-            cmd = javaFile + " ";
+            javaFile = new File(
+                    System.getProperty("java.home"), "" +
+                    "bin/java" + (Global.OS.toLowerCase().contains("win") ? ".exe" : "")
+            );
         }
+
+        try {
+            Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
+            Files.setPosixFilePermissions(javaFile.toPath(), perms);
+        } catch (UnsupportedOperationException e) {
+            // Ignored
+        } catch (Exception e) {
+            Log.err("Error set posix java file permission:");
+            e.printStackTrace();
+        }
+
+        cmd = javaFile + " ";
 
         cmd += "-Xms" + Config.getValue("minRam") + "m "; // Минимальное кол-во озу
         cmd += "-Xmx" + Config.getValue("maxRam") + "m "; // Максимальное кол-во озу
