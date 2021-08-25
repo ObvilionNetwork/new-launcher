@@ -8,18 +8,22 @@ import java.util.Properties;
 
 public class Config {
     public static Properties config;
+    public static String version = "2.0";
 
     static {
+        init();
+    }
+
+    public static void init() {
         try {
-            if(!Global.LAUNCHER_HOME.isDirectory()) {
+            if (!Global.LAUNCHER_HOME.isDirectory()) {
                 Global.LAUNCHER_HOME.mkdir();
             }
 
             config = new Properties();
-            if(!Global.LAUNCHER_CONFIG.exists()) {
-                if(Global.LAUNCHER_CONFIG.createNewFile()) {
+            if (!Global.LAUNCHER_CONFIG.exists()) {
+                if (Global.LAUNCHER_CONFIG.createNewFile()) {
                     Log.info("Config successfully created");
-                    config.load(new FileInputStream(Global.LAUNCHER_CONFIG));
 
                     config.setProperty("login", "");
                     config.setProperty("password", "");
@@ -34,14 +38,27 @@ public class Config {
                     config.setProperty("javaDir", "");
                     config.setProperty("lastServer", "");
                     config.setProperty("optionalMods", "");
+                    config.setProperty("version", version);
+
+                    OutputStream out = new FileOutputStream(Global.LAUNCHER_CONFIG);
+                    config.store(out, null);
+                    out.close();
+
+                    init();
                 }
             } else {
-                config.load(new FileInputStream(Global.LAUNCHER_CONFIG));
-            }
+                FileInputStream fi = new FileInputStream(Global.LAUNCHER_CONFIG);
+                config.load(fi);
+                fi.close();
 
-            OutputStream out = new FileOutputStream(Global.LAUNCHER_CONFIG);
-            config.store(out, null);
-            out.close();
+                if (!version.equals(config.getProperty("version"))) {
+                    if (Global.LAUNCHER_CONFIG.delete()) {
+                        init();
+                    } else {
+                        Log.err("Unable to remove config file :(");
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,10 +91,20 @@ public class Config {
     }
 
     public static int getIntValue(String name) {
-        return Integer.parseInt(getValue(name));
+        try {
+            return Integer.parseInt(getValue(name));
+        } catch (Exception e) {
+            Log.err(e);
+            return 0;
+        }
     }
 
     public static boolean getBooleanValue(String name) {
-        return Boolean.parseBoolean(getValue(name));
+        try {
+            return Boolean.parseBoolean(getValue(name));
+        } catch (Exception e) {
+            Log.err(e);
+            return false;
+        }
     }
 }
