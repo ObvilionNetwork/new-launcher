@@ -10,7 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import ru.obvilion.json.JSONObject;
@@ -20,9 +22,11 @@ import ru.obvilion.launcher.api.RequestType;
 import ru.obvilion.launcher.client.Client;
 import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.config.Config;
+import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
 
 import java.lang.management.ManagementFactory;
@@ -93,6 +97,9 @@ public class FrameController implements Initializable {
     public Pane DOWNLOADING_PANE;
     public Label DEBUG_BACK;
     public Label DEBUG_GO;
+    public Pane NO_INTERNET;
+    public Pane NO_INTERNET_BG;
+    public Pane BG_TOP;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,12 +127,12 @@ public class FrameController implements Initializable {
             return change;
         }));
         AUTH_BUTTON.setOnMouseClicked(e -> {
-            Request r1 = new Request(RequestType.POST, "https://obvilionnetwork.ru/api/auth/login");
+            Request r1 = new Request(RequestType.POST, Global.API_LINK + "auth/login");
             r1.setBody(new JSONObject().put("name", AUTH_LOGIN.getText()).put("password", AUTH_PASSWORD.getText()));
             JSONObject result = r1.connectAndGetJSON();
 
             if (result == null || !result.has("token")) {
-                //TODO
+                // TODO
                 Log.debug("Invalid user: {0}", AUTH_LOGIN.getText());
                 return;
             }
@@ -137,23 +144,28 @@ public class FrameController implements Initializable {
             Config.setValue("uuid", result.getString("uuid"));
             Config.setValue("login", AUTH_LOGIN.getText());
 
-            Image avatar = new Image("https://obvilionnetwork.ru/api/users/get/" + Config.getValue("login") + "/avatar");
+            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
             if (!avatar.isError())
                 AVATAR.setFill(new ImagePattern(avatar));
             NICKNAME.setText(Config.getValue("login"));
 
             Gui.openPane(MAIN_PANE);
+            StyleUtil.createFadeAnimation(BG_TOP, 600, 0);
             BG.setStyle("-fx-background-image: url(\"" + selectedServerImage + "\");");
         });
 
         /* Auto login */
         AUTH_LOGIN.setText(Config.getValue("login"));
         AUTH_PASSWORD.setText(Config.getPasswordValue("password"));
-        BG.setStyle("-fx-background-image: url(\"images/bg.jpg\");");
+        BG_TOP.setStyle("-fx-background-image: url(\"images/bg.jpg\");");
 
-        Image avatar = new Image("https://obvilionnetwork.ru/api/users/get/" + Config.getValue("login") + "/avatar");
-        if (!avatar.isError())
+        Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
+        if (!avatar.isError()) {
             AVATAR.setFill(new ImagePattern(avatar));
+        } else {
+            Log.err("Error loading user avatar");
+            AVATAR.setFill(Color.valueOf("#192331"));
+        }
         NICKNAME.setText(Config.getValue("login"));
 
         openWebsite(REGISTER, "https://obvilionnetwork.ru/auth/signup");

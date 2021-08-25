@@ -6,10 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -93,9 +95,12 @@ public class Gui extends Application {
     public static void openPane(Pane newPane) {
         final Pane p = Vars.selectedPane;
 
-        Platform.runLater(() -> {
-            StyleUtil.createFadeAnimation(p, 400, 0);
-        });
+        if (p == newPane) {
+            StyleUtil.createFadeAnimation(newPane, 400, 1);
+            return;
+        }
+
+        StyleUtil.createFadeAnimation(p, 400, 0);
 
         new Thread(() -> {
             try {
@@ -111,6 +116,7 @@ public class Gui extends Application {
                 newPane.setOpacity(0);
                 p.setVisible(false);
                 newPane.setVisible(true);
+
                 StyleUtil.createFadeAnimation(newPane, 400, 1);
             });
 

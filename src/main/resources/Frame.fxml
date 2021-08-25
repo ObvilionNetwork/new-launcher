@@ -9,6 +9,7 @@
 <AnchorPane fx:id="root" prefHeight="660" prefWidth="1165" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ru.obvilion.launcher.controllers.FrameController">
     <!-- Background -->
     <Pane fx:id="BG" layoutX="5" layoutY="5" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}" />
+    <Pane fx:id="BG_TOP" id="BG" layoutX="5" layoutY="5" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}" />
     <Pane id="BG_SHADOW" layoutX="5" layoutY="5" opacity="0.75" prefHeight="${root.height - 10}" prefWidth="${root.width - 10}" style="-fx-background-color: #040407" />
     <Label visible="false" style="-fx-text-fill: white; -fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" prefWidth="${root.width - 10}" prefHeight="${root.height - 10}" alignment="CENTER" fx:id="LOADING" text="Загрузка... Это может занять некоторое время. Подождите, пожалуйста."/>
 
@@ -36,7 +37,7 @@
                 <SVGPath content="M16 0.0055542C11.3476 0.0055542 7.5625 3.79062 7.5625 8.44305C7.5625 13.0955 11.3476 16.8806 16 16.8806C20.6524 16.8806 24.4375 13.0955 24.4375 8.44305C24.4375 3.79062 20.6524 0.0055542 16 0.0055542Z M26.4979 22.3927C24.1879 20.0472 21.1256 18.7556 17.875 18.7556H14.125C10.8745 18.7556 7.81212 20.0472 5.50212 22.3927C3.20344 24.7267 1.9375 27.8076 1.9375 31.0681C1.9375 31.5858 2.35725 32.0056 2.875 32.0056H29.125C29.6427 32.0056 30.0625 31.5858 30.0625 31.0681C30.0625 27.8076 28.7966 24.7267 26.4979 22.3927" scaleX="0.6" scaleY="0.6" stroke="WHITE" fill="white" strokeWidth="0.6" />
             </Pane>
 
-            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 63}" prefWidth="273" prefHeight="22" style="-fx-background-color: linear-gradient(rgba(65, 65, 65, 0) 0%, rgba(0, 0, 0, 0.2) 100%); -fx-background-radius: 15 15 0 0;" />
+            <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 75}" prefWidth="273" prefHeight="22" style="-fx-background-color: linear-gradient(rgba(65, 65, 65, 0) 0%, rgba(0, 0, 0, 0.2) 100%); -fx-background-radius: 15 15 0 0;" />
             <PasswordField fx:id="AUTH_PASSWORD" prefWidth="272" layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 68}" promptText="ПАРОЛЬ" alignment="CENTER" />
             <Pane layoutX="${105 * root.width / 1165}" layoutY="${270 * root.height / 660 + 95}" prefWidth="273" prefHeight="1.3" style="-fx-background-color: white" />
             <Pane layoutX="${105 * root.width / 1165 - 10}" layoutY="${270 * root.height / 660 + 65.6}">
@@ -263,6 +264,14 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Label>
+        </Pane>
+
+        <Pane fx:id="NO_INTERNET" layoutY="-150" prefWidth="${root.width - 10}" prefHeight="120">
+            <Pane fx:id="NO_INTERNET_BG" opacity="0.7" style="-fx-background-color: #000000" prefWidth="${NO_INTERNET.width}" prefHeight="${NO_INTERNET.height}" />
+            <Label id="title7" text="НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK" alignment="center" prefWidth="${NO_INTERNET.width}"
+                   prefHeight="${NO_INTERNET.height / 1.4}"/>
+            <Label id="title5" text="Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh"
+                   alignment="center" prefWidth="${NO_INTERNET.width}" prefHeight="${NO_INTERNET.height / 0.7}"/>
         </Pane>
     </Pane>
 

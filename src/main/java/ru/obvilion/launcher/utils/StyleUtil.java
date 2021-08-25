@@ -32,4 +32,23 @@ public class StyleUtil {
 
         animation.play();
     }
+
+    public static void changePosition(Node element, double toX, double toY, int durationAnimation) {
+        final Animation animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(durationAnimation));
+            }
+
+            final float ansLayoutX = (float) element.getLayoutX();
+            final float ansLayoutY = (float) element.getLayoutY();
+            protected void interpolate(double f) {
+                float x = (float) (toX * f + ansLayoutX * (1 - f));
+                float y = (float) (toY * f + ansLayoutY * (1 - f));
+
+                element.setLayoutX(x);
+                element.setLayoutY(y);
+            }
+        };
+        animation.play();
+    }
 }
