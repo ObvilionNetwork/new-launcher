@@ -1,7 +1,5 @@
 package ru.obvilion.launcher.client;
 
-import com.sun.javafx.application.PlatformImpl;
-import javafx.animation.Transition;
 import javafx.application.Platform;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 

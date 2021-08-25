@@ -1,5 +1,6 @@
 package ru.obvilion.launcher.controllers;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -24,6 +25,22 @@ import java.time.Instant;
 public class ServersController {
     FrameController c;
     public void init() {
+        /* Add servers to list */
+        boolean first = true;
+        for (Object obj : Vars.servers) {
+            JSONObject tec = (JSONObject) obj;
+
+            boolean finalFirst = first;
+            Platform.runLater(() -> {
+                c.SERVERS.getChildren().add(Vars.serversController.getServer(tec));
+                if (finalFirst) {
+                    Vars.serversController.setSelectedServer(tec);
+                }
+            });
+
+            first = false;
+        }
+
         c = Vars.frameController;
         Vars.serversController = this;
     }
@@ -52,11 +69,11 @@ public class ServersController {
             }
         }
 
-        String online1 = server.getInt("players") == -1 ? "Выкл" : server.getInt("players") + "/" + server.getInt("maxPlayers");
+        String online1 = server.getInt("online") == -1 ? "Выкл" : server.getInt("online") + "/" + server.getInt("maxOnline");
         c.SELECTED_SERVER_ONLINE.setText(online1);
 
         c.SELECTED_SERVER_ONLINE_ARC.setLength(
-                server.getInt("players") == -1 ? -360 : -360 * server.getInt("players") / server.getInt("maxPlayers")
+                server.getInt("online") == -1 ? -360 : -360 * server.getInt("online") / server.getInt("maxOnline")
         );
 
         try {
@@ -96,7 +113,7 @@ public class ServersController {
         name.setLayoutX(8);
         name.setLayoutY(-2);
 
-        Label online_label = new Label(serv.getInt("players") == -1 ? "Сервер выключен." : "Игроков онлайн:");
+        Label online_label = new Label(serv.getInt("online") == -1 ? "Сервер выключен." : "Игроков онлайн:");
         online_label.setStyle("-fx-font-family: 'Istok Web Regular', sans-serif; -fx-text-fill: #ADAEB2; -fx-font-size: 12.5;");
         online_label.setLayoutX(8);
         online_label.setLayoutY(17);
@@ -105,15 +122,15 @@ public class ServersController {
         statusG.setStrokeWidth(2);
         statusG.setStroke(Paint.valueOf("#414141"));
 
-        Arc status = serv.getInt("players") == -1 ?
+        Arc status = serv.getInt("online") == -1 ?
                 new Arc(135, 16, 16, 16, 90, -360) :
-                new Arc(135, 16, 16, 16, 90, -360 * serv.getInt("players") / serv.getInt("maxPlayers"));
+                new Arc(135, 16, 16, 16, 90, -360 * serv.getInt("online") / serv.getInt("maxOnline"));
         status.setFill(Color.TRANSPARENT);
         status.setStrokeWidth(2);
         status.setStrokeLineCap(StrokeLineCap.ROUND);
         status.setStroke(Color.WHITE);
 
-        String online1 = serv.getInt("players") == -1 ? "Выкл" : serv.getInt("players") + "/" + serv.getInt("maxPlayers");
+        String online1 = serv.getInt("online") == -1 ? "Выкл" : serv.getInt("online") + "/" + serv.getInt("maxOnline");
         Label online = new Label(online1);
         online.setStyle("-fx-font-family: 'Istok Web Bold', sans-serif; -fx-text-fill: white; -fx-font-size: 10.2;");
         online.setLayoutX(119);

@@ -5,6 +5,7 @@ plugins {
 }
 
 apply plugin: 'org.openjfx.javafxplugin'
+
 javafx {
     version = "11"
     modules = ['javafx.controls', 'javafx.fxml']
@@ -17,7 +18,7 @@ repositories {
 
 String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
 group 'ru.obvilion'
-version '0.2.5'
+version '0.2.6'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"

@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Downloader {
     public static String id;
     public static File CLIENT_DIR;
-    static final String api = "https://obvilionnetwork.ru/api/files/";
+    static final String api = Global.API_LINK + "files/";
 
     public static void setClient(String newId) {
         id = newId;
@@ -24,7 +24,7 @@ public class Downloader {
     public static Client load() {
         Log.info("Checking client {0}...", id);
 
-        Request r = new Request("https://obvilionnetwork.ru/api/servers/info");
+        Request r = new Request(Global.API_LINK + "servers/info");
         JSONObject serv = r.connectAndGetJSON();
 
         if (serv == null) {
