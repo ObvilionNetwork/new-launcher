@@ -175,8 +175,8 @@
             <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
             <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
             <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
-            <Label id="wipe_date" layoutX="${152 * root.width / 1165 + 104}" layoutY="${59 * root.height / 660 + 48}" text="Дата вайпа:" />
-            <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 46}" text="01.04.2021" />
+            <Label id="wipe_date" layoutX="${152 * root.width / 1165 + 104}" layoutY="${59 * root.height / 660 + 54}" text="Дата вайпа:" />
+            <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 52}" text="01.04.2021" />
             <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
 
             <Pane fx:id="SERVER_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
@@ -199,7 +199,7 @@
             <Label id="auth_title2" layoutX="${90 * root.width / 1165}" layoutY="${75 * root.height / 660 + 10}" text="НАСТРОЙКИ ЛАУНЧЕРА" />
 
             <CheckBox layoutX="${90 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" fx:id="DEBUG_CB" text="Режим отладки" />
-            <Label fx:id="DEBUG_GO" id="title5" layoutX="${890 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" text="Открыть журнал отладки">
+            <Label fx:id="DEBUG_GO" id="title51" layoutX="${890 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" text="Открыть журнал отладки">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

@@ -118,13 +118,13 @@ public class ServersController {
         online_label.setLayoutX(8);
         online_label.setLayoutY(17);
 
-        Circle statusG = new Circle(135, 16, 16, Paint.valueOf("transparent"));
+        Circle statusG = new Circle(140, 16, 16, Paint.valueOf("transparent"));
         statusG.setStrokeWidth(2);
         statusG.setStroke(Paint.valueOf("#414141"));
 
         Arc status = serv.getInt("online") == -1 ?
-                new Arc(135, 16, 16, 16, 90, -360) :
-                new Arc(135, 16, 16, 16, 90, -360 * serv.getInt("online") / serv.getInt("maxOnline"));
+                new Arc(140, 16, 16, 16, 90, -360) :
+                new Arc(140, 16, 16, 16, 90, -360 * serv.getInt("online") / serv.getInt("maxOnline"));
         status.setFill(Color.TRANSPARENT);
         status.setStrokeWidth(2);
         status.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -133,7 +133,7 @@ public class ServersController {
         String online1 = serv.getInt("online") == -1 ? "Выкл" : serv.getInt("online") + "/" + serv.getInt("maxOnline");
         Label online = new Label(online1);
         online.setStyle("-fx-font-family: 'Istok Web Bold', sans-serif; -fx-text-fill: white; -fx-font-size: 10.2;");
-        online.setLayoutX(119);
+        online.setLayoutX(124);
         online.setLayoutY(8);
         online.setPrefWidth(32);
         online.setAlignment(Pos.CENTER);
@@ -143,7 +143,7 @@ public class ServersController {
         );
         server.setPadding(new Insets(10, 0, 10, 0));
 
-        server.setCursor(Cursor.DEFAULT);
+        server.setCursor(Cursor.HAND);
         server.setOnMouseClicked(event -> {
             setSelectedServer(serv);
         });
