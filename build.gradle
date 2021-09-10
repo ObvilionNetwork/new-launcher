@@ -13,12 +13,13 @@ javafx {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
 String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
 group 'ru.obvilion'
-version '0.2.6'
+version '0.2.7'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
@@ -38,6 +39,7 @@ jar {
 }
 
 dependencies {
+    implementation 'club.minnced:java-discord-rpc:2.0.2'
     implementation 'com.github.ObvilionNetwork:JSONLib:1.0'
 
     if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
