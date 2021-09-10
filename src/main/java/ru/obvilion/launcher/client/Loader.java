@@ -94,6 +94,10 @@ public class Loader {
 
             Log.info("Automatic login to account is successful");
 
+            Config.setValue("token", result.getString("token"));
+            Config.setValue("uuid", result.getString("uuid"));
+            Config.setValue("login", result.getString("name"));
+
             Gui.openPane(c.MAIN_PANE);
             StyleUtil.createFadeAnimation(c.BG_TOP, 600, 0);
 
@@ -119,7 +123,10 @@ public class Loader {
         } else {
             if (result == null) {
                 Log.err("Error during automatic authorization. Attempt to load the servers after 5 seconds...");
+
                 c.NO_INTERNET_BG.setOpacity(0.35);
+                c.NO_INTERNET_TITLE.setText("НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK");
+                c.NO_INTERNET_SUBTITLE.setText("Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh");
 
                 if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
                     StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
@@ -179,6 +186,8 @@ public class Loader {
         } else {
             if (c.NO_INTERNET.getLayoutY() != 0) {
                 c.NO_INTERNET_BG.setOpacity(0.35);
+                c.NO_INTERNET_TITLE.setText("НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK");
+                c.NO_INTERNET_SUBTITLE.setText("Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh");
 
                 if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
                     StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);

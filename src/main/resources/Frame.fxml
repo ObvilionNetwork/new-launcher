@@ -268,9 +268,9 @@
 
         <Pane fx:id="NO_INTERNET" layoutY="-150" prefWidth="${root.width - 10}" prefHeight="120">
             <Pane fx:id="NO_INTERNET_BG" opacity="0.7" style="-fx-background-color: #000000" prefWidth="${NO_INTERNET.width}" prefHeight="${NO_INTERNET.height}" />
-            <Label id="title7" text="НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK" alignment="center" prefWidth="${NO_INTERNET.width}"
+            <Label fx:id="NO_INTERNET_TITLE" id="title7" text="НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK" alignment="center" prefWidth="${NO_INTERNET.width}"
                    prefHeight="${NO_INTERNET.height / 1.4}"/>
-            <Label id="title5" text="Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh"
+            <Label fx:id="NO_INTERNET_SUBTITLE" id="title5" text="Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh"
                    alignment="center" prefWidth="${NO_INTERNET.width}" prefHeight="${NO_INTERNET.height / 0.7}"/>
         </Pane>
     </Pane>

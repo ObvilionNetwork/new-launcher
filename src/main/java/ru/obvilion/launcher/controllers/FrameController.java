@@ -21,6 +21,7 @@ import ru.obvilion.launcher.api.Request;
 import ru.obvilion.launcher.api.RequestType;
 import ru.obvilion.launcher.client.Client;
 import ru.obvilion.launcher.client.Downloader;
+import ru.obvilion.launcher.client.Loader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
@@ -100,6 +101,8 @@ public class FrameController implements Initializable {
     public Pane NO_INTERNET;
     public Pane NO_INTERNET_BG;
     public Pane BG_TOP;
+    public Label NO_INTERNET_TITLE;
+    public Label NO_INTERNET_SUBTITLE;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -131,18 +134,66 @@ public class FrameController implements Initializable {
             r1.setBody(new JSONObject().put("name", AUTH_LOGIN.getText()).put("password", AUTH_PASSWORD.getText()));
             JSONObject result = r1.connectAndGetJSON();
 
-            if (result == null || !result.has("token")) {
-                // TODO
-                Log.debug("Invalid user: {0}", AUTH_LOGIN.getText());
+            if (result == null) {
+                Log.err("Error on connecting to API");
+
+                NO_INTERNET_BG.setOpacity(0.35);
+                NO_INTERNET_TITLE.setText("НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK");
+                NO_INTERNET_SUBTITLE.setText("Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh");
+
+                if (Loader.lastChangedPosition + 1400 < System.currentTimeMillis()) {
+                    StyleUtil.changePosition(NO_INTERNET, 0, 0, 1400);
+                }
+                Loader.lastChangedPosition = System.currentTimeMillis();
+
+                return;
+            }
+
+            if (!result.has("token")) {
+                NO_INTERNET_BG.setOpacity(0.35);
+                NO_INTERNET_TITLE.setText("ОШИБКА АВТОРИЗАЦИИ ПОЛЬЗОВАТЕЛЯ");
+
+                if (result.getString("error").equals("User not found")) {
+                    Log.debug("Invalid user: {0}", AUTH_LOGIN.getText());
+                    NO_INTERNET_SUBTITLE.setText("Данного пользователя не существует. Проверьте правильность введённых данных.");
+                }
+                else if (result.getString("error").equals("Invalid password")) {
+                    Log.debug("Invalid password for user {0}", AUTH_LOGIN.getText());
+                    NO_INTERNET_SUBTITLE.setText("Введён неверный пароль пользователя. Проверьте правильность введённых данных.");
+                }
+                else {
+                    Log.debug("Unknown error {0}", result.getString("error"));
+                    NO_INTERNET_SUBTITLE.setText("Введены неверные данные. Проверьте правильность введённых данных.");
+                }
+
+                if (Loader.lastChangedPosition + 1400 < System.currentTimeMillis()) {
+                    StyleUtil.changePosition(NO_INTERNET, 0, 0, 1400);
+                }
+                Loader.lastChangedPosition = System.currentTimeMillis();
+
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(4000);
+                    } catch (Exception ignored) { }
+
+                    if (Loader.lastChangedPosition + 1400 < System.currentTimeMillis()) {
+                        StyleUtil.changePosition(NO_INTERNET, 0, -150, 1400);
+                    }
+                    Loader.lastChangedPosition = System.currentTimeMillis();
+
+                    Thread.currentThread().interrupt();
+                }).start();
+
                 return;
             }
 
             if (Config.getBooleanValue("savePass")) {
                 Config.setPasswordValue("password", AUTH_PASSWORD.getText());
             }
+
             Config.setValue("token", result.getString("token"));
             Config.setValue("uuid", result.getString("uuid"));
-            Config.setValue("login", AUTH_LOGIN.getText());
+            Config.setValue("login", result.getString("name"));
 
             Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
             if (!avatar.isError())
@@ -152,6 +203,11 @@ public class FrameController implements Initializable {
             Gui.openPane(MAIN_PANE);
             StyleUtil.createFadeAnimation(BG_TOP, 600, 0);
             BG.setStyle("-fx-background-image: url(\"" + selectedServerImage + "\");");
+
+            if (Loader.lastChangedPosition + 1400 < System.currentTimeMillis()) {
+                StyleUtil.changePosition(NO_INTERNET, 0, -150, 2400);
+            }
+            Loader.lastChangedPosition = System.currentTimeMillis();
 
             if (Vars.richPresence != null) {
                 Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
