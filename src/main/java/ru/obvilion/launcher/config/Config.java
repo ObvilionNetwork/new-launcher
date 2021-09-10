@@ -2,6 +2,7 @@ package ru.obvilion.launcher.config;
 
 import ru.obvilion.launcher.utils.Base64;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.utils.SystemStats;
 
 import java.io.*;
 import java.util.Properties;
@@ -32,8 +33,8 @@ public class Config {
                     config.setProperty("fullscreen", "false");
                     config.setProperty("savePass", "true");
                     config.setProperty("debug", "false");
-                    config.setProperty("minRam", "256");
-                    config.setProperty("maxRam", "1024");
+                    config.setProperty("minRam", SystemStats.recommendedMin()+"");
+                    config.setProperty("maxRam", SystemStats.recommendedMax()+"");
                     config.setProperty("clientsDir", "");
                     config.setProperty("javaDir", "");
                     config.setProperty("lastServer", "");
