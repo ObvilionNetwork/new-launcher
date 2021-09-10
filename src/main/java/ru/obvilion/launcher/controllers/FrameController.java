@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -124,12 +125,7 @@ public class FrameController implements Initializable {
         DEBUG_BACK.setOnMouseClicked(e ->  Gui.openPane(MAIN_PANE));
         DEBUG_GO.setOnMouseClicked(e ->  Gui.openPane(DEBUG_PANE));
 
-        /* Authorisation */
-        AUTH_DESC.setTextFormatter(new TextFormatter<String>((change) -> {
-            change.setAnchor(change.getCaretPosition());
-            return change;
-        }));
-        AUTH_BUTTON.setOnMouseClicked(e -> {
+        Runnable authorization = () -> {
             Request r1 = new Request(RequestType.POST, Global.API_LINK + "auth/login");
             r1.setBody(new JSONObject().put("name", AUTH_LOGIN.getText()).put("password", AUTH_PASSWORD.getText()));
             JSONObject result = r1.connectAndGetJSON();
@@ -213,6 +209,23 @@ public class FrameController implements Initializable {
             if (Vars.richPresence != null) {
                 Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
                 Vars.richPresence.updateState("Выбирает сервер");
+            }
+        };
+
+        /* Authorisation */
+        AUTH_DESC.setTextFormatter(new TextFormatter<String>((change) -> {
+            change.setAnchor(change.getCaretPosition());
+            return change;
+        }));
+        AUTH_BUTTON.setOnMouseClicked(e -> authorization.run());
+        AUTH_LOGIN.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                AUTH_PASSWORD.requestFocus();
+            }
+        });
+        AUTH_PASSWORD.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                authorization.run();
             }
         });
 
