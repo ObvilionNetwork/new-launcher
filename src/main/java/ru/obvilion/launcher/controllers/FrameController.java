@@ -152,6 +152,11 @@ public class FrameController implements Initializable {
             Gui.openPane(MAIN_PANE);
             StyleUtil.createFadeAnimation(BG_TOP, 600, 0);
             BG.setStyle("-fx-background-image: url(\"" + selectedServerImage + "\");");
+
+            if (Vars.richPresence != null) {
+                Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
+                Vars.richPresence.updateState("Выбирает сервер");
+            }
         });
 
         /* Auto login */

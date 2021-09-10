@@ -1,6 +1,9 @@
 package ru.obvilion.launcher.client;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -12,9 +15,9 @@ import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.utils.RichPresence;
 import ru.obvilion.launcher.utils.StyleUtil;
-
-import java.lang.management.ManagementFactory;
+import ru.obvilion.launcher.utils.SystemStats;
 
 public class Loader {
     public static long lastChangedPosition = 0;
@@ -40,32 +43,40 @@ public class Loader {
             }, "AutoLoginUpdater").start();
         }
 
+        try {
+            Vars.richPresence = new RichPresence();
+            Log.info("Initialized Discord rich presence.");
+        } catch (Exception e) {
+            Log.warn("Discord rich presence is not initialized.");
+        }
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (Vars.minecraft != null) {
                 Vars.minecraft.destroy();
             }
         }));
 
-
         new Thread(() -> {
             int old = 0;
             while (true) {
-                int tec = (int) (ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024 / 1024);
-                if (old != tec) {
-                    if (Math.max(old, tec) - Math.min(old, tec) > 2)
-                    Log.debug(tec + "mb - heap");
-                }
-
-                if (old != tec || old <= 40) System.gc();
-                old = tec;
-
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                int tec = SystemStats.getUsedMemoryMB();
+
+                if (Math.max(old, tec) - 5 < Math.min(old, tec)) continue;
+
+                System.gc();
+                int afterGC = SystemStats.getUsedMemoryMB();
+
+                Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
+
+                old = afterGC;
             }
-        }).start();
+        }, "GarbageClearing").start();
     }
 
     public static void autoLogin(boolean first) {
@@ -75,7 +86,12 @@ public class Loader {
         r1.setBody(new JSONObject().put("name", Config.getValue("login")).put("password", Config.getPasswordValue("password")));
         JSONObject result = r1.connectAndGetJSON();
 
-        if (result != null && result.has("token")) {
+        if (result != null) {
+            if (!result.has("token")) {
+                Log.info("Automatic login to account is failed. Stopping cycle.");
+                return;
+            }
+
             Log.info("Automatic login to account is successful");
 
             Gui.openPane(c.MAIN_PANE);
@@ -85,6 +101,19 @@ public class Loader {
                 StyleUtil.changePosition(c.NO_INTERNET, 0, -150, 2400);
             }
             lastChangedPosition = System.currentTimeMillis();
+
+            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar", 512, 512, true, false);
+            if (!avatar.isError()) {
+                c.AVATAR.setFill(new ImagePattern(avatar));
+            } else {
+                Log.err("Error loading user avatar");
+                c.AVATAR.setFill(Color.valueOf("#192331"));
+            }
+
+            if (Vars.richPresence != null) {
+                Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
+                Vars.richPresence.updateState("Выбирает сервер");
+            }
 
             Thread.currentThread().interrupt();
         } else {

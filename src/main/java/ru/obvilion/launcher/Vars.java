@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
+import ru.obvilion.launcher.utils.RichPresence;
 
 public class Vars {
     public static Application app;
@@ -15,4 +16,5 @@ public class Vars {
     public static Process minecraft;
     public static int maxRam;
     public static Pane selectedPane;
+    public static RichPresence richPresence;
 }

@@ -120,6 +120,11 @@ public class Client {
             e.printStackTrace();
         }
 
+        if (Vars.richPresence != null) {
+            Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
+            Vars.richPresence.updateState("Выбирает сервер");
+        }
+
         Log.info("Process closed");
         Platform.runLater(() -> {
             if (Config.getBooleanValue("debug")) {

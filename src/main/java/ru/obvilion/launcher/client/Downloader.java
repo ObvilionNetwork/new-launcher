@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
+import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.api.Request;
 import ru.obvilion.launcher.utils.FileUtil;
@@ -23,6 +24,11 @@ public class Downloader {
 
     public static Client load() {
         Log.info("Checking client {0}...", id);
+
+        if (Vars.richPresence != null) {
+            Vars.richPresence.updateDescription("Сервер: " + id);
+            Vars.richPresence.updateState("Скачивает файлы игры");
+        }
 
         Request r = new Request(Global.API_LINK + "servers/info");
         JSONObject serv = r.connectAndGetJSON();
@@ -76,14 +82,22 @@ public class Downloader {
                 se += FileUtil.getSize(new File(CLIENT_DIR, "../../common/java/" + finalServer.getString("javaVersion")));
 
                 float persent = (float) ((double) se / (double) s.get());
-                if (persent > 1) persent = 1;
+                if (persent > 1) {
+                    persent = 1;
+                }
 
                 float finalPersent = persent;
                 Platform.runLater(() -> {
                     Vars.frameController.PERSENT.setText((int) (finalPersent * 100) + "%");
                     Vars.frameController.STATUS_L.setPrefWidth((1040 * finalPersent) * Vars.frameController.root.getWidth() / 1165);
                 });
+
+                if (persent == 1) {
+                    break;
+                }
             }
+
+            Thread.currentThread().interrupt();
         }).start();
 
         downloadModule(server.getJSONObject("core"));
@@ -123,6 +137,11 @@ public class Downloader {
             } else {
                 Log.err("Error downloading Java version {0} for OS {1}({2})!", server.getString("javaVersion"), os, Global.OS);
             }
+        }
+
+        if (Vars.richPresence != null) {
+            Vars.richPresence.updateDescription("На сервере: " + id);
+            Vars.richPresence.updateState("Игрок: " + Config.getValue("login"));
         }
 
         Log.info("Download ended. Starting client...");
