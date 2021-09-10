@@ -2,6 +2,7 @@ package ru.obvilion.launcher.utils;
 
 import javafx.application.Platform;
 import ru.obvilion.launcher.Vars;
+import ru.obvilion.launcher.config.Config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class StreamGobbler extends Thread {
                     e.printStackTrace();
                 }
 
+                if (Config.getBooleanValue("debug"))
                 Platform.runLater(() -> {
                     Vars.frameController.DEBUG_TEXT.appendText(log);
                     log = "";
@@ -43,7 +45,9 @@ public class StreamGobbler extends Thread {
             while ((line = br.readLine()) != null) {
                 Log.custom(type, line);
 
-                log += (line + "\n");
+                if (Config.getBooleanValue("debug")) {
+                    log += (line + "\n");
+                }
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
