@@ -97,6 +97,7 @@ public class Loader {
             Config.setValue("token", result.getString("token"));
             Config.setValue("uuid", result.getString("uuid"));
             Config.setValue("login", result.getString("name"));
+            c.BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
 
             Gui.openPane(c.MAIN_PANE);
             StyleUtil.createFadeAnimation(c.BG_TOP, 600, 0);

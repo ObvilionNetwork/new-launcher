@@ -194,6 +194,7 @@ public class FrameController implements Initializable {
             Config.setValue("token", result.getString("token"));
             Config.setValue("uuid", result.getString("uuid"));
             Config.setValue("login", result.getString("name"));
+            BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
 
             Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
             if (!avatar.isError())
