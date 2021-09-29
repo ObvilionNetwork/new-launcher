@@ -13,7 +13,10 @@ public class ClientLauncherWrapper {
     public static void main(String[] args) {
         try {
             Global.LAUNCHER_HOME.mkdirs();
-            PrintStream out = new PrintStream(new FileOutputStream(new File(Global.LAUNCHER_HOME, "latest.log")));
+            File log_file = new File(Global.LAUNCHER_HOME, "latest.log");
+            log_file.createNewFile();
+
+            PrintStream out = new PrintStream(new FileOutputStream(log_file));
             System.setOut(new DualStream(System.out, out));
             System.setErr(new DualStream(System.err, out));
         } catch (Exception e) {
