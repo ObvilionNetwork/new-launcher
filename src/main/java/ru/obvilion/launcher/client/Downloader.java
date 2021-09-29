@@ -190,7 +190,19 @@ public class Downloader {
 
                 FileUtil.threadedDownload(api + module.getString("link"), target, module.getLong("size"), threads);
             } catch (Exception e) {
-                Log.err("Error downloading file " + module.getString("link"));
+                if (module.has("_try")) {
+                    if (module.getInt("_try") < 3) {
+                        module.put("_try", module.getInt("_try") + 1);
+                        downloadModule(module);
+                        return;
+                    }
+                } else {
+                    module.put("_try", 1);
+                    downloadModule(module);
+                    return;
+                }
+
+                Log.err("Error downloading file after 3 attempts... " + module.getString("link"));
             }
         }
     }
