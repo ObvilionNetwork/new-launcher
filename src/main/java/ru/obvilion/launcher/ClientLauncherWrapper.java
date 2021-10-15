@@ -11,6 +11,11 @@ import java.io.PrintStream;
 
 public class ClientLauncherWrapper {
     public static void main(String[] args) {
+        if (Global.OS.toLowerCase().contains("mac")) {
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.verbose", "true");
+        }
+
         try {
             Global.LAUNCHER_HOME.mkdirs();
             PrintStream out = new PrintStream(new FileOutputStream(new File(Global.LAUNCHER_HOME, "latest.log")));
