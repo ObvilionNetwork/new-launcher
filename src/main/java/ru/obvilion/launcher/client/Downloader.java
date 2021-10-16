@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Downloader {
     public static String id;
     public static File CLIENT_DIR;
+    public static boolean skip = false;
     static final String api = Global.API_LINK + "files/";
 
     public static void setClient(String newId) {
@@ -61,10 +62,32 @@ public class Downloader {
         size += getModulesSize(server.getJSONArray("assets"));
         size += getModulesSize(server.getJSONArray("other"));
 
-        AtomicReference<Long> s = new AtomicReference<>();
-        s.set(size);
+        if (!System.getProperty("java.version").startsWith("1.8")) {
+            JSONObject java = server.getJSONObject("java");
+
+            String os = "";
+            String real = Global.OS.toLowerCase();
+            if (real.contains("win")) {
+                os = "windows";
+            } else if (real.contains("lin")) {
+                os = "linux";
+            } else if (real.contains("nix")) {
+                os = "linux";
+            } else if (real.contains("aix")) {
+                os = "linux";
+            } else if (real.contains("mac")) {
+                os = "macos";
+            }
+
+            os += System.getProperty("sun.arch.data.model");
+
+            if (java.has(os)) {
+                size += getModulesSize(java.getJSONArray(os));
+            }
+        }
 
         JSONObject finalServer = server;
+        long finalSize = size;
         new Thread(() -> {
             // TODO: показывать скорость загрузки
             while (true) {
@@ -74,14 +97,17 @@ public class Downloader {
                     e.printStackTrace();
                 }
 
-                // TODO: фильтр лишних файлов
-                long se = FileUtil.getSize(CLIENT_DIR);
+                long se = FileUtil.getSize(new File(CLIENT_DIR, "mods"));
+                se += FileUtil.getSize(new File(CLIENT_DIR, "config"));
+                se += FileUtil.getSize(new File(CLIENT_DIR, "natives"));
+                se += FileUtil.getSize(new File(CLIENT_DIR, "libraries"));
+                se += FileUtil.getSize(new File(CLIENT_DIR, finalServer.getJSONObject("core").getString("path")));
                 se += FileUtil.getSize(new File(CLIENT_DIR, "../assets/" + finalServer.getString("version")));
 
                 if (!System.getProperty("java.version").startsWith("1.8"))
                 se += FileUtil.getSize(new File(CLIENT_DIR, "../../common/java/" + finalServer.getString("javaVersion")));
 
-                float persent = (float) ((double) se / (double) s.get());
+                float persent = (float) ((double) se / (double) finalSize);
                 if (persent > 1) {
                     persent = 1;
                 }
@@ -104,8 +130,7 @@ public class Downloader {
         downloadAllModules(server.getJSONArray("libraries"));
         downloadAllModules(server.getJSONArray("natives"));
         downloadAllModules(server.getJSONArray("mods"));
-        downloadAllModules(server.getJSONArray("assets"));
-        downloadAllModules(server.getJSONArray("other"));
+        downloadAllModules(server.getJSONArray("other"), true);
 
         if (!System.getProperty("java.version").startsWith("1.8")) {
             JSONObject java = server.getJSONObject("java");
@@ -131,18 +156,22 @@ public class Downloader {
 
                 Vars.useCustomJRE = true;
                 downloadAllModules(java.getJSONArray(os));
-
-                size += getModulesSize(java.getJSONArray(os));
-                s.set(size);
             } else {
                 Log.err("Error downloading Java version {0} for OS {1}({2})!", server.getString("javaVersion"), os, Global.OS);
             }
         }
 
+        Platform.runLater(() -> {
+            Vars.frameController.SKIP.setVisible(true);
+        });
+        downloadAllModules(server.getJSONArray("assets"));
+
         if (Vars.richPresence != null) {
             Vars.richPresence.updateDescription("На сервере: " + id);
             Vars.richPresence.updateState("Игрок: " + Config.getValue("login"));
         }
+
+        skip = false;
 
         Log.info("Download ended. Starting client...");
         return new Client(server);
@@ -159,6 +188,10 @@ public class Downloader {
     }
 
     private static void downloadModule(JSONObject module) {
+        downloadModule(module, false);
+    }
+
+    private static void downloadModule(JSONObject module, boolean ignore) {
         String path = module.getString("path").replace("../../common/java", "../java");
         File target = new File(CLIENT_DIR, path);
 
@@ -171,7 +204,7 @@ public class Downloader {
             temp.mkdir();
         }
 
-        if (FileUtil.getSize(target) != module.getLong("size")) {
+        if (!ignore && FileUtil.getSize(target) != module.getLong("size")) {
             try {
                 Log.debug("Downloading file {0} ({1}KB)", module.getString("link"), module.getLong("size") / 1024 + "");
 
@@ -208,9 +241,15 @@ public class Downloader {
     }
 
     private static void downloadAllModules(JSONArray modules) {
+        downloadAllModules(modules, false);
+    }
+
+    private static void downloadAllModules(JSONArray modules, boolean ignore) {
         for (Object m : modules) {
+            if (skip) break;
+
             JSONObject module = (JSONObject) m;
-            downloadModule(module);
+            downloadModule(module, ignore);
         }
     }
 }
