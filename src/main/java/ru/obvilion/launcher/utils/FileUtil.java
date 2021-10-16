@@ -5,9 +5,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -29,6 +29,8 @@ public class FileUtil {
         final Range range = new Range(0, size, threads_count);
         final List< Thread > threadList = new ArrayList<>();
         final String path = target.getPath();
+
+        AtomicReference<Exception> error = new AtomicReference<>(null);
 
         for (int i = 0; i < threads_count; i++) {
             final int diap_i = i;
@@ -58,7 +60,7 @@ public class FileUtil {
                     }
                     randomAccessFile.close();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    error.set(ex);
                 }
             });
 
@@ -71,6 +73,10 @@ public class FileUtil {
 
         for (Thread thread : threadList) {
             thread.join();
+        }
+
+        if (error.get() != null) {
+            throw error.get();
         }
     }
 
