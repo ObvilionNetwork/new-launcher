@@ -236,9 +236,9 @@
             <TextArea style="-fx-font-size: 17.5; -fx-background-color: #ffffff20;" id="auth_desc" editable="false" layoutX="${58 * root.width / 1165}" layoutY="${165 * root.height / 660 + 50}" pickOnBounds="false" prefWidth="${490 * root.width / 1165}" prefHeight="${250 * root.height / 660}" wrapText="true" text="На сервере вы сможете окунуться в мир игры Minecraft и создать любое строение, а также открыть доступ к различным модам. Мы создали сервер для того, чтобы каждый игрок чувствовал себя комфортно. Качественные сборки, оптимизированные сервера, нет ограничений механизмов донатом, и это всё для вас! " />
             <Label id="title3" layoutY="${160 * root.height / 660 + 10}" layoutX="${root.width - 10 - 58 * root.width / 1165 - 118}" text="НОВОСТИ" />
             <Pane prefHeight="${110 * root.height / 660}" style="-fx-background-color: #ffffff20;" layoutX="${root.width - 10 - 58 * root.width / 1165 - 390 * root.width / 1165}" layoutY="${165 * root.height / 660 + 50}">
-                <TextArea style="-fx-font-size: 17.5;" id="auth_desc" editable="false" pickOnBounds="false" prefWidth="${390 * root.width / 1165}" prefHeight="${80 * root.height / 660}" wrapText="true" text="Новое обновление лаунчера 2.6 уже здесь!" />
+                <TextArea style="-fx-font-size: 17.5;" id="auth_desc" editable="false" pickOnBounds="false" prefWidth="${390 * root.width / 1165}" prefHeight="${80 * root.height / 660}" wrapText="true" text="Новое обновление лаунчера 2.8 уже здесь!" />
                 <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1_GO" layoutX="14" text="Перейти >"/>
-                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1" layoutX="${390 * root.width / 1165 - 14 - INFO_1.width}" text="17.07.21 в 10:00"/>
+                <Label id="newsInfo" layoutY="${90 * root.height / 660 - 7}" fx:id="INFO_1" layoutX="${390 * root.width / 1165 - 14 - INFO_1.width}" text="16.10.21 в 23:00"/>
             </Pane>
 
             <Pane prefHeight="${110 * root.height / 660}" style="-fx-background-color: #ffffff20;" layoutX="${root.width - 10 - 58 * root.width / 1165 - 390 * root.width / 1165}" layoutY="${305 * root.height / 660 + 50}">
