@@ -1,6 +1,9 @@
 package ru.obvilion.launcher.client;
 
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.application.Platform;
+import javafx.util.Duration;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
@@ -90,6 +93,10 @@ public class Downloader {
         long finalSize = size;
         new Thread(() -> {
             // TODO: показывать скорость загрузки
+            long old_size = 0;
+            float old_speed = 0;
+            int index = -1;
+
             while (true) {
                 try {
                     Thread.sleep(100);
@@ -106,6 +113,33 @@ public class Downloader {
 
                 if (!System.getProperty("java.version").startsWith("1.8"))
                 se += FileUtil.getSize(new File(CLIENT_DIR, "../../common/java/" + finalServer.getString("javaVersion")));
+
+                if (index == -1) {
+                    old_speed = 0;
+                    old_size = se;
+                    index++;
+                }
+
+                index++;
+                if (index >= 5) {
+                    float finalOld_speed = old_speed;
+                    old_speed = (se - old_size) * 2 / 1024f / 1024;
+                    old_size = se;
+                    float finalTec_speed = old_speed;
+
+                    final Animation animation = new Transition() {
+                        {
+                            setCycleDuration(Duration.millis(800));
+                        }
+
+                        protected void interpolate(double f) {
+                            Vars.frameController.SPEED.setText((int) ((finalOld_speed + (finalTec_speed - finalOld_speed) * f) * 10) / 10f + " МБ/C");
+                        }
+                    };
+                    animation.play();
+
+                    index = 0;
+                }
 
                 float persent = (float) ((double) se / (double) finalSize);
                 if (persent > 1) {

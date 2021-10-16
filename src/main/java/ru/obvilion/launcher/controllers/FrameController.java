@@ -107,6 +107,7 @@ public class FrameController implements Initializable {
     public Label NO_INTERNET_TITLE;
     public Label NO_INTERNET_SUBTITLE;
     public Label SKIP;
+    public Label SPEED;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
