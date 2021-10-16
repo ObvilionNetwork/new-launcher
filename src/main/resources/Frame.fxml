@@ -248,9 +248,11 @@
             </Pane>
 
             <Label fx:id="PERSENT" id="title4" layoutY="${590 * root.height / 660 - 39}" prefWidth="${root.width - 10}" alignment="CENTER" text="15%" />
-            <Label fx:id="STATUS" id="title5" layoutY="${597 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER" text="Загрузка файла: /mods/ClientFixer-1.12.2-1.9.jar" />
+            <Label fx:id="STATUS" id="title5" layoutY="${597 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER" text="Ожидание ответа..." />
             <Pane layoutY="${590 * root.height / 660}" layoutX="${54 * root.width / 1165}" prefHeight="${3 * root.height / 660 + 2}" prefWidth="${1040 * root.width / 1165}" style="-fx-background-color: #ffffff20;" />
             <Pane fx:id="STATUS_L" layoutY="${590 * root.height / 660}" layoutX="${54 * root.width / 1165}" prefHeight="${3 * root.height / 660 + 2}" prefWidth="0" style="-fx-background-color: #ffffffaa;" />
+
+            <Label fx:id="SKIP" id="title4" layoutX="${950 * root.width / 1165}" layoutY="${595 * root.height / 660}" text="Пропустить" visible="false" />
         </Pane>
 
         <Pane fx:id="DEBUG_PANE" visible="false">

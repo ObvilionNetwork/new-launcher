@@ -1,8 +1,10 @@
 package ru.obvilion.launcher.controllers;
 
 import com.sun.management.OperatingSystemMXBean;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -104,6 +106,7 @@ public class FrameController implements Initializable {
     public Pane BG_TOP;
     public Label NO_INTERNET_TITLE;
     public Label NO_INTERNET_SUBTITLE;
+    public Label SKIP;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,8 +125,14 @@ public class FrameController implements Initializable {
         TO_SETTINGS.setOnMouseClicked(e -> Gui.openPane(SETTINGS_PANE));
         TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/rules"));
         SETTINGS_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
-        DEBUG_BACK.setOnMouseClicked(e ->  Gui.openPane(MAIN_PANE));
-        DEBUG_GO.setOnMouseClicked(e ->  Gui.openPane(DEBUG_PANE));
+        DEBUG_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
+        DEBUG_GO.setOnMouseClicked(e -> Gui.openPane(DEBUG_PANE));
+
+        SKIP.setCursor(Cursor.HAND);
+        SKIP.setOnMouseClicked(e -> {
+            Downloader.skip = true;
+            Vars.frameController.STATUS.setText("Досрочный запуск клиента...");
+        });
 
         Runnable authorization = () -> {
             Request r1 = new Request(RequestType.POST, Global.API_LINK + "auth/login");
