@@ -60,14 +60,14 @@ public class Loader {
             int old = 0;
             while (true) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(1100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 int tec = SystemStats.getUsedMemoryMB();
 
-                if (Math.max(old, tec) - 5 < Math.min(old, tec)) continue;
+                if (Math.max(old, tec) - 10 < Math.min(old, tec)) continue;
 
                 System.gc();
                 int afterGC = SystemStats.getUsedMemoryMB();

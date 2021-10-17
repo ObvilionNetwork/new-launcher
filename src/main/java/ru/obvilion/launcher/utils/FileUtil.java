@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -169,5 +170,23 @@ public class FileUtil {
         }
 
         dir.delete();
+    }
+
+    public static ArrayList<File> listFiles(File dir, boolean ignore_sub) {
+        ArrayList<File> files = new ArrayList<>();
+        if (dir.isDirectory()) {
+            if (ignore_sub) {
+                files.addAll(Arrays.asList(dir.listFiles()));
+                return files;
+            }
+
+            for (File f : dir.listFiles()) {
+                files.addAll(listFiles(f, false));
+            }
+        } else {
+            files.add(dir);
+        }
+
+        return files;
     }
 }

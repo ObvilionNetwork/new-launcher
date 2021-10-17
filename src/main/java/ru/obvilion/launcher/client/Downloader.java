@@ -161,9 +161,16 @@ public class Downloader {
         }).start();
 
         downloadModule(server.getJSONObject("core"));
+
+        checkFiles(server.getJSONArray("libraries"), new File(CLIENT_DIR, "libraries"), false);
         downloadAllModules(server.getJSONArray("libraries"));
+
+        checkFiles(server.getJSONArray("natives"), new File(CLIENT_DIR, "natives"), false);
         downloadAllModules(server.getJSONArray("natives"));
+
+        checkFiles(server.getJSONArray("mods"), new File(CLIENT_DIR, "mods"), true);
         downloadAllModules(server.getJSONArray("mods"));
+
         downloadAllModules(server.getJSONArray("other"), true);
 
         if (!System.getProperty("java.version").startsWith("1.8")) {
@@ -206,6 +213,29 @@ public class Downloader {
         }
 
         skip = false;
+
+        new Thread(() -> {
+            int i = 0;
+            while (i <= 3) {
+                i++;
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Log.info("Rechecking files (" + i + ")...");
+                checkFiles(finalServer.getJSONArray("libraries"), new File(CLIENT_DIR, "libraries"), false);
+                checkFiles(finalServer.getJSONArray("natives"), new File(CLIENT_DIR, "natives"), false);
+                checkFiles(finalServer.getJSONArray("mods"), new File(CLIENT_DIR, "mods"), true);
+            }
+        }).start();
+
+        Log.info("Rechecking files...");
+        checkFiles(server.getJSONArray("libraries"), new File(CLIENT_DIR, "libraries"), false);
+        checkFiles(server.getJSONArray("natives"), new File(CLIENT_DIR, "natives"), false);
+        checkFiles(server.getJSONArray("mods"), new File(CLIENT_DIR, "mods"), true);
 
         Log.info("Download ended. Starting client...");
         return new Client(server);
@@ -285,5 +315,27 @@ public class Downloader {
             JSONObject module = (JSONObject) m;
             downloadModule(module, ignore);
         }
+    }
+
+    private static void checkFiles(JSONArray modules, File dir, boolean ignore_sub) {
+        FileUtil.listFiles(dir, ignore_sub).forEach(file -> {
+            if (file.isDirectory()) {
+                return;
+            }
+
+            boolean ok = false;
+            for (Object obj : modules) {
+                JSONObject object = (JSONObject) obj;
+                if (file.equals(new File(CLIENT_DIR, object.getString("path")))) {
+                    ok = true;
+                    break;
+                }
+            }
+
+            if (!ok) {
+                Log.warn("FILE " + file.getName() + " DELETED");
+                file.delete();
+            }
+        });
     }
 }
