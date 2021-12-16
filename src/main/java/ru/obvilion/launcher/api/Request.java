@@ -2,7 +2,6 @@ package ru.obvilion.launcher.api;
 
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
-import ru.obvilion.launcher.utils.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -11,7 +10,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 

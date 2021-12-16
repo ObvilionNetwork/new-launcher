@@ -119,12 +119,12 @@ public class FrameController implements Initializable {
         HIDE_BUTTON.setOnMouseClicked(e -> Gui.getStage().setIconified(true));
 
         /* Menu buttons */
-        TO_SITE.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru"));
-        TO_CABINET.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/cabinet"));
-        TO_NEWS.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/news"));
-        TO_FORUM.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://forum.obvilionnetwork.ru"));
+        TO_SITE.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilion.ru"));
+        TO_CABINET.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilion.ru/cabinet"));
+        TO_NEWS.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilion.ru/news"));
+        TO_FORUM.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://forum.obvilion.ru"));
         TO_SETTINGS.setOnMouseClicked(e -> Gui.openPane(SETTINGS_PANE));
-        TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilionnetwork.ru/rules"));
+        TO_RULES.setOnMouseClicked(e -> DesktopUtil.openWebpage("https://obvilion.ru/rules"));
         SETTINGS_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
         DEBUG_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
         DEBUG_GO.setOnMouseClicked(e -> Gui.openPane(DEBUG_PANE));
@@ -253,8 +253,8 @@ public class FrameController implements Initializable {
         }
         NICKNAME.setText(Config.getValue("login"));
 
-        openWebsite(REGISTER, "https://obvilionnetwork.ru/auth/signup");
-        openWebsite(RESTORE_PASSWORD, "https://obvilionnetwork.ru/auth/restore");
+        openWebsite(REGISTER, "https://obvilion.ru/auth/signup");
+        openWebsite(RESTORE_PASSWORD, "https://obvilion.ru/auth/restore");
         WindowMoveUtil.addMoveListener(TOP_BAR);
 
         /* Main */
