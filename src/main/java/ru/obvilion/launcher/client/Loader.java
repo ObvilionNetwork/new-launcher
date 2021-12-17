@@ -19,6 +19,8 @@ import ru.obvilion.launcher.utils.RichPresence;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.SystemStats;
 
+import java.util.*;
+
 public class Loader {
     public static long lastChangedPosition = 0;
 
@@ -89,6 +91,7 @@ public class Loader {
         if (result != null) {
             if (!result.has("token")) {
                 Log.info("Automatic login to account is failed. Stopping cycle.");
+                Platform.runLater(() -> Gui.openPane(c.AUTHORIZATION_PANE));
                 return;
             }
 
@@ -97,7 +100,10 @@ public class Loader {
             Config.setValue("token", result.getString("token"));
             Config.setValue("uuid", result.getString("uuid"));
             Config.setValue("login", result.getString("name"));
-            c.BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
+
+            Platform.runLater(() -> {
+                c.BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
+            });
 
             Gui.openPane(c.MAIN_PANE);
             StyleUtil.createFadeAnimation(c.BG_TOP, 600, 0);
@@ -136,9 +142,7 @@ public class Loader {
             }
 
             if (first) {
-                Platform.runLater(() -> {
-                    Gui.openPane(c.AUTHORIZATION_PANE);
-                });
+                Platform.runLater(() -> Gui.openPane(c.AUTHORIZATION_PANE));
             }
 
             try {
@@ -161,15 +165,29 @@ public class Loader {
             JSONArray temp = new JSONArray();
 
             Log.debug("Sorting servers... Count: " + Vars.servers.length());
+
+            int index = 0;
+            Map<Integer, String> _do = new HashMap<>();
             for (Object obj : Vars.servers) {
                 JSONObject tec = (JSONObject) obj;
 
                 if (tec.getString("type").equalsIgnoreCase("minecraft")) {
                     Log.debug("+ Server " + tec.getString("name"));
-                    temp.put(tec);
+                    _do.put(index, tec.getString("name"));
                 }
+
+                index++;
             }
+
+            List<Map.Entry<Integer, String>> entries = new ArrayList<>(_do.entrySet());
+            entries.sort(Map.Entry.comparingByValue());
+
+            for (Map.Entry<Integer, String> entry : entries) {
+                temp.put(Vars.servers.getJSONObject(entry.getKey()));
+            }
+
             Vars.servers = temp;
+
             Log.info("Loaded servers: " + Vars.servers.length());
 
             if (Vars.serversController == null) {
