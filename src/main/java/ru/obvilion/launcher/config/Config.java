@@ -91,6 +91,14 @@ public class Config {
         return Base64.decrypt(config.getProperty(name), "ljXocw9WGiwRxn8oIrXn3HfOvEInrOy");
     }
 
+    public static int getIntValue(String name, int def) {
+        try {
+            return Integer.parseInt(getValue(name));
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
     public static int getIntValue(String name) {
         try {
             return Integer.parseInt(getValue(name));

@@ -15,6 +15,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
+import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
 
@@ -25,24 +26,38 @@ import java.time.Instant;
 public class ServersController {
     FrameController c;
     public void init() {
+
         /* Add servers to list */
-        boolean first = true;
+        int selected = Config.getIntValue("last_server", -1);
+        boolean is_first = true;
+        JSONObject selected_server = null;
+
         for (Object obj : Vars.servers) {
             JSONObject tec = (JSONObject) obj;
+            
+            if (is_first) {
+                selected_server = tec;
+                is_first = false;
+            }
 
-            boolean finalFirst = first;
+            if (selected != -1) {
+                if (tec.getInt("id") == selected) {
+                    selected_server = tec;
+                }
+            }
+
             Platform.runLater(() -> {
                 c.SERVERS.getChildren().add(Vars.serversController.getServer(tec));
-                if (finalFirst) {
-                    Vars.serversController.setSelectedServer(tec);
-                }
             });
-
-            first = false;
         }
 
         c = Vars.frameController;
         Vars.serversController = this;
+
+        JSONObject finalSelected_server = selected_server;
+        Platform.runLater(() -> {
+            setSelectedServer(finalSelected_server);
+        });
     }
 
     public void setSelectedServer(JSONObject server) {
@@ -81,6 +96,7 @@ public class ServersController {
             p.getChildren().get(1).setVisible(true);
         } catch (Exception e) {
             Log.err("Error loading main server");
+            throw e;
         }
 
         Text t = (Text) c.SERVER_DESC.lookup(".text");
@@ -145,6 +161,7 @@ public class ServersController {
 
         server.setCursor(Cursor.HAND);
         server.setOnMouseClicked(event -> {
+            Config.setValue("last_server", serv.getInt("id") + "");
             setSelectedServer(serv);
         });
 
