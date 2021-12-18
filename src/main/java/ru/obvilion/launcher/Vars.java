@@ -3,6 +3,7 @@ package ru.obvilion.launcher;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
 import ru.obvilion.json.JSONArray;
+import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.utils.RichPresence;
@@ -17,4 +18,5 @@ public class Vars {
     public static int maxRam;
     public static Pane selectedPane;
     public static RichPresence richPresence;
+    public static JSONObject selectedServer;
 }

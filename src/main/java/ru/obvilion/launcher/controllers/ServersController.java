@@ -61,6 +61,8 @@ public class ServersController {
     }
 
     public void setSelectedServer(JSONObject server) {
+        Vars.selectedServer = server;
+
         c.SELECTED_SERVER_NAME.setText(server.getString("name"));
 
         c.selectedServerImage = server.getString("image");
