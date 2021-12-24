@@ -30,8 +30,9 @@ public class Downloader {
         Log.info("Checking client {0}...", id);
 
         if (Vars.richPresence != null) {
-            Vars.richPresence.updateDescription("Сервер " + id);
-            Vars.richPresence.updateState("Скачивает файлы игры");
+            Vars.richPresence.updateState("Сервер " + id);
+            Vars.richPresence.updateDescription("Скачивает файлы игры");
+            Vars.richPresence.updateInvite();
         }
 
         Request r = new Request(Global.API_LINK + "servers/info");
@@ -208,8 +209,9 @@ public class Downloader {
         downloadAllModules(server.getJSONArray("assets"));
 
         if (Vars.richPresence != null) {
-            Vars.richPresence.updateDescription("Сервер " + id);
-            Vars.richPresence.updateState("Игрок " + Config.getValue("login"));
+            Vars.richPresence.updateState("Сервер " + id);
+            Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
+            Vars.richPresence.updateInvite();
         }
 
         skip = false;

@@ -123,6 +123,7 @@ public class Client {
         if (Vars.richPresence != null) {
             Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
             Vars.richPresence.updateState("Выбирает сервер");
+            Vars.richPresence.disableInvite();
         }
 
         Log.info("Process closed");

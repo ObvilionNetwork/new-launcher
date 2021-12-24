@@ -219,6 +219,7 @@ public class FrameController implements Initializable {
             if (Vars.richPresence != null) {
                 Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
                 Vars.richPresence.updateState("Выбирает сервер");
+                Vars.richPresence.disableInvite();
             }
         };
 

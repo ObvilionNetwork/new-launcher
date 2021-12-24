@@ -14,10 +14,7 @@ import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.gui.Gui;
-import ru.obvilion.launcher.utils.Log;
-import ru.obvilion.launcher.utils.RichPresence;
-import ru.obvilion.launcher.utils.StyleUtil;
-import ru.obvilion.launcher.utils.SystemStats;
+import ru.obvilion.launcher.utils.*;
 
 import java.util.*;
 
@@ -49,6 +46,7 @@ public class Loader {
             Vars.richPresence = new RichPresence();
             Log.info("Initialized Discord rich presence.");
         } catch (Exception e) {
+            e.printStackTrace();
             Log.warn("Discord rich presence is not initialized.");
         }
 
@@ -62,7 +60,7 @@ public class Loader {
             int old = 0;
             while (true) {
                 try {
-                    Thread.sleep(1100);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -124,6 +122,7 @@ public class Loader {
             if (Vars.richPresence != null) {
                 Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
                 Vars.richPresence.updateState("Выбирает сервер");
+                Vars.richPresence.disableInvite();
             }
 
             Thread.currentThread().interrupt();
