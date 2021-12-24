@@ -66,7 +66,8 @@ public class RichPresence {
             });
         };
         handlers.joinRequest = request -> {
-
+            Log.info("Discord RPC join: " + request.userId);
+            lib.Discord_Respond(request.userId, 1);
         };
         handlers.errored = (errorCode, message) ->
                 Log.err("Discord RPC error: {0} - {1}", errorCode + "", message);
@@ -88,6 +89,11 @@ public class RichPresence {
 
         updateTimestamp();
         render();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            lib.Discord_Shutdown();
+            Thread.currentThread().interrupt();
+        }));
     }
 
     public void disableInvite() {
