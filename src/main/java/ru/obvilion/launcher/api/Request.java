@@ -3,11 +3,11 @@ package ru.obvilion.launcher.api;
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -56,6 +56,7 @@ public class Request {
         try {
             return new JSONObject(json);
         } catch (JSONException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -63,7 +64,7 @@ public class Request {
     public String connect() {
         try {
             URL obj = new URL(this.link);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
 
             connection.setRequestMethod(this.requestType.toString());
 
@@ -78,23 +79,20 @@ public class Request {
 
             return response.toString();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     private String createGetRequest() {
-        try {
-            return connect();
-        } catch (Exception ex) {
-            return null;
-        }
+        return connect();
     }
 
     public String createPostRequest() {
         try {
             URL url = new URL(link);
             URLConnection con = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection) con;
+            HttpsURLConnection http = (HttpsURLConnection) con;
             http.setRequestMethod("POST");
             http.setDoOutput(true);
 
@@ -122,6 +120,7 @@ public class Request {
 
             return response.toString();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
