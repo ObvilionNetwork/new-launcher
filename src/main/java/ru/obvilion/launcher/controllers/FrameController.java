@@ -108,6 +108,7 @@ public class FrameController implements Initializable {
     public Label NO_INTERNET_SUBTITLE;
     public Label SKIP;
     public Label SPEED;
+    public Label SELECTED_SERVER_VERSION;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -202,7 +203,7 @@ public class FrameController implements Initializable {
             Config.setValue("login", result.getString("name"));
             BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
 
-            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
+            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar", 512, 512, true, false);
             if (!avatar.isError())
                 AVATAR.setFill(new ImagePattern(avatar));
             NICKNAME.setText(Config.getValue("login"));
@@ -326,5 +327,9 @@ public class FrameController implements Initializable {
 
     public static void openWebsite(Node node, String url) {
         node.setOnMouseClicked(event -> DesktopUtil.openWebpage(url));
+    }
+
+    public static void onHover(Node node) {
+
     }
 }
