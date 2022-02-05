@@ -20,7 +20,7 @@ public class Downloader {
     public static String id;
     public static File CLIENT_DIR;
     public static boolean skip = false;
-    static final String api = Global.API_LINK + "files/";
+    static final String api = Global.API_LINK + "files/?path=";
 
     public static void setClient(String newId) {
         id = newId;
@@ -270,7 +270,9 @@ public class Downloader {
             temp.mkdir();
         }
 
-        if (!ignore && FileUtil.getSize(target) != module.getLong("size")) {
+        if (ignore && target.exists()) return;
+
+        if (FileUtil.getSize(target) != module.getLong("size")) {
             try {
                 Log.debug("Downloading file {0} ({1}KB)", module.getString("link"), module.getLong("size") / 1024 + "");
 
@@ -287,7 +289,7 @@ public class Downloader {
                     threads = 1;
                 }
 
-                FileUtil.threadedDownload(api + module.getString("link"), target, module.getLong("size"), threads);
+                FileUtil.threadedDownload(api + module.getString("link").replaceAll(" ", "%20"), target, module.getLong("size"), threads);
             } catch (Exception e) {
                 if (module.has("_try")) {
                     if (module.getInt("_try") < 3) {
