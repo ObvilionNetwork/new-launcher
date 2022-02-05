@@ -3,11 +3,11 @@ package ru.obvilion.launcher.api;
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -64,7 +64,7 @@ public class Request {
     public String connect() {
         try {
             URL obj = new URL(this.link);
-            HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
 
             connection.setRequestMethod(this.requestType.toString());
 
@@ -92,7 +92,7 @@ public class Request {
         try {
             URL url = new URL(link);
             URLConnection con = url.openConnection();
-            HttpsURLConnection http = (HttpsURLConnection) con;
+            HttpURLConnection http = (HttpURLConnection) con;
             http.setRequestMethod("POST");
             http.setDoOutput(true);
 
