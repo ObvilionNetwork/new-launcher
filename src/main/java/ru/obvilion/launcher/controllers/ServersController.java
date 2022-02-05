@@ -5,7 +5,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -64,6 +66,7 @@ public class ServersController {
         Vars.selectedServer = server;
 
         c.SELECTED_SERVER_NAME.setText(server.getString("name"));
+        c.SELECTED_SERVER_VERSION.setText(server.getString("version"));
 
         c.selectedServerImage = server.getString("image");
         c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
@@ -131,18 +134,25 @@ public class ServersController {
         name.setLayoutX(8);
         name.setLayoutY(-2);
 
+        Label version = new Label(serv.getString("version"));
+        version.setStyle("-fx-font-family: 'Istok Web Regular', sans-serif; -fx-text-fill: #bbbbbb; -fx-font-size: 13.5;");
+        version.setLayoutY(-1);
+        Platform.runLater(() -> {
+            version.setLayoutX(name.getWidth() + 15);
+        });
+
         Label online_label = new Label(serv.getInt("online") == -1 ? "Сервер выключен." : "Игроков онлайн:");
         online_label.setStyle("-fx-font-family: 'Istok Web Regular', sans-serif; -fx-text-fill: #ADAEB2; -fx-font-size: 12.5;");
         online_label.setLayoutX(8);
         online_label.setLayoutY(17);
 
-        Circle statusG = new Circle(140, 16, 16, Paint.valueOf("transparent"));
+        Circle statusG = new Circle(150, 18, 16, Paint.valueOf("transparent"));
         statusG.setStrokeWidth(2);
         statusG.setStroke(Paint.valueOf("#414141"));
 
         Arc status = serv.getInt("online") == -1 ?
-                new Arc(140, 16, 16, 16, 90, -360) :
-                new Arc(140, 16, 16, 16, 90, -360 * serv.getInt("online") / serv.getInt("maxOnline"));
+                new Arc(150, 18, 16, 16, 90, -360) :
+                new Arc(150, 18, 16, 16, 90, -360 * serv.getInt("online") / serv.getInt("maxOnline"));
         status.setFill(Color.TRANSPARENT);
         status.setStrokeWidth(2);
         status.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -151,13 +161,13 @@ public class ServersController {
         String online1 = serv.getInt("online") == -1 ? "Выкл" : serv.getInt("online") + "/" + serv.getInt("maxOnline");
         Label online = new Label(online1);
         online.setStyle("-fx-font-family: 'Istok Web Bold', sans-serif; -fx-text-fill: white; -fx-font-size: 10.2;");
-        online.setLayoutX(124);
-        online.setLayoutY(8);
+        online.setLayoutX(134);
+        online.setLayoutY(9.5);
         online.setPrefWidth(32);
         online.setAlignment(Pos.CENTER);
 
         server.getChildren().addAll(
-                selected, selected_bg, name, online_label, online, statusG, status
+                selected, selected_bg, name, online_label, online, statusG, status, version
         );
         server.setPadding(new Insets(10, 0, 10, 0));
 

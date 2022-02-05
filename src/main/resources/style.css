@@ -119,6 +119,11 @@
     -fx-text-fill: white;
     -fx-font-size: 60;
 }
+#SELECTED_SERVER_VERSION {
+    -fx-font-family: 'Istok Web Bold', sans-serif;
+    -fx-text-fill: #BBBBBB;
+    -fx-font-size: 40;
+}
 #wipe_date {
     -fx-text-fill: #BDBDBD;
     -fx-font-size: 15;

@@ -172,9 +172,10 @@
 
             <!-- Selected server -->
             <Label fx:id="SELECTED_SERVER_NAME" layoutX="${152 * root.width / 1165 + 100}" layoutY="${59 * root.height / 660 - 26}" text="HiTech" />
-            <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
-            <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
-            <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${152 * root.width / 1165 + 125 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
+            <Label fx:id="SELECTED_SERVER_VERSION" layoutX="${152 * root.width / 1165 + 115 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 - 4}" text="1.12.2" />
+            <Label fx:id="SELECTED_SERVER_ONLINE" layoutX="${152 * root.width / 1165 + 148 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_VERSION.width}" layoutY="${59 * root.height / 660 + 11}" text="18/30" />
+            <Circle strokeWidth="4" strokeLineCap="ROUND" stroke="#414141" fill="transparent" radius="28" layoutX="${152 * root.width / 1165 + 148 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_VERSION.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" />
+            <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${152 * root.width / 1165 + 148 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_VERSION.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
             <Label id="wipe_date" layoutX="${152 * root.width / 1165 + 104}" layoutY="${59 * root.height / 660 + 54}" text="Дата вайпа:" />
             <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 52}" text="01.04.2021" />
             <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
