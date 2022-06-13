@@ -16,6 +16,7 @@ import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.*;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.util.*;
 
 public class Loader {
@@ -72,7 +73,7 @@ public class Loader {
                 System.gc();
                 int afterGC = SystemStats.getUsedMemoryMB();
 
-                Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
+                //Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
 
                 old = afterGC;
             }
@@ -157,7 +158,21 @@ public class Loader {
 
         /* Get servers list */
         Request r = new Request(Global.API_LINK + "servers");
-        JSONObject servers = r.connectAndGetJSON();
+        JSONObject servers = null;
+
+        String customError = "НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK",
+               customErrorSub = "Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
+
+        try {
+            servers = r.connectAndGetJSON();
+        } catch (Exception ex) {
+            if (ex.getClass() == SSLHandshakeException.class) {
+                customError = "ОБНАРУЖЕНА ПОЛОМАННАЯ ВЕРСИЯ JAVA";
+                customErrorSub = "Скачайте Java тут https://www.java.com/ru/download/ или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
+            }
+
+            ex.printStackTrace();
+        }
 
         if (servers != null) {
             Vars.servers = servers.getJSONArray("servers");
@@ -204,8 +219,8 @@ public class Loader {
         } else {
             if (c.NO_INTERNET.getLayoutY() != 0) {
                 c.NO_INTERNET_BG.setOpacity(0.35);
-                c.NO_INTERNET_TITLE.setText("НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK");
-                c.NO_INTERNET_SUBTITLE.setText("Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh");
+                c.NO_INTERNET_TITLE.setText(customError);
+                c.NO_INTERNET_SUBTITLE.setText(customErrorSub);
 
                 if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
                     StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
