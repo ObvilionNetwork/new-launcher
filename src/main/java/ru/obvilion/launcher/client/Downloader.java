@@ -71,15 +71,14 @@ public class Downloader {
 
             String os = "";
             String real = Global.OS.toLowerCase();
+
             if (real.contains("win")) {
                 os = "windows";
-            } else if (real.contains("lin")) {
+            }
+            else if (real.contains("nix") || real.contains("aix") || real.contains("lin")) {
                 os = "linux";
-            } else if (real.contains("nix")) {
-                os = "linux";
-            } else if (real.contains("aix")) {
-                os = "linux";
-            } else if (real.contains("mac")) {
+            }
+            else if (real.contains("mac")) {
                 os = "macos";
             }
 
@@ -92,7 +91,7 @@ public class Downloader {
 
         JSONObject finalServer = server;
         long finalSize = size;
-        new Thread(() -> {
+        Thread anim = new Thread(() -> {
             // TODO: показывать скорость загрузки
             long old_size = 0;
             float old_speed = 0;
@@ -100,7 +99,7 @@ public class Downloader {
 
             while (true) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -124,13 +123,13 @@ public class Downloader {
                 index++;
                 if (index >= 5) {
                     float finalOld_speed = old_speed;
-                    old_speed = (se - old_size) * 2 / 1024f / 1024;
+                    old_speed = (se - old_size) * 5 / 1024f / 1024;
                     old_size = se;
                     float finalTec_speed = old_speed;
 
                     final Animation animation = new Transition() {
                         {
-                            setCycleDuration(Duration.millis(800));
+                            setCycleDuration(Duration.millis(600));
                         }
 
                         protected void interpolate(double f) {
@@ -143,7 +142,7 @@ public class Downloader {
                 }
 
                 float persent = (float) ((double) se / (double) finalSize);
-                if (persent > 1) {
+                if (persent > 0.99) {
                     persent = 1;
                 }
 
@@ -153,13 +152,15 @@ public class Downloader {
                     Vars.frameController.STATUS_L.setPrefWidth((1040 * finalPersent) * Vars.frameController.root.getWidth() / 1165);
                 });
 
-                if (persent == 1) {
+                if (persent >= 1) {
                     break;
                 }
             }
 
             Thread.currentThread().interrupt();
-        }).start();
+        });
+
+        anim.start();
 
         downloadModule(server.getJSONObject("core"));
 
@@ -232,6 +233,8 @@ public class Downloader {
                 checkFiles(finalServer.getJSONArray("natives"), new File(CLIENT_DIR, "natives"), false);
                 checkFiles(finalServer.getJSONArray("mods"), new File(CLIENT_DIR, "mods"), true);
             }
+
+            Thread.currentThread().interrupt();
         }).start();
 
         Log.info("Rechecking files...");
@@ -240,6 +243,8 @@ public class Downloader {
         checkFiles(server.getJSONArray("mods"), new File(CLIENT_DIR, "mods"), true);
 
         Log.info("Download ended. Starting client...");
+        anim.interrupt();
+
         return new Client(server);
     }
 
