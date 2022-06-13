@@ -25,6 +25,18 @@ public class FileUtil {
         }
     }
 
+    public static void downloadFromURL(String url, File target, String message) {
+        try {
+            URL website = new URL(url);
+            try (InputStream in = website.openStream()) {
+                Log.debug(message, url);
+                Files.copy(in, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void threadedDownload(String url, File target, long size, int threads_count) throws Exception {
         final int stock_buffer = 4096 * threads_count;
         final Range range = new Range(0, size, threads_count);

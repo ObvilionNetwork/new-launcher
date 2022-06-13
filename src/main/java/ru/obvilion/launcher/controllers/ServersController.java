@@ -6,7 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
@@ -16,16 +17,27 @@ import javafx.scene.text.Text;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
+import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
+import ru.obvilion.launcher.utils.FileUtil;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServersController {
     FrameController c;
+
+    public String priority;
+
     public void init() {
 
         /* Add servers to list */
@@ -35,6 +47,15 @@ public class ServersController {
 
         for (Object obj : Vars.servers) {
             JSONObject tec = (JSONObject) obj;
+
+            String[] s = tec.getString("image").split("/");
+            File image = new File(Global.LAUNCHER_CACHE, s[s.length - 1]);
+
+            try {
+                tec.put("image_file", image.getCanonicalPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             
             if (is_first) {
                 selected_server = tec;
@@ -59,6 +80,65 @@ public class ServersController {
         Platform.runLater(() -> {
             setSelectedServer(finalSelected_server);
         });
+
+        Global.LAUNCHER_CACHE.mkdirs();
+
+        for (Object obj : Vars.servers) {
+            JSONObject tec = (JSONObject) obj;
+
+            if (priority != null) {
+                String[] s = priority.split("/");
+                File image = new File(Global.LAUNCHER_CACHE, s[s.length - 1]);
+
+                FileUtil.downloadFromURL(priority, image, "Downloading background image: {0}");
+
+                try {
+                    c.BG.setBackground(
+                            new Background(
+                                    new BackgroundImage(
+                                            new Image(new FileInputStream(image.getCanonicalPath())),
+                                            BackgroundRepeat.NO_REPEAT,
+                                            BackgroundRepeat.NO_REPEAT,
+                                            BackgroundPosition.CENTER,
+                                            new BackgroundSize(0, 0, true, true, false, true)
+                                    )
+                            )
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                priority = null;
+            }
+
+            String[] s = tec.getString("image").split("/");
+            File image = new File(Global.LAUNCHER_CACHE, s[s.length - 1]);
+
+            // TODO: check images size
+            if (!image.exists()) {
+                FileUtil.downloadFromURL(tec.getString("image"), image, "Downloading background image: {0}");
+            }
+
+            if (priority != null && priority.contains(image.getName())) {
+                try {
+                    c.BG.setBackground(
+                            new Background(
+                                    new BackgroundImage(
+                                            new Image(new FileInputStream(image.getCanonicalPath())),
+                                            BackgroundRepeat.NO_REPEAT,
+                                            BackgroundRepeat.NO_REPEAT,
+                                            BackgroundPosition.CENTER,
+                                            new BackgroundSize(0, 0, true, true, false, true)
+                                    )
+                            )
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                priority = null;
+            }
+        }
     }
 
     public void setSelectedServer(JSONObject server) {
@@ -67,8 +147,33 @@ public class ServersController {
         c.SELECTED_SERVER_NAME.setText(server.getString("name"));
         c.SELECTED_SERVER_VERSION.setText(server.getString("version"));
 
-        c.selectedServerImage = server.getString("image");
-        c.BG.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
+        c.selectedServerImage = server.getString("image_file");
+
+        try {
+            try {
+                Image i = new Image(new FileInputStream(c.selectedServerImage));
+
+                if (i.getException() != null) {
+                    priority = server.getString("image");
+                }
+
+                c.BG.setBackground(
+                        new Background(
+                                new BackgroundImage(
+                                        i,
+                                        BackgroundRepeat.NO_REPEAT,
+                                        BackgroundRepeat.NO_REPEAT,
+                                        BackgroundPosition.CENTER,
+                                        new BackgroundSize(0, 0, true, true, false, true)
+                                )
+                        )
+                );
+            } catch (Exception e) {
+                priority = server.getString("image");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
         c.SELECTED_SERVER_WIPE_DATE.setText(df.format(Instant.parse(server.getString("wipeDate")).getEpochSecond() * 1000));
@@ -114,11 +219,37 @@ public class ServersController {
         StyleUtil.changeText(c.SELECTED_SERVER_NAME, 400, 1, 0.6f, server.getString("name"));
         StyleUtil.changeText(c.SELECTED_SERVER_VERSION, 400, 1, 0.6f, server.getString("version"));
 
-        c.selectedServerImage = server.getString("image");
-        c.BG_TOP.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
+        c.selectedServerImage = server.getString("image_file");
+
+        try {
+            c.BG_TOP.setBackground(
+                    new Background(new BackgroundImage(
+                            new Image(new FileInputStream(c.selectedServerImage)),
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.CENTER,
+                            new BackgroundSize(0, 0, true, true, false, true)
+                    ))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         StyleUtil.to(c.BG, c.BG_TOP, 600, () -> {
-            c.BG.setStyle("-fx-background-image: url(\"" + server.getString("image") + "\");");
+            try {
+                c.BG.setBackground(
+                        new Background(new BackgroundImage(
+                                new Image(new FileInputStream(c.selectedServerImage)),
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundPosition.CENTER,
+                                new BackgroundSize(0, 0, true, true, false, true)
+                        ))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             c.BG.setOpacity(1);
         });
 
