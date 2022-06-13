@@ -56,20 +56,31 @@ public class Client {
             e.printStackTrace();
         }
 
-        cmd = javaFile + " ";
+        try {
+            if (Global.OS.toLowerCase().contains("win")) {
+                cmd = "\"" + javaFile.getCanonicalPath() + "\" ";
+            } else {
+                cmd = javaFile.getCanonicalPath() + " ";
+            }
+        } catch (IOException e) {
+            cmd = "\"" + javaFile.getPath() + "\" ";
+            e.printStackTrace();
+        }
+
+        String quote = Global.OS.toLowerCase().contains("win") ? "\"" : "";
 
         cmd += "-Xms" + Config.getValue("minRam") + "m "; // Минимальное кол-во озу
         cmd += "-Xmx" + Config.getValue("maxRam") + "m "; // Максимальное кол-во озу
-        cmd += "-Djava.library.path=" + new File(clientDir, "natives").getPath() + " ";
-        cmd += "-cp " + new Classpath(new File(clientDir, "libraries")).getCmd() + new File(clientDir, "forge.jar").getPath() +  " ";
+        cmd += "-Djava.library.path=" + quote + new File(clientDir, "natives").getPath() + quote + " ";
+        cmd += "-cp " + new Classpath(new File(clientDir, "libraries")).getCmd() + quote + new File(clientDir, "forge.jar").getPath() + quote + " ";
         cmd += "-Duser.language=ru ";
 
         cmd += "net.minecraft.launchwrapper.Launch ";
 
         cmd += "--username " + Config.getValue("login") + " ";
         cmd += "--version " + this.core + " " + this.version + " ";
-        cmd += "--gameDir " + clientDir.getPath() + " ";
-        cmd += "--assetsDir " + new File(Global.LAUNCHER_CLIENTS, "assets/" + this.version) + " ";
+        cmd += "--gameDir " + quote + clientDir.getPath() + quote +" ";
+        cmd += "--assetsDir " + quote + new File(Global.LAUNCHER_CLIENTS, "assets/" + this.version) + quote + " ";
         cmd += "--assetIndex " + this.version + " ";
         cmd += "--uuid " + Config.getValue("uuid") + " "; // Айди, выдается при авторизации
         cmd += "--accessToken " + Config.getValue("token") + " "; // Токен доступа, выдается при авторизации
@@ -151,10 +162,14 @@ class Classpath {
 
         String separator = Global.OS.toLowerCase().contains("win") ? ";" : ":";
 
-        for(File f : dir.listFiles()) {
-            if(f.isDirectory()) {
+        for (File f : dir.listFiles()) {
+            if (f.isDirectory()) {
                 cmd += new Classpath(f).getCmd();
-            } else {
+            }
+            else if (Global.OS.toLowerCase().contains("win")) {
+                cmd += "\"" + f.getPath() + "\"" + separator;
+            }
+            else {
                 cmd += f.getPath() + separator;
             }
         }
