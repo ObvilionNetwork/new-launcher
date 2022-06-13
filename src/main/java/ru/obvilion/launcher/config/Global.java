@@ -5,7 +5,7 @@ import java.io.File;
 public class Global {
     public static final String DISCORD_APP_ID = "657878741703327754";
     public static final String API_LINK = "https://obvilion.ru/api/";
-    public static final String VERSION  = "2.8.3";
+    public static final String VERSION  = "2.8.7";
 
     public static final File USER_HOME = new File(System.getProperty("user.home"));
     public static final File LAUNCHER_HOME = new File(USER_HOME, ".ObvilionNetwork");

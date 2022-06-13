@@ -41,13 +41,9 @@ public class Request {
     }
 
     public JSONObject connectAndGetJSON() {
-        String json;
-
-        if(requestType == RequestType.GET) {
-            json = this.createGetRequest();
-        } else {
-            json = this.createPostRequest();
-        }
+        String json = requestType == RequestType.GET
+                ? this.createGetRequest()
+                : this.createPostRequest();
 
         if (json == null) {
             return null;
