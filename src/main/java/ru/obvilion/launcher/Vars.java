@@ -14,6 +14,7 @@ public class Vars {
     public static ServersController serversController;
     public static JSONArray servers;
     public static boolean useCustomJRE = false;
+    public static boolean useAnimations = true;
     public static Process minecraft;
     public static int maxRam;
     public static Pane selectedPane;

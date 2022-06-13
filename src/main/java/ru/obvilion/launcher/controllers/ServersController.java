@@ -18,6 +18,7 @@ import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.utils.StyleUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,6 +97,8 @@ public class ServersController {
 
         try {
             p.getChildren().get(0).setVisible(true);
+            StyleUtil.createFadeAnimation(p.getChildren().get(0), 200, 1);
+
             p.getChildren().get(1).setVisible(true);
         } catch (Exception e) {
             Log.err("Error loading main server");
@@ -105,6 +108,35 @@ public class ServersController {
         Text t = (Text) c.SERVER_DESC.lookup(".text");
         double f = t.getBoundsInLocal().getHeight();
         c.SERVER_BUTTON.setLayoutY(59 * Gui.getStage().getHeight() / 660 + f + 110);
+    }
+
+    public void hoverServer(JSONObject server) {
+        StyleUtil.changeText(c.SELECTED_SERVER_NAME, 400, 1, 0.6f, server.getString("name"));
+        StyleUtil.changeText(c.SELECTED_SERVER_VERSION, 400, 1, 0.6f, server.getString("version"));
+
+        c.selectedServerImage = server.getString("image");
+        c.BG_TOP.setStyle("-fx-background-image: url(\"" + c.selectedServerImage + "\");");
+
+        StyleUtil.to(c.BG, c.BG_TOP, 600, () -> {
+            c.BG.setStyle("-fx-background-image: url(\"" + server.getString("image") + "\");");
+            c.BG.setOpacity(1);
+        });
+
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        StyleUtil.changeText(c.SELECTED_SERVER_WIPE_DATE, 400, 1, 0.6f, df.format(Instant.parse(server.getString("wipeDate")).getEpochSecond() * 1000));
+        StyleUtil.changeText(c.SERVER_DESC, 400, 1, 0.6f, server.getString("description"));
+
+        String online1 = server.getInt("online") == -1 ? "Выкл" : server.getInt("online") + "/" + server.getInt("maxOnline");
+        StyleUtil.changeText(c.SELECTED_SERVER_ONLINE, 400, 1, 0.6f, online1);
+
+        StyleUtil.changeArc(c.SELECTED_SERVER_ONLINE_ARC, 400,
+                server.getInt("online") == -1
+                        ? -360
+                        : -360 * server.getInt("online") / server.getInt("maxOnline"));
+
+        Text t = (Text) c.SERVER_DESC.lookup(".text");
+        double f = t.getBoundsInLocal().getHeight();
+        StyleUtil.changeYPosition(c.SERVER_BUTTON, 59 * Gui.getStage().getHeight() / 660 + f + 110, 400);
     }
 
     public Pane getServer(JSONObject serv) {
@@ -173,6 +205,44 @@ public class ServersController {
         server.setOnMouseClicked(event -> {
             Config.setValue("last_server", serv.getInt("id") + "");
             setSelectedServer(serv);
+        });
+
+        server.setOnMouseEntered(event -> {
+            if (selected_bg.isVisible()) {
+                return;
+            }
+
+            hoverServer(serv);
+
+            if (selected.isVisible()) {
+                return;
+            }
+
+            selected.setOpacity(0);
+            selected.setVisible(true);
+            StyleUtil.createFadeAnimation(selected, 100, 0.7f);
+        });
+
+        server.setOnMouseExited(event -> {
+            if (selected_bg.isVisible()) {
+                return;
+            }
+
+            hoverServer(Vars.selectedServer);
+
+            StyleUtil.createFadeAnimation(selected, 100, 0);
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(() -> {
+                    selected.setVisible(false);
+                });
+            }, "Fade timer (100ms)").start();
         });
 
         return server;

@@ -40,6 +40,7 @@ public class Config {
                     config.setProperty("lastServer", "");
                     config.setProperty("optionalMods", "");
                     config.setProperty("version", version);
+                    config.setProperty("useAnimations", "true");
 
                     OutputStream out = new FileOutputStream(Global.LAUNCHER_CONFIG);
                     config.store(out, null);
@@ -115,5 +116,16 @@ public class Config {
             Log.err(e);
             return false;
         }
+    }
+
+    public static boolean getBooleanValue(String name, boolean def) {
+        String v = getValue(name);
+
+        if (v == null) {
+            setValue(name, def ? "true" : "false");
+            return def;
+        }
+
+        return Boolean.parseBoolean(v);
     }
 }

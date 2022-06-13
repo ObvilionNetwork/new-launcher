@@ -19,9 +19,11 @@ public class DesktopUtil {
 
                 if (os.contains("mac")) {
                     rt.exec(new String[]{ "open", url });
-                } else if(os.contains("lin") || os.contains("nix") || os.contains("aix")) {
+                }
+                else if (os.contains("lin") || os.contains("nix") || os.contains("aix")) {
                     rt.exec(new String[]{ "xdg-open", url });
-                } else if(os.contains("win")) {
+                }
+                else if (os.contains("win")) {
                     rt.exec(new String[]{ "rundll32", "url.dll,FileProtocolHandler", url });
                 }
             } catch (Exception e) {

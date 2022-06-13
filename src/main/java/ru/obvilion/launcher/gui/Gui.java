@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.client.Loader;
+import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowResizeUtil;
 
@@ -102,7 +103,9 @@ public class Gui extends Application {
 
         new Thread(() -> {
             try {
-                Thread.sleep(400);
+                if (Vars.useAnimations) {
+                    Thread.sleep(400);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

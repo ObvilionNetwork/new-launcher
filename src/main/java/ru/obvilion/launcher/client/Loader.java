@@ -73,7 +73,9 @@ public class Loader {
                 System.gc();
                 int afterGC = SystemStats.getUsedMemoryMB();
 
-                //Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
+                if (Global.PRINT_GC_STATUS) {
+                    Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
+                }
 
                 old = afterGC;
             }

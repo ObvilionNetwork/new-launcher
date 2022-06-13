@@ -91,6 +91,7 @@ public class FrameController implements Initializable {
     public Label SETTINGS_BACK;
     public CheckBox DEBUG_CB;
     public CheckBox AUTOUPDATE_CB;
+    public CheckBox ANIMATIONS_CB;
     public CheckBox SAVEPASS_CB;
     public Pane DEBUG_PANE;
     public TextArea DEBUG_TEXT;
@@ -315,13 +316,23 @@ public class FrameController implements Initializable {
             RAM_MAX.setText("до " + (float)((int) (size / 1024f * 100)) / 100 + "ГБ");
         });
 
+        Vars.useAnimations = Config.getBooleanValue("useAnimations", true);
+        if (!Vars.useAnimations) {
+            Log.info("Animations are disabled, you can turn them back on in the settings");
+        }
+
         SAVEPASS_CB.setSelected(Config.getBooleanValue("savePass"));
         DEBUG_CB.setSelected(Config.getBooleanValue("debug"));
         AUTOUPDATE_CB.setSelected(Config.getBooleanValue("autoupdate"));
+        ANIMATIONS_CB.setSelected(!Vars.useAnimations);
 
         DEBUG_CB.setOnMouseClicked(e -> Config.setValue("debug", DEBUG_CB.isSelected() ? "true" : "false"));
         AUTOUPDATE_CB.setOnMouseClicked(e -> Config.setValue("autoupdate", AUTOUPDATE_CB.isSelected() ? "true" : "false"));
         SAVEPASS_CB.setOnMouseClicked(e -> Config.setValue("savePass", SAVEPASS_CB.isSelected() ? "true" : "false"));
+        ANIMATIONS_CB.setOnMouseClicked(e -> {
+            Config.setValue("useAnimations", ANIMATIONS_CB.isSelected() ? "false" : "true");
+            Vars.useAnimations = !ANIMATIONS_CB.isSelected();
+        });
     }
 
     public static void openWebsite(Node node, String url) {
