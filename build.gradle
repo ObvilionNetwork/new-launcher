@@ -19,7 +19,7 @@ repositories {
 
 String mainClassName = "ru.obvilion.launcher.ClientLauncherWrapper"
 group 'ru.obvilion'
-version '2.8.6'
+version '2.8.7'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
@@ -43,17 +43,14 @@ dependencies {
     implementation 'com.github.ObvilionNetwork:JSONLib:1.0'
 
     if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        implementation (files('javafx-graphics-11.0.2-win.jar'))
+        implementation (files('libs/javafx-graphics-11.0.2-win.jar'))
     }
 
     if (!Os.isFamily(Os.FAMILY_UNIX)) {
-        implementation (files('javafx-graphics-11.0.2-linux.jar'))
+        implementation (files('libs/javafx-graphics-11.0.2-linux.jar'))
     }
 
     if (!Os.isFamily(Os.FAMILY_MAC)) {
-        implementation (files('javafx-graphics-11.0.2-mac.jar'))
+        implementation (files('libs/javafx-graphics-11.0.2-mac.jar'))
     }
-
-    /* Данная библиотека включена по дефолту в плагине javafx */
-    //implementation (files('javafx-graphics-11.0.2-base.jar'))
 }
