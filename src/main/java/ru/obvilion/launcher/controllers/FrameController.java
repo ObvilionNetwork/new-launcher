@@ -250,7 +250,9 @@ public class FrameController implements Initializable {
         if (!avatar.isError()) {
             AVATAR.setFill(new ImagePattern(avatar));
         } else {
-            Log.err("Error loading user avatar");
+            Log.err("Error loading user avatar:");
+            avatar.getException().printStackTrace();
+
             AVATAR.setFill(Color.valueOf("#192331"));
         }
         NICKNAME.setText(Config.getValue("login"));

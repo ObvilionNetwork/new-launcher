@@ -3,11 +3,9 @@ package ru.obvilion.launcher.api;
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -40,7 +38,7 @@ public class Request {
         this.body = json;
     }
 
-    public JSONObject connectAndGetJSON() {
+    public JSONObject connectAndGetJSON_THROWS() throws IOException {
         String json = requestType == RequestType.GET
                 ? this.createGetRequest()
                 : this.createPostRequest();
@@ -57,68 +55,76 @@ public class Request {
         }
     }
 
-    public String connect() {
+
+    public JSONObject connectAndGetJSON()  {
         try {
-            URL obj = new URL(this.link);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            String json = requestType == RequestType.GET
+                    ? this.createGetRequest()
+                    : this.createPostRequest();
 
-            connection.setRequestMethod(this.requestType.toString());
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            if (json == null) {
+                return null;
             }
-            in.close();
 
-            return response.toString();
+            return new JSONObject(json);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private String createGetRequest() {
+    public String connect() throws IOException {
+        URL obj = new URL(this.link);
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+        connection.setRequestMethod(this.requestType.toString());
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
+    }
+
+    private String createGetRequest() throws IOException {
         return connect();
     }
 
-    public String createPostRequest() {
-        try {
-            URL url = new URL(link);
-            URLConnection con = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection) con;
-            http.setRequestMethod("POST");
-            http.setDoOutput(true);
+    public String createPostRequest() throws IOException {
+        URL url = new URL(link);
+        URLConnection con = url.openConnection();
+        HttpURLConnection http = (HttpURLConnection) con;
+        http.setRequestMethod("POST");
+        http.setDoOutput(true);
 
-            byte[] out = body.toString().getBytes(StandardCharsets.UTF_8);
-            int length = out.length;
+        byte[] out = body.toString().getBytes(StandardCharsets.UTF_8);
+        int length = out.length;
 
-            http.setFixedLengthStreamingMode(length);
-            http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            http.setRequestProperty("Accept-Charset", "UTF-8");
-            http.connect();
-            try(OutputStream os = http.getOutputStream()) {
-                os.write(out);
-            }
-
-            InputStream is = http.getResponseCode() >= 400 ? http.getErrorStream() : http.getInputStream();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            return response.toString();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+        http.setFixedLengthStreamingMode(length);
+        http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        http.setRequestProperty("Accept-Charset", "UTF-8");
+        http.connect();
+        try(OutputStream os = http.getOutputStream()) {
+            os.write(out);
         }
+
+        InputStream is = http.getResponseCode() >= 400 ? http.getErrorStream() : http.getInputStream();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
     }
 }
 

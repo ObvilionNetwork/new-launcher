@@ -87,7 +87,27 @@ public class Loader {
 
         Request r1 = new Request(RequestType.POST, Global.API_LINK + "auth/login");
         r1.setBody(new JSONObject().put("name", Config.getValue("login")).put("password", Config.getPasswordValue("password")));
-        JSONObject result = r1.connectAndGetJSON();
+        JSONObject result = null;
+
+        String customError    = "НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK",
+               customErrorSub = "Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
+
+        boolean try_load = true;
+
+        try {
+            result = r1.connectAndGetJSON_THROWS();
+        } catch (Exception ex) {
+            if (ex.getClass() == SSLHandshakeException.class) {
+                Log.err("Auto login error: broken version of Java detected!");
+
+                try_load = false;
+
+                customError = "ОБНАРУЖЕНА ПОЛОМАННАЯ ВЕРСИЯ JAVA";
+                customErrorSub = "Скачайте Java тут https://java.com/ru/download или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
+            }
+
+            ex.printStackTrace();
+        }
 
         if (result != null) {
             if (!result.has("token")) {
@@ -102,8 +122,9 @@ public class Loader {
             Config.setValue("uuid", result.getString("uuid"));
             Config.setValue("login", result.getString("name"));
 
+            JSONObject finalResult = result;
             Platform.runLater(() -> {
-                c.BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
+                c.BALANCE.setText("Баланс: " + finalResult.getInt("money") + "p.");
             });
 
             Gui.openPane(c.MAIN_PANE);
@@ -118,7 +139,8 @@ public class Loader {
             if (!avatar.isError()) {
                 c.AVATAR.setFill(new ImagePattern(avatar));
             } else {
-                Log.err("Error loading user avatar");
+                Log.err("Error loading user avatar:");
+                avatar.getException().printStackTrace();
                 c.AVATAR.setFill(Color.valueOf("#192331"));
             }
 
@@ -130,22 +152,27 @@ public class Loader {
 
             Thread.currentThread().interrupt();
         } else {
-            if (result == null) {
-                Log.err("Error during automatic authorization. Attempt to load the servers after 5 seconds...");
+            c.NO_INTERNET_BG.setOpacity(0.35);
+            c.NO_INTERNET_TITLE.setText(customError);
+            c.NO_INTERNET_SUBTITLE.setText(customErrorSub);
 
-                c.NO_INTERNET_BG.setOpacity(0.35);
-                c.NO_INTERNET_TITLE.setText("НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK");
-                c.NO_INTERNET_SUBTITLE.setText("Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh");
-
-                if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
-                    StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
-                }
-                lastChangedPosition = System.currentTimeMillis();
+            if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
+                StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
             }
+            lastChangedPosition = System.currentTimeMillis();
 
             if (first) {
                 Platform.runLater(() -> Gui.openPane(c.AUTHORIZATION_PANE));
             }
+
+            if (!try_load) {
+                Log.err("Critical error during automatic authorization.");
+
+                //Thread.currentThread().interrupt();
+                return;
+            }
+
+            Log.err("Error during automatic authorization. Attempt to load the servers after 5 seconds...");
 
             try {
                 Thread.sleep(5000);
@@ -165,12 +192,18 @@ public class Loader {
         String customError = "НЕТ ПОДКЛЮЧЕНИЯ К СЕРВЕРАМ OBVILION NETWORK",
                customErrorSub = "Проверьте подключение к сети или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
 
+        boolean try_load = true;
+
         try {
-            servers = r.connectAndGetJSON();
+            servers = r.connectAndGetJSON_THROWS();
         } catch (Exception ex) {
             if (ex.getClass() == SSLHandshakeException.class) {
+                Log.err("List servers error: broken version of Java detected!");
+
+                try_load = false;
+
                 customError = "ОБНАРУЖЕНА ПОЛОМАННАЯ ВЕРСИЯ JAVA";
-                customErrorSub = "Скачайте Java тут https://www.java.com/ru/download/ или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
+                customErrorSub = "Скачайте Java тут https://java.com/ru/download или обратитесь к техподдержке при помощи Discord: https://discord.gg/cg82mjh";
             }
 
             ex.printStackTrace();
@@ -231,11 +264,21 @@ public class Loader {
             }
 
             Vars.servers = new JSONArray();
+
+            if (!try_load) {
+                Log.err("Critical error on attempt to get list of servers!");
+
+                Thread.currentThread().interrupt();
+                return;
+            }
+
             Log.err("Unable to get the list of servers. Attempt to load the servers after 5 seconds...");
 
             try {
                 Thread.sleep(5000);
-            } catch (Exception e) { /* Ignored */ }
+            } catch (Exception e) {
+                /* Ignored */
+            }
 
             loadServers();
         }

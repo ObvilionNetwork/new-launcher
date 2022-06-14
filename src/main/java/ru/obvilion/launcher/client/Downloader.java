@@ -219,7 +219,7 @@ public class Downloader {
 
         new Thread(() -> {
             int i = 0;
-            while (i <= 3) {
+            while (i <= 5) {
                 i++;
 
                 try {
@@ -235,7 +235,7 @@ public class Downloader {
             }
 
             Thread.currentThread().interrupt();
-        }).start();
+        }, "Recheck files").start();
 
         Log.info("Rechecking files...");
         checkFiles(server.getJSONArray("libraries"), new File(CLIENT_DIR, "libraries"), false);
