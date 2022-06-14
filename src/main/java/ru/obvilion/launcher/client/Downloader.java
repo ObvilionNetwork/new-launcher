@@ -101,7 +101,7 @@ public class Downloader {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+
                 }
 
                 long se = FileUtil.getSize(new File(CLIENT_DIR, "mods"));
