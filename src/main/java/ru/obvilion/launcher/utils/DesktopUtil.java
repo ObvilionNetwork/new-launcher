@@ -1,9 +1,37 @@
 package ru.obvilion.launcher.utils;
 
 import ru.obvilion.launcher.config.Global;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class DesktopUtil {
+    public static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
+
+    public static String getOs() {
+        String os = "";
+        String real = Global.OS.toLowerCase();
+
+        if (real.contains("win")) {
+            os = "windows";
+        } else if (real.contains("lin") || real.contains("nix") || real.contains("aix")) {
+            os = "linux";
+        } else if (real.contains("mac")) {
+            os = "macos";
+        }
+
+        os += System.getProperty("sun.arch.data.model");
+        return os;
+    }
+
     public static boolean openWebpage(String url) {
         try {
             URI.create(url);

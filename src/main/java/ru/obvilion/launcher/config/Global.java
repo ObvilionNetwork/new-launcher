@@ -5,7 +5,7 @@ import java.io.File;
 public class Global {
     public static final String DISCORD_APP_ID = "657878741703327754";
     public static final String API_LINK = "https://mc.obvilion.ru/api/";
-    public static final String VERSION  = "2.8.8";
+    public static final String VERSION  = "2.10.4";
 
     public static final boolean PRINT_GC_STATUS = false;
 

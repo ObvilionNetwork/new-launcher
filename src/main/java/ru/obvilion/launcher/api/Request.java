@@ -2,10 +2,11 @@ package ru.obvilion.launcher.api;
 
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
+import ru.obvilion.launcher.config.Global;
+import ru.obvilion.launcher.utils.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -88,11 +89,31 @@ public class Request {
         }
         in.close();
 
+        //Log.custom("N", "GET > {2} > {1}, {0}", connection.getResponseCode(), connection.getResponseMessage(), this.link);
+
         return response.toString();
     }
 
     private String createGetRequest() throws IOException {
         return connect();
+    }
+
+    public String createHeadRequest(String key)  {
+        try {
+            URL obj = new URL(this.link);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod(this.requestType.toString());
+            connection.connect();
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return connection.getHeaderField(key);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     public String createPostRequest() throws IOException {
@@ -106,8 +127,11 @@ public class Request {
         int length = out.length;
 
         http.setFixedLengthStreamingMode(length);
+
         http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         http.setRequestProperty("Accept-Charset", "UTF-8");
+        http.setRequestProperty("From", "Launcher-" + Global.VERSION);
+
         http.connect();
         try(OutputStream os = http.getOutputStream()) {
             os.write(out);
@@ -123,6 +147,8 @@ public class Request {
             response.append(inputLine);
         }
         in.close();
+
+        //Log.custom("N", "POST > {2} > {1}, {0}", http.getResponseCode(), http.getResponseMessage(), this.link);
 
         return response.toString();
     }

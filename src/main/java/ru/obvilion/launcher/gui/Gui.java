@@ -15,9 +15,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.client.Loader;
-import ru.obvilion.launcher.config.Config;
+import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowResizeUtil;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Gui extends Application {
     private static Stage stage;
@@ -52,6 +55,17 @@ public class Gui extends Application {
 
         stage.heightProperty().addListener(o -> ResizeListener.onHeightResize());
         stage.widthProperty().addListener(observable -> ResizeListener.onWidthResize());
+
+        AtomicLong last_i = new AtomicLong(0);
+        stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (last_i.get() + 100 < System.currentTimeMillis()) {
+                stage.setIconified(!newValue);
+
+                last_i.set(System.currentTimeMillis());
+                return;
+            }
+        });
+
         WindowResizeUtil.addResizeListener(stage);
     }
 

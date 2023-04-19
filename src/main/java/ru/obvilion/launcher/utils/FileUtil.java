@@ -1,5 +1,7 @@
 package ru.obvilion.launcher.utils;
 
+import ru.obvilion.launcher.client.Downloader;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -70,6 +74,10 @@ public class FileUtil {
                     InputStream inputStream = conn.getInputStream();
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         randomAccessFile.write(buffer, 0, bytesRead);
+
+                        if (Downloader.INSTANCE != null) {
+                            Downloader.INSTANCE.bytes_per_second.addAndGet(bytesRead);
+                        }
                     }
                     randomAccessFile.close();
                 } catch (Exception ex) {
@@ -111,6 +119,20 @@ public class FileUtil {
         }
 
         return file.length();
+    }
+
+    public static String getExtension(File file) {
+        String extension = "";
+        String fileName = file.getName();
+
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i+1);
+        }
+
+        return extension;
     }
 
     public static void downloadAndUnpackFromURL(String url, Path target) {

@@ -12,9 +12,9 @@ public class Log {
     private static String getTime() {
         return new SimpleDateFormat("[HH:mm:ss]").format(Calendar.getInstance().getTime());
     }
-    private static String getMessage(String message, String... n) {
+    private static String getMessage(String message, Object... n) {
         for(int i = 0; i < n.length; i++) {
-            message = message.replace("{"+i+"}", n[i]);
+            message = message.replace("{"+i+"}", n[i].toString());
         }
         return message;
     }
@@ -25,35 +25,35 @@ public class Log {
     public static void info(Object message) {
         print(getTime() + log + message);
     }
-    public static void info(String message, String... n) {
+    public static void info(String message, Object... n) {
         print(getTime() + log + getMessage(message, n));
     }
 
     public static void warn(Object message) {
         print(getTime() + warn + message);
     }
-    public static void warn(String message, String... n) {
+    public static void warn(String message, Object... n) {
         print(getTime() + warn + getMessage(message, n));
     }
 
     public static void err(Object message) {
         print(getTime() + err + message);
     }
-    public static void err(String message, String... n) {
+    public static void err(String message, Object... n) {
         print(getTime() + err + getMessage(message, n));
     }
 
     public static void debug(Object message) {
         print(getTime() + debug + message);
     }
-    public static void debug(String message, String... n) {
+    public static void debug(String message, Object... n) {
         print(getTime() + debug + getMessage(message, n));
     }
 
     public static void custom(String name, Object message) {
         print(getTime() + custom.replace("%", name) + message);
     }
-    public static void custom(String name, String message, String... n) {
+    public static void custom(String name, String message, Object... n) {
         print(getTime() + custom.replace("%", name) + getMessage(message, n));
     }
 }

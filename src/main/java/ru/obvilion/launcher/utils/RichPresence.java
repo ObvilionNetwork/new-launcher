@@ -56,9 +56,11 @@ public class RichPresence {
                 StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, 0, 1400);
 
                 Vars.selectedServer = server;
-                Downloader.setClient(server.getString("name"));
+
+                new Downloader(server.getString("name"), 1);
+
                 new Thread(() -> {
-                    Client client = Downloader.load();
+                    Client client = Downloader.INSTANCE.loadAll();
                     client.run();
                 }).start();
 

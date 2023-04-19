@@ -8,6 +8,7 @@ import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StreamGobbler;
+import ru.obvilion.launcher.utils.StyleUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +29,10 @@ public class Client {
     public Client(JSONObject info) {
         this.name = info.getString("name");
         this.version = info.getString("version");
-        this.javaVersion = info.getString("javaVersion");
-        this.core = info.getJSONObject("core").getString("type");
+        this.javaVersion = info.getString("java");
+        this.core = info.getString("type");
 
-        clientDir = new File(Global.LAUNCHER_CLIENTS, info.getString("id"));
+        clientDir = new File(Global.LAUNCHER_CLIENTS, info.getString("name"));
         javaFile = new File(clientDir, "../java/" + javaVersion + "/bin");
         javaFile = new File(javaFile, Global.OS.toLowerCase().contains("win") ? "java.exe" : "java");
     }
@@ -145,6 +146,8 @@ public class Client {
                 Gui.getStage().show();
                 Vars.selectedPane.setOpacity(0);
                 Gui.openPane(Vars.frameController.MAIN_PANE);
+
+                Vars.frameController.BG.setStyle("-fx-background-image: url(\"" + Vars.frameController.selectedServerImage + "\");");
             }
         });
     }
@@ -161,6 +164,10 @@ class Classpath {
         String cmd = "";
 
         String separator = Global.OS.toLowerCase().contains("win") ? ";" : ":";
+
+        if (dir.listFiles() == null) {
+            return "";
+        }
 
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {

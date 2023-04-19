@@ -170,6 +170,11 @@
             <Label fx:id="NICKNAME" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660}" text="Player" />
             <Label fx:id="BALANCE" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660 + 20}" text="Баланс: 0р." />
 
+            <!-- Debug info -->
+            <Label fx:id="DEBUG_VERSION" id="SELECTED_SERVER_WIPE_DATE" layoutX="${31 * root.width / 1165 + 5}" layoutY="${17 * root.height / 660}" text="Бета версия 2.10.4" />
+            <Label fx:id="DEBUG_MEMORY" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_VERSION.layoutX + DEBUG_VERSION.width + 20}" layoutY="${17 * root.height / 660}" text="0 MB" />
+            <Label fx:id="DEBUG_LASTGC" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_MEMORY.layoutX + DEBUG_MEMORY.width + 20}" layoutY="${17 * root.height / 660}" text="00:00.000 (-0 MB)" />
+
             <!-- Selected server -->
             <Label fx:id="SELECTED_SERVER_NAME" layoutX="${152 * root.width / 1165 + 100}" layoutY="${59 * root.height / 660 - 26}" text="HiTech" />
             <Label fx:id="SELECTED_SERVER_VERSION" layoutX="${152 * root.width / 1165 + 115 + SELECTED_SERVER_NAME.width}" layoutY="${59 * root.height / 660 - 4}" text="1.12.2" />
@@ -178,28 +183,90 @@
             <Arc strokeWidth="4" strokeLineCap="ROUND" stroke="white" fill="transparent" radiusX="28" radiusY="28" startAngle="90" layoutX="${152 * root.width / 1165 + 148 + SELECTED_SERVER_NAME.width + SELECTED_SERVER_VERSION.width + SELECTED_SERVER_ONLINE.width / 2}" layoutY="${59 * root.height / 660 + 23}" length="-150" fx:id="SELECTED_SERVER_ONLINE_ARC" />
             <Label id="wipe_date" layoutX="${152 * root.width / 1165 + 104}" layoutY="${59 * root.height / 660 + 54}" text="Дата вайпа:" />
             <Label fx:id="SELECTED_SERVER_WIPE_DATE" layoutX="${162 * root.width / 1165 + 182}" layoutY="${59 * root.height / 660 + 52}" text="01.04.2021" />
-            <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
 
-            <Pane fx:id="SERVER_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
-                <Label fx:id="MODS_LIST_BUTTON" text="Список модов" />
+            <!-- Description and buttons -->
+            <Pane fx:id="SELECTED_ADDITIONAL">
+                <TextArea style="-fx-font-size: 17.5;" id="auth_desc" fx:id="SERVER_DESC" editable="false" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 85}" pickOnBounds="false" prefWidth="${780 * root.width / 1165 + 45}" wrapText="true" />
+
+                <Pane fx:id="MODS_LIST_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 133}" >
+                    <Label id="buttons_main_serv" text="Список модов" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+                <Pane fx:id="CLIENT_SETTINGS_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 290}" layoutY="${MODS_LIST_BUTTON.layoutY}" >
+                    <Label id="buttons_main_serv" text="Выбор клиентских модов" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+                <Pane fx:id="ONLINE_MAP_BUTTON" id="server_button" layoutX="${152 * root.width / 1165 + 486}" layoutY="${MODS_LIST_BUTTON.layoutY}" >
+                    <Label id="buttons_main_serv" text="Онлайн карта" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
             </Pane>
-            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 290}" layoutY="${SERVER_BUTTON.layoutY}" >
-                <Label fx:id="CLIENT_SETTINGS_BUTTON" text="Настройки клиента" />
+
+            <Pane fx:id="MODS_LIST" visible="false" layoutX="12">
+                <ScrollPane fx:id="MODS_LIST_SCROLL" prefWidth="${760 * root.width / 1165 + 25}" prefHeight="${380 * root.height / 660 - 35}" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 100}" styleClass="scroll-pane">
+                    <VBox fx:id="MODS_LIST_BOX" prefWidth="${760 * root.width / 1165}" spacing="15">
+
+                    </VBox>
+                </ScrollPane>
+
+                <Pane fx:id="SERVER_DESCR" id="server_button" layoutX="${162 * root.width / 1165 + 110}" layoutY="${MODS_LIST_SCROLL.layoutY + MODS_LIST_SCROLL.height + 20}" >
+                    <Label id="buttons_main_serv" text="Назад к описанию" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
             </Pane>
-            <Pane id="server_button" layoutX="${152 * root.width / 1165 + 486}" layoutY="${SERVER_BUTTON.layoutY}" >
-                <Label fx:id="ONLINE_MAP_BUTTON" text="Онлайн карта" />
+
+            <Pane fx:id="SUB_MODS_LIST" visible="false" layoutX="12">
+                <ScrollPane fx:id="SUB_MODS_LIST_SCROLL" prefWidth="${650 * root.width / 1165 + 120}" maxHeight="310" layoutX="${162 * root.width / 1165 + 110}" layoutY="${59 * root.height / 660 + 100}" styleClass="scroll-pane">
+                    <VBox fx:id="SUB_MODS_LIST_BOX" prefWidth="${650 * root.width / 1165 + 90}" spacing="15">
+
+                    </VBox>
+                </ScrollPane>
+
+                <Pane fx:id="SERVER_DESCR2" id="server_button" layoutX="${162 * root.width / 1165 + 110}" layoutY="${MODS_LIST_SCROLL.layoutY + MODS_LIST_SCROLL.height + 20}" >
+                    <Label id="buttons_main_serv" text="Описание сервера" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+                <Pane fx:id="MODS_LIST_BUTTON2" id="server_button" layoutX="${SERVER_DESCR.layoutX + SERVER_DESCR.width + 20}" layoutY="${SERVER_DESCR.layoutY}" >
+                    <Label id="buttons_main_serv" text="Список модов" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
+                <Pane fx:id="ONLINE_MAP_BUTTON3" id="server_button" layoutX="${CLIENT_SETTINGS_BUTTON.layoutX + CLIENT_SETTINGS_BUTTON.width + 20}" layoutY="${SERVER_DESCR.layoutY}" >
+                    <Label id="buttons_main_serv" text="Онлайн карта" />
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Pane>
             </Pane>
 
             <!-- Servers -->
             <Label id="servers_label" layoutX="${62 * root.width / 1165 - 25}" layoutY="${131 * root.height / 660}" text="Сервера:" />
             <VBox fx:id="SERVERS" layoutX="${62 * root.width / 1165 - 18}" layoutY="${131 * root.height / 660 + 38}" prefWidth="200" prefHeight="400"/>
+
         </Pane>
 
         <Pane fx:id="SETTINGS_PANE" visible="false">
             <!-- Title -->
             <Label id="auth_title2" layoutX="${90 * root.width / 1165}" layoutY="${75 * root.height / 660 + 10}" text="НАСТРОЙКИ ЛАУНЧЕРА" />
 
-            <Label fx:id="DEBUG_GO" id="title51" layoutX="${890 * root.width / 1165}" layoutY="${150 * root.height / 660 + 10}" text="Открыть журнал отладки">
+            <Label fx:id="DEBUG_GO" id="title51" layoutX="${865 * root.width / 1165}" layoutY="${145 * root.height / 660 + 10}" text="Открыть журнал отладки">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Label>
+
+            <Label fx:id="EXIT" id="title51" layoutX="${865 * root.width / 1165}" layoutY="${145 * root.height / 660 + 47}" text="Выйти из аккаунта">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
@@ -210,6 +277,7 @@
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${158 * root.height / 660 + 66}" fx:id="DEBUG_CB" text="Режим отладки" />
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${162 * root.height / 660 + 94}" fx:id="SEND_STATISTICS_CB" text="Отправлять информацию о ошибках на сервер Obvilion" />
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${166 * root.height / 660 + 122}" fx:id="ANIMATIONS_CB" text="Выключить анимации в лаунчере" />
+            <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${170 * root.height / 660 + 150}" fx:id="DEV_INFO" text="Информация для разработчиков лаунчера" />
 
             <Label id="ramValueTitle" layoutX="${90 * root.width / 1165}" layoutY="${490 * root.height / 660 + 30}" text="Количество ОЗУ" />
             <Pane fx:id="RAM_SELECTOR" layoutX="${90 * root.width / 1165}" layoutY="${530 * root.height / 660 + 30}" prefHeight="14.0" prefWidth="390.0">

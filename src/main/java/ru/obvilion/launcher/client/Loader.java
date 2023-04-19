@@ -17,6 +17,8 @@ import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.*;
 
 import javax.net.ssl.SSLHandshakeException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Loader {
@@ -76,6 +78,17 @@ public class Loader {
                 if (Global.PRINT_GC_STATUS) {
                     Log.debug("GC: {0}mb -> {1}mb", tec + "", afterGC + "");
                 }
+                Platform.runLater(() -> {
+                    DateFormat df = new SimpleDateFormat("hh:mm:ss");
+
+                    Date today = Calendar.getInstance().getTime();
+                    String todayAsString = df.format(today);
+
+
+                    Vars.frameController.DEBUG_LASTGC.setText("Посл. очистка " + todayAsString);
+                    Vars.frameController.DEBUG_MEMORY.setText("Потр. " + afterGC + " MB, очищено " + (afterGC - tec)  + " MB");
+                });
+
 
                 old = afterGC;
             }
@@ -135,7 +148,7 @@ public class Loader {
             }
             lastChangedPosition = System.currentTimeMillis();
 
-            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar", 512, 512, true, false);
+            Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar", 512, 512, true, false);
             if (!avatar.isError()) {
                 c.AVATAR.setFill(new ImagePattern(avatar));
             } else {
@@ -221,7 +234,7 @@ public class Loader {
                 JSONObject tec = (JSONObject) obj;
 
                 if (tec.getString("type").equalsIgnoreCase("minecraft")) {
-                    Log.debug("+ Server " + tec.getString("name"));
+                    Log.debug("  + Server " + tec.getString("name"));
                     _do.put(index, tec.getString("name"));
                 }
 

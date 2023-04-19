@@ -1,6 +1,8 @@
 package ru.obvilion.launcher.controllers;
 
 import com.sun.management.OperatingSystemMXBean;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,12 +13,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.api.Request;
@@ -26,6 +31,9 @@ import ru.obvilion.launcher.client.Downloader;
 import ru.obvilion.launcher.client.Loader;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
+import ru.obvilion.launcher.controllers.elements.ClientMod;
+import ru.obvilion.launcher.controllers.elements.Mod;
+import ru.obvilion.launcher.fx.CachingImageLoader;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
@@ -34,9 +42,19 @@ import ru.obvilion.launcher.utils.WindowMoveUtil;
 
 import java.lang.management.ManagementFactory;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FrameController implements Initializable {
+    @FXML public TextArea WWWW;
+
+    @FXML public Label DEBUG_VERSION;
+    @FXML public Label DEBUG_MEMORY;
+    @FXML public Label DEBUG_LASTGC;
+
+    @FXML public Label EXIT;
     @FXML public AnchorPane root;
     @FXML public Pane BG;
     @FXML public Pane TOP_BAR;
@@ -67,6 +85,10 @@ public class FrameController implements Initializable {
     @FXML public Label SELECTED_SERVER_WIPE_DATE;
     @FXML public Label SELECTED_SERVER_NAME;
     @FXML public Label SELECTED_SERVER_ONLINE;
+    @FXML public Pane SELECTED_ADDITIONAL;
+    @FXML public Pane MODS_LIST;
+    @FXML public ScrollPane MODS_LIST_SCROLL;
+    @FXML public Pane MODS_LIST_BOX;
 
     @FXML public Pane TO_GAME;
     @FXML public Label TO_GAME_TEXT;
@@ -79,7 +101,19 @@ public class FrameController implements Initializable {
 
     @FXML public Pane LOADING_PANE;
     @FXML public Pane SETTINGS_PANE;
-    @FXML public Pane SERVER_BUTTON;
+
+    @FXML public Pane MODS_LIST_BUTTON;
+    @FXML public Pane MODS_LIST_BUTTON2;
+
+    @FXML public Pane SERVER_DESCR;
+    @FXML public Pane SERVER_DESCR2;
+
+    @FXML public Pane CLIENT_SETTINGS_BUTTON;
+    @FXML public Pane CLIENT_SETTINGS_BUTTON2;
+
+    @FXML public Pane ONLINE_MAP_BUTTON;
+    @FXML public Pane ONLINE_MAP_BUTTON2;
+    @FXML public Pane ONLINE_MAP_BUTTON3;
 
     public String selectedServerImage = "";
     public Circle curRamMin;
@@ -92,6 +126,7 @@ public class FrameController implements Initializable {
     public CheckBox DEBUG_CB;
     public CheckBox AUTOUPDATE_CB;
     public CheckBox ANIMATIONS_CB;
+    public CheckBox DEV_INFO;
     public CheckBox SAVEPASS_CB;
     public Pane DEBUG_PANE;
     public TextArea DEBUG_TEXT;
@@ -109,6 +144,7 @@ public class FrameController implements Initializable {
     public Label SKIP;
     public Label SPEED;
     public Label SELECTED_SERVER_VERSION;
+    public ImageView yes;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -130,10 +166,32 @@ public class FrameController implements Initializable {
         DEBUG_BACK.setOnMouseClicked(e -> Gui.openPane(MAIN_PANE));
         DEBUG_GO.setOnMouseClicked(e -> Gui.openPane(DEBUG_PANE));
 
+
+        boolean ok = Config.getBooleanValue("devInfo", false);
+        DEBUG_VERSION.setVisible(ok);
+        DEBUG_MEMORY.setVisible(ok);
+        DEBUG_LASTGC.setVisible(ok);
+        DEV_INFO.setSelected(ok);
+
+        DEV_INFO.setOnMouseClicked(event -> {
+            boolean c = !Config.getBooleanValue("devInfo");
+            Config.setBoolean("devInfo", c);
+
+            DEBUG_VERSION.setVisible(c);
+            DEBUG_MEMORY.setVisible(c);
+            DEBUG_LASTGC.setVisible(c);
+        });
+
         SKIP.setCursor(Cursor.HAND);
         SKIP.setOnMouseClicked(e -> {
-            Downloader.skip = true;
+            Downloader.INSTANCE.skip = true;
             Vars.frameController.STATUS.setText("Досрочный запуск клиента...");
+        });
+
+        EXIT.setOnMouseClicked(event -> {
+            Config.setValue("password", "");
+            AUTH_PASSWORD.clear();
+            Gui.openPane(AUTHORIZATION_PANE);
         });
 
         Runnable authorization = () -> {
@@ -203,7 +261,8 @@ public class FrameController implements Initializable {
             Config.setValue("login", result.getString("name"));
             BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
 
-            Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar", 512, 512, true, false);
+            Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar", 512, 512, true, false);
+
             if (!avatar.isError())
                 AVATAR.setFill(new ImagePattern(avatar));
             NICKNAME.setText(Config.getValue("login"));
@@ -246,7 +305,9 @@ public class FrameController implements Initializable {
         AUTH_PASSWORD.setText(Config.getPasswordValue("password"));
         BG_TOP.setStyle("-fx-background-image: url(\"images/bg.jpg\");");
 
-        Image avatar = new Image(Global.API_LINK + "users/" + Config.getValue("login") + "/avatar");
+        // FIXME: при отстутствии инета долго грузит
+        Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar");
+
         if (!avatar.isError()) {
             AVATAR.setFill(new ImagePattern(avatar));
         } else {
@@ -268,10 +329,23 @@ public class FrameController implements Initializable {
         }));
 
         TO_GAME.setOnMouseClicked(event -> {
-            Downloader.setClient(SELECTED_SERVER_NAME.getText());
+            new Downloader(SELECTED_SERVER_NAME.getText(), 1);
+
             new Thread(() -> {
-                Client client = Downloader.load();
-                client.run();
+                Client client = Downloader.INSTANCE.loadAll();
+
+                if (client == null) {
+                    Gui.openPane(MAIN_PANE);
+                    return;
+                }
+
+                try {
+                    client.run();
+                } catch (Exception e) {
+                    Gui.openPane(MAIN_PANE);
+                    Log.err("Error on running client: ");
+                    e.printStackTrace();
+                }
             }).start();
 
             Gui.openPane(DOWNLOADING_PANE);
@@ -335,6 +409,203 @@ public class FrameController implements Initializable {
             Config.setValue("useAnimations", ANIMATIONS_CB.isSelected() ? "false" : "true");
             Vars.useAnimations = !ANIMATIONS_CB.isSelected();
         });
+
+        MODS_LIST_BUTTON.setOnMouseClicked(event -> {
+            Vars.showModsList = true;
+            Vars.isOptionalModsList = false;
+            loadModsList();
+
+            StyleUtil.to(SELECTED_ADDITIONAL, MODS_LIST, 400,
+                    () -> SELECTED_ADDITIONAL.setVisible(false));
+        });
+        MODS_LIST_BUTTON2.setOnMouseClicked(event -> {
+            Vars.showModsList = true;
+            Vars.isOptionalModsList = false;
+            loadModsList();
+
+            StyleUtil.to(SELECTED_ADDITIONAL, MODS_LIST, 400,
+                    () -> SELECTED_ADDITIONAL.setVisible(false));
+        });
+
+        SERVER_DESCR.setOnMouseClicked(event -> {
+            Vars.showModsList = false;
+
+            StyleUtil.to(MODS_LIST, SELECTED_ADDITIONAL, 400,
+                    () -> {
+                        MODS_LIST.setVisible(false);
+                        Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+                    });
+        });
+        SERVER_DESCR2.setOnMouseClicked(event -> {
+            Vars.showModsList = false;
+
+            StyleUtil.to(MODS_LIST, SELECTED_ADDITIONAL, 400,
+                    () -> {
+                        MODS_LIST.setVisible(false);
+                        Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+                    });
+        });
+
+        CLIENT_SETTINGS_BUTTON.setOnMouseClicked(event -> {
+            Vars.showModsList = true;
+            Vars.isOptionalModsList = true;
+            loadModsList();
+
+            StyleUtil.to(SELECTED_ADDITIONAL, MODS_LIST, 400,
+                    () -> SELECTED_ADDITIONAL.setVisible(false));
+        });
+
+        AtomicBoolean played = new AtomicBoolean(false);
+        AtomicReference<Double> delta = new AtomicReference<>((double) 0);
+
+        MODS_LIST_BOX.setOnScroll(event -> {
+            event.consume();
+
+            double deltaY = event.getDeltaY() * 0.0005 * 4172 / MODS_LIST_BOX.getHeight();
+            double _vvalue = MODS_LIST_SCROLL.getVvalue();
+
+            if (!Vars.useAnimations) {
+                MODS_LIST_SCROLL.setVvalue(_vvalue + -deltaY);
+                return;
+            }
+
+            delta.updateAndGet(v -> v + deltaY);
+
+            final Animation animation = new Transition() {
+                {
+                    setCycleDuration(Duration.millis(10000));
+                }
+
+                double d = 0;
+
+                protected void interpolate(double f) {
+                    double c = (delta.get() - d) * 0.1;
+                    d += c;
+
+                    float op = (float) (MODS_LIST_SCROLL.getVvalue() - c);
+                    MODS_LIST_SCROLL.setVvalue(Math.max(op, 0));
+                }
+            };
+
+            animation.setOnFinished(event1 -> {
+                played.set(false);
+                delta.set((double) 0);
+            });
+
+            if (played.get()) return;
+
+            played.set(true);
+            animation.play();
+        });
+        //verticalScrollbar.setUnitIncrement(defaultUnitIncrement * 3);
+    }
+
+
+    public static void loadModsList() {
+        loadModsList(Vars.selectedServer);
+    }
+    public static void loadModsList(JSONObject server) {
+        if (server == null || server.isNull("clientId")) {
+            Pane mod = new Pane();
+            mod.setPrefHeight(64);
+            mod.setId("mod_item");
+
+            Label name = new Label("Упс... Не могу найти клиент для этого сервера.");
+            name.setId("mod_item_name");
+            name.setLayoutX(26);
+            name.setLayoutY(14);
+
+            mod.getChildren().add(name);
+
+            Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+            Vars.frameController.MODS_LIST_BOX.getChildren().add(mod);
+
+            Log.err("Client id is not selected");
+            return;
+        }
+
+        new Thread(() -> {
+            Request req = new Request(RequestType.GET, Global.API_LINK + "clients/" + server.get("clientId"));
+            JSONObject out = req.connectAndGetJSON();
+
+            if (out == null || out.getInt("code") != 1000 || !out.has("data")) {
+                Pane mod = new Pane();
+                mod.setPrefHeight(64);
+                mod.setId("mod_item");
+
+                Label name = new Label("Упс... Произошла ошибка при загрузке данных клиента.");
+                name.setId("mod_item_name");
+                name.setLayoutX(26);
+                name.setLayoutY(14);
+
+                mod.getChildren().add(name);
+
+                Platform.runLater(() -> {
+                    Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+                    Vars.frameController.MODS_LIST_BOX.getChildren().add(mod);
+                });
+
+                Log.err(out);
+                return;
+            }
+
+            if (Vars.isOptionalModsList) {
+                JSONArray optional_mods = out.getJSONObject("data").getJSONArray("optionalMods");
+
+                Vars.optionalMods.clear();
+
+                if (Vars.clientMods.has(server.get("clientId") + "")) {
+                    for (Object o : Vars.clientMods.getJSONArray(server.get("clientId") + "")) {
+                        int find_id = (int) o;
+                        JSONObject ok = null;
+
+                        for (Object category : optional_mods) {
+                            for (Object _mod : ((JSONObject)category).getJSONArray("mods")) {
+                                JSONObject mod = (JSONObject) _mod;
+
+                                if (mod.getInt("id") == find_id) {
+                                    ok = mod;
+                                    break;
+                                }
+                            }
+
+                            if (ok != null) break;
+                        }
+
+                        if (ok == null) {
+                            Log.warn("Client mod with id {0} not allowed on server (on fetch)", find_id);
+                            continue;
+                        }
+
+                        Vars.optionalMods.add(ok);
+                    }
+                }
+
+                //Vars.optionalMods.add(mod_data);
+
+                Platform.runLater(() -> {
+                    Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+
+                    for (Object _mod : optional_mods) {
+                        JSONObject mod = (JSONObject) _mod;
+
+                        Vars.frameController.MODS_LIST_BOX.getChildren().add( new ClientMod(mod) );
+                    }
+                });
+            } else {
+                JSONArray mods = out.getJSONObject("data").getJSONArray("mods");
+                Platform.runLater(() -> {
+                    Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+
+                    for (Object _mod : mods) {
+                        JSONObject mod = (JSONObject) _mod;
+
+                        if (!Objects.equals(mod.getString("category"), "CLIENT"))
+                            Vars.frameController.MODS_LIST_BOX.getChildren().add( new Mod(mod) );
+                    }
+                });
+            }
+        }).start();
     }
 
     public static void openWebsite(Node node, String url) {

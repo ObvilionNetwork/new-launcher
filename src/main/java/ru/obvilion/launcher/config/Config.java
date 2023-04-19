@@ -1,5 +1,7 @@
 package ru.obvilion.launcher.config;
 
+import ru.obvilion.json.JSONArray;
+import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.utils.Base64;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.SystemStats;
@@ -41,6 +43,7 @@ public class Config {
                     config.setProperty("optionalMods", "");
                     config.setProperty("version", version);
                     config.setProperty("useAnimations", "true");
+                    config.setProperty("clientMods", "{}");
 
                     OutputStream out = new FileOutputStream(Global.LAUNCHER_CONFIG);
                     config.store(out, null);
@@ -80,6 +83,14 @@ public class Config {
 
     public static void setPasswordValue(String name, String value) {
         setValue(name, Base64.encrypt(value, "ljXocw9WGiwRxn8oIrXn3HfOvEInrOy"));
+    }
+
+    public static void setJSONObject(String name, JSONObject object) {
+        setValue(name, object.toString());
+    }
+
+    public static void setBoolean(String name, boolean value) {
+        setValue(name, value ? "true" : "false");
     }
 
     public static String getValue(String name) {
@@ -127,5 +138,13 @@ public class Config {
         }
 
         return Boolean.parseBoolean(v);
+    }
+
+    public static JSONObject getJSONObject(String name) {
+        try {
+            return new JSONObject(getValue(name));
+        } catch (Exception e) {
+            return new JSONObject();
+        }
     }
 }
