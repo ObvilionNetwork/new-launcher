@@ -56,15 +56,7 @@ public class Gui extends Application {
         stage.heightProperty().addListener(o -> ResizeListener.onHeightResize());
         stage.widthProperty().addListener(observable -> ResizeListener.onWidthResize());
 
-        AtomicLong last_i = new AtomicLong(0);
-        stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (last_i.get() + 100 < System.currentTimeMillis()) {
-                stage.setIconified(!newValue);
-
-                last_i.set(System.currentTimeMillis());
-                return;
-            }
-        });
+        stage.setAlwaysOnTop(false);
 
         WindowResizeUtil.addResizeListener(stage);
     }

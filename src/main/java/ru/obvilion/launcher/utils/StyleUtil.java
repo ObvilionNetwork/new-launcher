@@ -4,7 +4,6 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.shape.Arc;
