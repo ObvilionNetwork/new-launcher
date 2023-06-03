@@ -75,13 +75,18 @@ public class Downloader {
 
 
     private void addClientMods(JSONArray optional) {
-        if (!Vars.clientMods.has(this.id + "")) {
-            return;
-        }
-
         Vars.optionalMods.clear();
 
-        for (Object o : Vars.clientMods.getJSONArray(this.id + "")) {
+        if (!Vars.clientMods.has(this.id + "")) {
+            for (Object category : optional) {
+                for (Object _mod : ((JSONObject)category).getJSONArray("defaultMods")) {
+                    JSONObject mod = (JSONObject) _mod;
+                    Vars.optionalMods.add(mod);
+                }
+            }
+            Log.info("Can't find default client mods. Using mods from API.");
+        }
+        else for (Object o : Vars.clientMods.getJSONArray(this.id + "")) {
             int find_id = (int) o;
             JSONObject ok = null;
 
@@ -130,7 +135,7 @@ public class Downloader {
         Log.info("Checking client {0} - {1}...", name, id);
         all_items.clear();
 
-        JSONObject client = (JSONObject) getJsonFromAPI("clients/" + 1 + "/files");
+        JSONObject client = (JSONObject) getJsonFromAPI("clients/" + this.id + "/files");
         JSONObject default_client = (JSONObject) getJsonFromAPI(
                 "clients/default/files?version=" + client.getString("version"));
 
@@ -147,7 +152,7 @@ public class Downloader {
 
         check_items = new ArrayList<>(all_items);
 
-        addItems(configs, client_dir);
+        addConfigItems(configs, client_dir);
         addItems(assets, new File(Global.LAUNCHER_CLIENTS, "assets/" + Vars.clientVersion), () -> {
             Platform.runLater(() -> Vars.frameController.SKIP.setVisible(true));
         });
@@ -180,6 +185,29 @@ public class Downloader {
      */
     private void addItems(JSONObject items_data, File out) {
         addItems(items_data, out, null);
+    }
+
+    /**
+     * Добавляет в очередь не модульные файлы с включенными директориями и версиями
+     * @param items_data Ответ от сервера
+     * @param out В какую директорию сохранять
+     */
+    private void addConfigItems(JSONObject items_data, File out) {
+        JSONArray items = items_data.getJSONArray("files");
+        String apiFilesPrefix = items_data.getString("prefix");
+
+        for (Object it : items) {
+            JSONObject item = (JSONObject) it;
+
+            File file = new File(out, item.getString("path"));
+            String link = apiFilesPrefix + item.getString("path");
+            String hash = item.getString("hash");
+
+            DownloadItem downloadItem = new DownloadItem(link, file, item.getLong("fileSize"));
+            downloadItem.setVersion(hash);
+
+            all_items.add(downloadItem);
+        }
     }
 
     /**
@@ -406,7 +434,7 @@ public class Downloader {
         Log.info("Download ended. Starting client...");
 
         if (Vars.richPresence != null) {
-            Vars.richPresence.updateState("Сервер " + id);
+            Vars.richPresence.updateState("Сервер " + this.name);
             Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
             Vars.richPresence.updateInvite();
         }

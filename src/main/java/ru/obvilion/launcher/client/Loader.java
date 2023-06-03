@@ -53,12 +53,6 @@ public class Loader {
             Log.warn("Discord rich presence is not initialized.");
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (Vars.minecraft != null) {
-                Vars.minecraft.destroy();
-            }
-        }));
-
         new Thread(() -> {
             int old = 0;
             while (true) {
@@ -130,6 +124,8 @@ public class Loader {
             }
 
             Log.info("Automatic login to account is successful");
+
+            Vars.userData = result;
 
             Config.setValue("token", result.getString("token"));
             Config.setValue("uuid", result.getString("uuid"));

@@ -44,6 +44,7 @@ public class Config {
                     config.setProperty("version", version);
                     config.setProperty("useAnimations", "true");
                     config.setProperty("clientMods", "{}");
+                    config.setProperty("hideLauncher", "false");
 
                     OutputStream out = new FileOutputStream(Global.LAUNCHER_CONFIG);
                     config.store(out, null);

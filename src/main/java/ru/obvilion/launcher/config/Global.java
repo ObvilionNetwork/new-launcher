@@ -5,13 +5,14 @@ import java.io.File;
 public class Global {
     public static final String DISCORD_APP_ID = "657878741703327754";
     public static final String API_LINK = "https://mc.obvilion.ru/api/";
-    public static final String VERSION  = "2.10.4";
+    public static final String VERSION  = "2.10.6";
 
     public static final boolean PRINT_GC_STATUS = false;
 
     public static final File USER_HOME = new File(System.getProperty("user.home"));
     public static final File LAUNCHER_HOME = new File(USER_HOME, ".ObvilionNetwork");
     public static final File LAUNCHER_CONFIG = new File(LAUNCHER_HOME, "config.properties");
+    public static final File LAUNCHER_FILE_VERSIONS = new File(LAUNCHER_HOME, "file_versions.properties");
     public static final File LAUNCHER_CACHE = new File(LAUNCHER_HOME, ".cache");
     public static File LAUNCHER_CLIENTS = LAUNCHER_HOME;
 

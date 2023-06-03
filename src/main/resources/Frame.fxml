@@ -94,74 +94,60 @@
 
         <Pane fx:id="MAIN_PANE" visible="false">
             <!-- Buttons -->
-            <HBox layoutY="${600 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER">
-                <Region visible="false" prefHeight="200.0" prefWidth="${140 * root.width / 1165}" />
+            <HBox fx:id="BOTTOM_BUTTONS" layoutY="${600 * root.height / 660}" prefWidth="${root.width - 10}" alignment="CENTER">
+                <Region HBox.hgrow="ALWAYS" />
 
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" textAlignment="CENTER" fx:id="TO_SITE" text="НА САЙТ" />
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${205 * root.width / 1165}"  />
-
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" fx:id="TO_CABINET" text="ЛИЧНЫЙ КАБИНЕТ"/>
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${205 * root.width / 1165}" />
-
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" fx:id="TO_NEWS" text="НОВОСТИ"/>
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${209 * root.width / 1165}" />
-
-                <Pane fx:id="TO_GAME">
-                    <Label layoutY="${-22 * root.width / 1165}" fx:id="TO_GAME_TEXT" id="TO_GAME_text" text="ИГРАТЬ"/>
-                    <Pane layoutX="${TO_GAME_TEXT.width + 5}" layoutY="${TO_GAME_TEXT.height / 2 - 15 - 22 * root.width / 1165}">
-                        <SVGPath content="M22.8603 14.1768L8.98437 0.33925C8.52975 -0.113854 7.79369 -0.113092 7.33983 0.341594C6.88632 0.796221 6.88749 1.53268 7.34217 1.98614L20.3921 15.0001L7.3417 28.0139C6.88708 28.4674 6.88591 29.2034 7.33936 29.6581C7.56688 29.886 7.86494 30 8.16301 30C8.46031 30 8.75721 29.8868 8.98432 29.6604L22.8603 15.8233C23.0792 15.6054 23.2021 15.309 23.2021 15.0001C23.2021 14.6911 23.0789 14.395 22.8603 14.1768Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" fill="white" strokeWidth="0.9" />
+                <HBox fx:id="TO_GAME" HBox.hgrow="ALWAYS" style="-fx-padding: -25 0 0 0">
+                    <Pane>
+                        <Label fx:id="TO_GAME_TEXT" id="TO_GAME_text" text="ИГРАТЬ"  layoutY="${20 * ((1165 - root.width) / 1165)}" />
                     </Pane>
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                </Pane>
+                    <Pane fx:id="TO_GAME_ARROW">
+                        <SVGPath layoutY="${8 * ((1165 - root.width) / 1165) + 2}" content="M22.8603 14.1768L8.98437 0.33925C8.52975 -0.113854 7.79369 -0.113092 7.33983 0.341594C6.88632 0.796221 6.88749 1.53268 7.34217 1.98614L20.3921 15.0001L7.3417 28.0139C6.88708 28.4674 6.88591 29.2034 7.33936 29.6581C7.56688 29.886 7.86494 30 8.16301 30C8.46031 30 8.75721 29.8868 8.98432 29.6604L22.8603 15.8233C23.0792 15.6054 23.2021 15.309 23.2021 15.0001C23.2021 14.6911 23.0789 14.395 22.8603 14.1768Z" scaleX="0.7" scaleY="0.7" stroke="WHITE" fill="white" strokeWidth="0.9" />
+                    </Pane>
+                </HBox>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
-
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" fx:id="TO_FORUM" text="ФОРУМ"/>
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
-
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" fx:id="TO_SETTINGS" text="НАСТРОЙКИ"/>
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
-
-                <Pane>
+                <Pane HBox.hgrow="ALWAYS">
                     <Label id="buttons_main" fx:id="TO_RULES" text="ПРАВИЛА ПРОЕКТА"/>
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Pane>
 
-                <Region visible="false" prefHeight="200.0" prefWidth="${200 * root.width / 1165}" />
             </HBox>
 
             <!-- User info -->
@@ -171,7 +157,7 @@
             <Label fx:id="BALANCE" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660 + 20}" text="Баланс: 0р." />
 
             <!-- Debug info -->
-            <Label fx:id="DEBUG_VERSION" id="SELECTED_SERVER_WIPE_DATE" layoutX="${31 * root.width / 1165 + 5}" layoutY="${17 * root.height / 660}" text="Бета версия 2.10.4" />
+            <Label fx:id="DEBUG_VERSION" id="SELECTED_SERVER_WIPE_DATE" layoutX="${31 * root.width / 1165 + 5}" layoutY="${17 * root.height / 660}" text="Бета версия 2.10.6" />
             <Label fx:id="DEBUG_MEMORY" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_VERSION.layoutX + DEBUG_VERSION.width + 20}" layoutY="${17 * root.height / 660}" text="0 MB" />
             <Label fx:id="DEBUG_LASTGC" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_MEMORY.layoutX + DEBUG_MEMORY.width + 20}" layoutY="${17 * root.height / 660}" text="00:00.000 (-0 MB)" />
 
@@ -278,6 +264,7 @@
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${162 * root.height / 660 + 94}" fx:id="SEND_STATISTICS_CB" text="Отправлять информацию о ошибках на сервер Obvilion" />
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${166 * root.height / 660 + 122}" fx:id="ANIMATIONS_CB" text="Выключить анимации в лаунчере" />
             <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${170 * root.height / 660 + 150}" fx:id="DEV_INFO" text="Информация для разработчиков лаунчера" />
+            <CheckBox layoutX="${92 * root.width / 1165}" layoutY="${170 * root.height / 660 + 178}" fx:id="HIDE_LAUNCHER" text="Выключать лаунчер при запуске игры (потребление ОЗУ ↓)" />
 
             <Label id="ramValueTitle" layoutX="${90 * root.width / 1165}" layoutY="${490 * root.height / 660 + 30}" text="Количество ОЗУ" />
             <Pane fx:id="RAM_SELECTOR" layoutX="${90 * root.width / 1165}" layoutY="${530 * root.height / 660 + 30}" prefHeight="14.0" prefWidth="390.0">

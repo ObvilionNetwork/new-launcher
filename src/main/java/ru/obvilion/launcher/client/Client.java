@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
@@ -123,6 +124,16 @@ public class Client {
             }
         });
 
+        final AtomicBoolean stopped = new AtomicBoolean(false);
+
+        if (Config.getBooleanValue("hideLauncher", false) && !Config.getBooleanValue("debug", false)) {
+            Log.delay(5000, () -> {
+                if (stopped.get()) return;
+
+                Runtime.getRuntime().exit(0);
+            });
+        }
+
         try {
             exit.set(finalPs.waitFor()); // Ждем когда майн закроется
 
@@ -131,6 +142,8 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        stopped.set(true);
 
         if (Vars.richPresence != null) {
             Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));

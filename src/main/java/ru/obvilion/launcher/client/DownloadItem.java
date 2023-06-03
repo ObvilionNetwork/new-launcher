@@ -17,6 +17,7 @@ public class DownloadItem {
     private Runnable callback = null;
     private short _try = 0;
     private String hash = null;
+    private String version = null;
 
     // TODO: hash
 
@@ -28,6 +29,10 @@ public class DownloadItem {
 
     public void setHashCode(String hashCode) {
         this.hash = hashCode;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public void setOnDownloadCallback(Runnable runnable) {
@@ -49,6 +54,8 @@ public class DownloadItem {
             Platform.runLater(() -> Vars.frameController.STATUS.setText("Загрузка файла " + this.link));
 
             FileUtil.threadedDownload(Downloader.api + URLEncoder.encode(link, "UTF-8").replaceAll("%2F", "/"), save_to, size, threads);
+
+            FileVersions.setValue(save_to.getAbsolutePath(), version);
         } catch (Exception e) {
             if (_try > 2) {
                 Log.err("Error on download file " + link);
@@ -67,6 +74,27 @@ public class DownloadItem {
             if (other.exists()) {
                 save_to = other;
             }
+        }
+
+        if (size == 0) {
+            try {
+                save_to.createNewFile();
+                return true;
+            } catch (Exception e) {
+                Log.err("I can't create a file " + save_to);
+                e.printStackTrace();
+            }
+        }
+
+        if (version != null) {
+            String vers = FileVersions.getValue(save_to.getAbsolutePath());
+
+            if (vers == null || !vers.equals(version)) {
+                Log.debug("  - Detected invalid version ({0} / {1}) - {2}", version, String.valueOf(vers), this.save_to.getName());
+                return false;
+            }
+
+            return true;
         }
 
         if (save_to.exists() && save_to.length() != size) {

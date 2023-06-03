@@ -13,6 +13,7 @@ import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.fx.CachingImageLoader;
+import ru.obvilion.launcher.utils.Arrays;
 import ru.obvilion.launcher.utils.Log;
 
 public class ClientMod extends VBox {
@@ -69,6 +70,7 @@ public class ClientMod extends VBox {
         this.getChildren().addAll(name, desc);
 
         this.mods = data.getJSONArray("mods");
+        this.mods = Arrays.sortByName(this.mods);
 
         for (Object mod : this.mods) {
             this.getChildren().add(

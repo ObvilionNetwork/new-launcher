@@ -16,6 +16,10 @@ public class Vars {
     public static FrameController frameController;
     public static ServersController serversController;
     public static JSONArray servers;
+
+    /* Последние данные пользователя */
+    public static JSONObject userData = null;
+
     public static boolean useCustomJRE = false;
     public static boolean useAnimations = true;
 
