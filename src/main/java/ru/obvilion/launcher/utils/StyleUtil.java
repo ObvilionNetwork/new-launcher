@@ -12,6 +12,34 @@ import javafx.util.Duration;
 import ru.obvilion.launcher.Vars;
 
 public class StyleUtil {
+    /* Pop-up message management */
+    private static boolean messageOpened = false;
+
+    public static void openMessage(String title, String description, int animationDuration, int closeVia, float opacity) {
+        if (messageOpened) return;
+
+        openMessage(title, description, animationDuration, opacity);
+
+        Log.delay(closeVia, () -> closeMessage(animationDuration));
+    }
+
+    public static void openMessage(String title, String description, int animationDuration, float opacity) {
+        messageOpened = true;
+
+        Vars.frameController.NO_INTERNET_BG.setOpacity(opacity);
+        Vars.frameController.NO_INTERNET_TITLE.setText(title);
+        Vars.frameController.NO_INTERNET_SUBTITLE.setText(description);
+
+        StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, 0, animationDuration);
+    }
+
+    public static void closeMessage(int animationDuration) {
+        Log.delay(animationDuration, () -> messageOpened = false);
+
+        StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, -150, animationDuration);
+    }
+    /* Pop-up message management end */
+
     public static void createFadeAnimation(Node node, int fadeDuration, float to) {
         if (!Vars.useAnimations) {
             node.setOpacity(to);
