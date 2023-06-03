@@ -17,7 +17,7 @@ public class Vars {
     public static ServersController serversController;
     public static JSONArray servers;
 
-    /* Последние данные пользователя */
+    /* Последние данные о пользователе */
     public static JSONObject userData = null;
 
     public static boolean useCustomJRE = false;
@@ -32,11 +32,23 @@ public class Vars {
     /* Текущая версия клиента при скачивании */
     public static String clientVersion = "1.7.10";
 
-    /* Список опциональных модов */
+    /**
+     *  Список в данный момент выбранных опциональных модов
+     *  @apiNote Mod[]
+     */
     public static List<JSONObject> optionalMods = new ArrayList<>();
 
-    /* Опциональные моды для всех клиентов из конфига */
+    /**
+     * Опциональные моды для всех клиентов из конфига
+     * @apiNote { clientId: modIds[] }
+     */
     public static JSONObject clientMods = new JSONObject();
+
+    /**
+     * Все клиентские моды для проверки добавляения новых модов
+     * @apiNote { clientId: modIds[] }
+     */
+    public static JSONObject allClientMods = new JSONObject();
 
     public static Process minecraft;
     public static int maxRam;

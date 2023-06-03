@@ -74,6 +74,20 @@ public class Downloader {
     }
 
 
+    private boolean modInDefaultClientMods(JSONArray optional, int id) {
+        for (Object category : optional) {
+            for (Object _mod : ((JSONObject)category).getJSONArray("defaultMods")) {
+                JSONObject mod = (JSONObject) _mod;
+
+                if (mod.getInt("id") == id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void addClientMods(JSONArray optional) {
         Vars.optionalMods.clear();
 
@@ -86,31 +100,88 @@ public class Downloader {
             }
             Log.info("Can't find default client mods. Using mods from API.");
         }
-        else for (Object o : Vars.clientMods.getJSONArray(this.id + "")) {
-            int find_id = (int) o;
-            JSONObject ok = null;
 
-            for (Object category : optional) {
-                for (Object _mod : ((JSONObject)category).getJSONArray("mods")) {
-                    JSONObject mod = (JSONObject) _mod;
+        else {
+            // Добавляем клиентские моды из конфига
+            for (Object o : Vars.clientMods.getJSONArray(this.id + "")) {
+                int find_id = (int) o;
+                JSONObject ok = null;
 
-                    if (mod.getInt("id") == find_id) {
-                        ok = mod;
-                        break;
+                // Проверяем исходные
+                for (Object category : optional) {
+                    for (Object _mod : ((JSONObject) category).getJSONArray("mods")) {
+                        JSONObject mod = (JSONObject) _mod;
+
+                        if (mod.getInt("id") == find_id) {
+                            ok = mod;
+                            break;
+                        }
                     }
+
+                    if (ok != null) break;
                 }
 
-                if (ok != null) break;
+                if (ok == null) {
+                    Log.warn("Client mod with id {0} not allowed on server", find_id);
+                    continue;
+                }
+
+                Vars.optionalMods.add(ok);
             }
 
-            if (ok == null) {
-                Log.warn("Client mod with id {0} not allowed on server", find_id);
-                continue;
+            // Проверяем моды, которых нет в конфиге и были добавлены недавно
+            JSONArray newAllClientMods = new JSONArray();
+
+            Vars.allClientMods = Config.getJSONObject("allClientMods");
+
+            if (!Vars.allClientMods.has(this.id + "")) {
+                Vars.allClientMods.put(this.id + "", new JSONArray());
             }
 
-            Vars.optionalMods.add(ok);
+            for (Object category : optional) {
+
+                for (Object _mod : ((JSONObject) category).getJSONArray("mods")) {
+                    JSONObject mod = (JSONObject) _mod;
+                    boolean found = false;
+
+                    for (Object find_mod_id : Vars.allClientMods.getJSONArray(this.id + "")) {
+                        int find_id = (int) find_mod_id;
+
+                        if (mod.getInt("id") == find_id) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        Log.info("| - Mod {0} not found in allClientMod", mod.getInt("id"));
+
+                        JSONArray clientMods = Vars.clientMods.getJSONArray(this.id + "");
+
+                        if ( modInDefaultClientMods(optional, mod.getInt("id"))
+                                && !clientMods.toList().contains(mod.getInt("id")) ) {
+
+                            Log.info("| - And mod {0} in default client mods. Adding it...", mod.getInt("id"));
+
+
+                            clientMods.put(mod.getInt("id"));
+
+                            Vars.optionalMods.add(mod);
+                        }
+                    }
+
+                    newAllClientMods.put( mod.getInt("id") );
+                }
+            }
+
+            Vars.allClientMods.put( this.id + "", newAllClientMods );
         }
 
+        // Сохраняем конфиги
+        Config.setJSONObject("clientMods", Vars.clientMods);
+        Config.setJSONObject("allClientMods", Vars.allClientMods);
+
+        // Добавлем моды в список файлов к загрузке
         for (JSONObject mod : Vars.optionalMods) {
             String path = mod.getString("path");
 
