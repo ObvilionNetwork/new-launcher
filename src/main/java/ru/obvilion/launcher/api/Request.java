@@ -3,7 +3,6 @@ package ru.obvilion.launcher.api;
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.config.Global;
-import ru.obvilion.launcher.utils.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -80,7 +79,9 @@ public class Request {
 
         connection.setRequestMethod(this.requestType.toString());
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+        InputStream is = connection.getResponseCode() >= 400 ? connection.getErrorStream() : connection.getInputStream();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
