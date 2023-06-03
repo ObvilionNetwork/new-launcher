@@ -1,12 +1,14 @@
 package ru.obvilion.launcher.utils;
 
+import javafx.concurrent.Task;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Log {
     private static final String
-            log    = "[L]: ", warn  = "[W]: ",
-            err    = "[E]: ", debug = "[D]: ",
+            log    = "[L]: ",    warn  = "[W]: ",
+            err    = "[E]: ",    debug = "[D]: ",
             custom = "[%]: ";
 
     private static String getTime() {
@@ -55,5 +57,19 @@ public class Log {
     }
     public static void custom(String name, String message, Object... n) {
         print(getTime() + custom.replace("%", name) + getMessage(message, n));
+    }
+
+    public static void delay(long millis, Runnable continuation) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() {
+                try { Thread.sleep(millis); }
+                catch (InterruptedException ignored) { }
+                return null;
+            }
+        };
+
+        sleeper.setOnSucceeded(event -> continuation.run());
+        new Thread(sleeper).start();
     }
 }

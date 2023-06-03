@@ -26,10 +26,11 @@ public class RichPresence {
         handlers.joinGame = secret -> {
             Log.info("Discord RPC join: {0}", secret);
             if (Vars.selectedPane != Vars.frameController.MAIN_PANE && Vars.selectedPane != Vars.frameController.SETTINGS_PANE) {
-                Vars.frameController.NO_INTERNET_BG.setOpacity(0.35);
-                Vars.frameController.NO_INTERNET_TITLE.setText("ОШИБКА АВТОМАТИЧЕСКОГО ПОДКЛЮЧЕНИЯ С DISCORD");
-                Vars.frameController.NO_INTERNET_SUBTITLE.setText("Вы должны находиться в меню выбора серверов.");
-                StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, 0, 1400);
+                StyleUtil.openMessage(
+                        "ОШИБКА АВТОМАТИЧЕСКОГО ПОДКЛЮЧЕНИЯ С DISCORD",
+                        "Вы должны находиться в меню выбора серверов.",
+                        1400, 5000, 0.85F
+                );
                 return;
             }
 
@@ -43,21 +44,23 @@ public class RichPresence {
                 }
 
                 if (server == null) {
-                    Vars.frameController.NO_INTERNET_BG.setOpacity(0.35);
-                    Vars.frameController.NO_INTERNET_TITLE.setText("ОШИБКА АВТОМАТИЧЕСКОГО ПОДКЛЮЧЕНИЯ С DISCORD");
-                    Vars.frameController.NO_INTERNET_SUBTITLE.setText("Сервер не найден");
-                    StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, 0, 1400);
+                    StyleUtil.openMessage(
+                            "ОШИБКА АВТОМАТИЧЕСКОГО ПОДКЛЮЧЕНИЯ С DISCORD",
+                            "Сервер не найден. Обратитесь в техподдержку при помощи Discord: https://discord.gg/cg82mjh",
+                            1400, 5000, 0.85F
+                    );
                     return;
                 }
 
-                Vars.frameController.NO_INTERNET_BG.setOpacity(0.35);
-                Vars.frameController.NO_INTERNET_TITLE.setText("АВТОМАТИЧЕСКОЕ ПОДКЛЮЧЕНИЕ ПРИ ПОМОЩИ DISCORD");
-                Vars.frameController.NO_INTERNET_SUBTITLE.setText("Загрузка клиента... Ваш id: " + secret);
-                StyleUtil.changePosition(Vars.frameController.NO_INTERNET, 0, 0, 1400);
+                StyleUtil.openMessage(
+                        "АВТОМАТИЧЕСКОЕ ПОДКЛЮЧЕНИЕ ПРИ ПОМОЩИ DISCORD",
+                        "Загрузка клиента... Ваш id: " + secret,
+                        1400, 5000, 0.85F
+                );
 
                 Vars.selectedServer = server;
 
-                new Downloader(server.getString("name"), 1);
+                new Downloader(server.getString("name"), server.getInt("clientId"));
 
                 new Thread(() -> {
                     Client client = Downloader.INSTANCE.loadAll();

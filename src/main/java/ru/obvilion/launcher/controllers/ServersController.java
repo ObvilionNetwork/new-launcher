@@ -31,8 +31,6 @@ import static ru.obvilion.launcher.controllers.FrameController.loadModsList;
 public class ServersController {
     FrameController c;
 
-    public String priority;
-
     public void init() {
 
         /* Add servers to list */
@@ -78,6 +76,27 @@ public class ServersController {
         c.SELECTED_SERVER_VERSION.setText(server.getString("version"));
 
         c.selectedServerImage = server.getString("image");
+
+        if (server.getString("status").equals("IN_DEV")) {
+            c.TO_GAME_TEXT.setText("В РАЗРАБОТКЕ");
+            c.TO_GAME_TEXT.setOpacity(0.35);
+            c.TO_GAME.setCursor(Cursor.DEFAULT);
+            c.TO_GAME_ARROW.setVisible(false);
+        }
+        else if (server.getString("status").equals("EARLY_ACCESS")) {
+            c.TO_GAME_TEXT.setText("РАННИЙ ДОСТУП");
+            c.TO_GAME_TEXT.setLayoutX(20);
+            c.TO_GAME_TEXT.setOpacity(0.35);
+            c.TO_GAME.setCursor(Cursor.DEFAULT);
+            c.TO_GAME_ARROW.setVisible(false);
+        }
+        else {
+            c.TO_GAME_TEXT.setText("ИГРАТЬ");
+            c.TO_GAME_TEXT.setOpacity(1);
+            c.TO_GAME.setCursor(Cursor.HAND);
+            c.TO_GAME_ARROW.setVisible(true);
+            c.TO_GAME_TEXT.setLayoutX(0);
+        }
 
         new CachingImageLoader()
                 .load(c.selectedServerImage)
@@ -229,7 +248,21 @@ public class ServersController {
             Platform.runLater(() -> version.setLayoutX(name.getWidth() + 15));
         });
 
-        Label online_label = new Label(serv.getInt("online") == -1 ? "Сервер выключен." : "Игроков онлайн:");
+        String label = serv.getInt("online") == -1 ? "Сервер выключен" : "Игроков онлайн:";
+
+        switch (serv.getString("status")) {
+            case "IN_DEV":
+                label = "В разработке";
+                break;
+            case "TECH_WORKS":
+                label = "Тех. работы";
+                break;
+            case "EARLY_ACCESS":
+                label = "Ранний доступ";
+                break;
+        }
+
+        Label online_label = new Label(label);
         online_label.setStyle("-fx-font-family: 'Istok Web Regular', sans-serif; -fx-text-fill: #ADAEB2; -fx-font-size: 12.5;");
         online_label.setLayoutX(8);
         online_label.setLayoutY(17);

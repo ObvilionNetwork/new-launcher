@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
@@ -35,6 +36,7 @@ import ru.obvilion.launcher.controllers.elements.ClientMod;
 import ru.obvilion.launcher.controllers.elements.Mod;
 import ru.obvilion.launcher.fx.CachingImageLoader;
 import ru.obvilion.launcher.gui.Gui;
+import ru.obvilion.launcher.utils.Arrays;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
@@ -42,8 +44,7 @@ import ru.obvilion.launcher.utils.WindowMoveUtil;
 
 import java.lang.management.ManagementFactory;
 import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -74,6 +75,7 @@ public class FrameController implements Initializable {
     @FXML public Label REMEMBER_PASSWORD;
 
     @FXML public Pane MAIN_PANE;
+    @FXML public HBox BOTTOM_BUTTONS;
 
     @FXML public Label NICKNAME;
     @FXML public Circle AVATAR;
@@ -92,6 +94,7 @@ public class FrameController implements Initializable {
 
     @FXML public Pane TO_GAME;
     @FXML public Label TO_GAME_TEXT;
+    @FXML public Pane TO_GAME_ARROW;
     @FXML public Label TO_SITE;
     @FXML public Label TO_CABINET;
     @FXML public Label TO_NEWS;
@@ -109,10 +112,8 @@ public class FrameController implements Initializable {
     @FXML public Pane SERVER_DESCR2;
 
     @FXML public Pane CLIENT_SETTINGS_BUTTON;
-    @FXML public Pane CLIENT_SETTINGS_BUTTON2;
 
     @FXML public Pane ONLINE_MAP_BUTTON;
-    @FXML public Pane ONLINE_MAP_BUTTON2;
     @FXML public Pane ONLINE_MAP_BUTTON3;
 
     public String selectedServerImage = "";
@@ -128,6 +129,7 @@ public class FrameController implements Initializable {
     public CheckBox ANIMATIONS_CB;
     public CheckBox DEV_INFO;
     public CheckBox SAVEPASS_CB;
+    public CheckBox HIDE_LAUNCHER;
     public Pane DEBUG_PANE;
     public TextArea DEBUG_TEXT;
     public Label PERSENT;
@@ -180,6 +182,12 @@ public class FrameController implements Initializable {
             DEBUG_VERSION.setVisible(c);
             DEBUG_MEMORY.setVisible(c);
             DEBUG_LASTGC.setVisible(c);
+        });
+
+        HIDE_LAUNCHER.setSelected(Config.getBooleanValue("hideLauncher", false));
+        HIDE_LAUNCHER.setOnMouseClicked(event -> {
+            boolean c = !Config.getBooleanValue("hideLauncher");
+            Config.setBoolean("hideLauncher", c);
         });
 
         SKIP.setCursor(Cursor.HAND);
@@ -251,6 +259,8 @@ public class FrameController implements Initializable {
 
                 return;
             }
+
+            Vars.userData = result;
 
             if (Config.getBooleanValue("savePass")) {
                 Config.setPasswordValue("password", AUTH_PASSWORD.getText());
@@ -329,13 +339,80 @@ public class FrameController implements Initializable {
         }));
 
         TO_GAME.setOnMouseClicked(event -> {
-            new Downloader(SELECTED_SERVER_NAME.getText(), 1);
+            if (Vars.selectedServer == null) {
+                StyleUtil.openMessage(
+                        "СЕРВЕР НЕ ВЫБРАН", "Выберите сервер перед заходом",
+                        1400, 5000, 0.85F
+                );
+                return;
+            }
+
+            List<String> permissions = new ArrayList<>();
+            JSONArray arr = Vars.userData.getJSONArray("permissions");
+
+            for (int i = 0; i < arr.length(); i++) {
+                permissions.add( arr.getString(i) );
+            }
+
+            if (Vars.selectedServer.getString("status").equals("EARLY_ACCESS") &&
+                    !(permissions.contains("TEST_SERVERS") || permissions.contains("DEV_SERVERS")) ) {
+
+                StyleUtil.openMessage(
+                        "СЕРВЕР НАХОДИТСЯ В ЗАКРЫТОМ БЕТА ТЕСТЕ",
+                        "Вход разрешен только тестировщикам проекта mc.obvilion.ru",
+                        1400, 5000, 0.85F
+                );
+
+                return;
+            }
+
+            if (Vars.selectedServer.getString("status").equals("IN_DEV") && !permissions.contains("DEV_SERVERS")) {
+                StyleUtil.openMessage(
+                        "СЕРВЕР НАХОДИТСЯ В РАЗРАБОТКЕ",
+                        "Вход разрешен только разработчикам проекта mc.obvilion.ru",
+                        1400, 5000, 0.85F
+                );
+                return;
+            }
+
+            new Downloader(SELECTED_SERVER_NAME.getText(), Vars.selectedServer.getInt("clientId"));
 
             new Thread(() -> {
-                Client client = Downloader.INSTANCE.loadAll();
+                Client client = null;
+
+                try {
+                    client = Downloader.INSTANCE.loadAll();
+                } catch (Exception e) {
+                    Log.err("Error on downloading client " + SELECTED_SERVER_NAME.getText());
+                    e.printStackTrace();
+
+                    Platform.runLater(() -> {
+                        if (e.getMessage().contains("Specified client does not exist")) {
+                            StyleUtil.openMessage(
+                                    "НЕ МОГУ ЗАГРУЗИТЬ ДАННЫЕ О ЭТОМ КЛИЕНТЕ",
+                                    "Данного клиента ещё нет на сервере Obvilion",
+                                    1400, 5000,
+                                    0.80f
+                            );
+                        }
+                        else {
+                            StyleUtil.openMessage(
+                                    "НЕ МОГУ ЗАГРУЗИТЬ ДАННЫЕ О ЭТОМ КЛИЕНТЕ",
+                                    "Скорее всего данного клиента ещё нет на сервере Obvilion",
+                                    1400, 5000,
+                                    0.80f
+                            );
+                        }
+                    });
+                }
 
                 if (client == null) {
-                    Gui.openPane(MAIN_PANE);
+                    Log.delay(410, () -> {
+                        Platform.runLater(() -> {
+                            Gui.openPane(MAIN_PANE);
+                        });
+                    });
+
                     return;
                 }
 
@@ -579,14 +656,24 @@ public class FrameController implements Initializable {
 
                         Vars.optionalMods.add(ok);
                     }
+                } else {
+                    for (Object category : optional_mods) {
+                        for (Object _mod : ((JSONObject)category).getJSONArray("defaultMods")) {
+                            JSONObject mod = (JSONObject) _mod;
+                            Vars.optionalMods.add(mod);
+                        }
+                    }
+                    Log.warn("Can't find default client mods. Using mods from API.");
                 }
 
                 //Vars.optionalMods.add(mod_data);
 
+                JSONArray tmp = Arrays.sortByName(optional_mods);
+
                 Platform.runLater(() -> {
                     Vars.frameController.MODS_LIST_BOX.getChildren().clear();
 
-                    for (Object _mod : optional_mods) {
+                    for (Object _mod : tmp) {
                         JSONObject mod = (JSONObject) _mod;
 
                         Vars.frameController.MODS_LIST_BOX.getChildren().add( new ClientMod(mod) );
@@ -594,10 +681,12 @@ public class FrameController implements Initializable {
                 });
             } else {
                 JSONArray mods = out.getJSONObject("data").getJSONArray("mods");
+                JSONArray temp = Arrays.sortByName(mods);
+
                 Platform.runLater(() -> {
                     Vars.frameController.MODS_LIST_BOX.getChildren().clear();
 
-                    for (Object _mod : mods) {
+                    for (Object _mod : temp) {
                         JSONObject mod = (JSONObject) _mod;
 
                         if (!Objects.equals(mod.getString("category"), "CLIENT"))
