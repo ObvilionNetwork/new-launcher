@@ -42,6 +42,8 @@ dependencies {
     implementation 'club.minnced:java-discord-rpc:2.0.2'
     implementation 'com.github.ObvilionNetwork:JSONLib:1.0'
 
+    implementation (files('libs/progress-bar-1.0.1.jar'))
+
     if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
         implementation (files('libs/javafx-graphics-11.0.2-win.jar'))
     }

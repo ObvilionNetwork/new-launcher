@@ -14,6 +14,7 @@ public class Global {
     public static final File LAUNCHER_CONFIG = new File(LAUNCHER_HOME, "config.properties");
     public static final File LAUNCHER_FILE_VERSIONS = new File(LAUNCHER_HOME, "file_versions.properties");
     public static final File LAUNCHER_CACHE = new File(LAUNCHER_HOME, ".cache");
+    public static final File LAUNCHER_PLUGINS = new File(LAUNCHER_HOME, ".plugins");
     public static File LAUNCHER_CLIENTS = LAUNCHER_HOME;
 
     public static final String OS = System.getProperty("os.name");

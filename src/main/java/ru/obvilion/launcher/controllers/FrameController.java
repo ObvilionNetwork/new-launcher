@@ -10,6 +10,8 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -36,15 +38,20 @@ import ru.obvilion.launcher.controllers.elements.ClientMod;
 import ru.obvilion.launcher.controllers.elements.Mod;
 import ru.obvilion.launcher.fx.CachingImageLoader;
 import ru.obvilion.launcher.gui.Gui;
+import ru.obvilion.launcher.gui.plugins.TaskBar;
 import ru.obvilion.launcher.utils.Arrays;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowMoveUtil;
+import ru.obvilion.progressbar.ProgressState;
 
+import javax.swing.*;
+import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -574,7 +581,6 @@ public class FrameController implements Initializable {
             played.set(true);
             animation.play();
         });
-        //verticalScrollbar.setUnitIncrement(defaultUnitIncrement * 3);
     }
 
 

@@ -15,12 +15,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.client.Loader;
-import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.launcher.gui.plugins.TaskBar;
 import ru.obvilion.launcher.utils.StyleUtil;
 import ru.obvilion.launcher.utils.WindowResizeUtil;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
+import ru.obvilion.progressbar.ProgressState;
 
 public class Gui extends Application {
     private static Stage stage;
@@ -59,6 +57,9 @@ public class Gui extends Application {
         stage.setAlwaysOnTop(false);
 
         WindowResizeUtil.addResizeListener(stage);
+
+        // Load lib after first render
+        Platform.runLater(TaskBar::load);
     }
 
     public static Stage getStage() {

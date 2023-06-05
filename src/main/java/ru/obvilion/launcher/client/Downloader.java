@@ -10,8 +10,10 @@ import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.api.Request;
+import ru.obvilion.launcher.gui.plugins.TaskBar;
 import ru.obvilion.launcher.utils.DesktopUtil;
 import ru.obvilion.launcher.utils.Log;
+import ru.obvilion.progressbar.ProgressState;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class Downloader {
     }
 
     public Client loadAll() {
+        TaskBar.setProgressState(ProgressState.INDETERMINATE);
         Platform.runLater(() -> Vars.frameController.STATUS.setText("Получение списка файлов с сервера..."));
 
         // Запрашиваем список файлов с сервера, формируем списки к загрузке
@@ -560,6 +563,8 @@ public class Downloader {
     }
 
     private void stopAnimationThread() {
+        TaskBar.setProgressState(ProgressState.NO_PROGRESS);
+
         if (this.animation_thread == null) {
             return;
         }
@@ -605,6 +610,9 @@ public class Downloader {
                     tec_percent = 1;
                 }
 
+                int toolbar_percent = (int) (tec_percent * 100);
+                TaskBar.setProgressValue(toolbar_percent);
+
                 float f_tec_percent = tec_percent;
                 float f_last_percent = last_percent;
                 final Animation animation = new Transition() {
@@ -629,5 +637,7 @@ public class Downloader {
         }, "Loading animation Thread");
 
         this.animation_thread.start();
+
+        TaskBar.setProgressState(ProgressState.NORMAL);
     }
 }
