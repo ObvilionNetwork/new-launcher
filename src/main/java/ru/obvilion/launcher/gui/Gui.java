@@ -58,8 +58,11 @@ public class Gui extends Application {
 
         WindowResizeUtil.addResizeListener(stage);
 
-        // Load lib after first render
-        Platform.runLater(TaskBar::load);
+
+        Thread tb_loader = new Thread(TaskBar::load, "TaskBar loader");
+
+        tb_loader.setDaemon(true);
+        tb_loader.start();
     }
 
     public static Stage getStage() {
