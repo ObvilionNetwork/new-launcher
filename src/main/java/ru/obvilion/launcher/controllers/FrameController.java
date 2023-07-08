@@ -178,6 +178,7 @@ public class FrameController implements Initializable {
 
         boolean ok = Config.getBooleanValue("devInfo", false);
         DEBUG_VERSION.setVisible(ok);
+        DEBUG_VERSION.setText("Бета версия " + Global.VERSION);
         DEBUG_MEMORY.setVisible(ok);
         DEBUG_LASTGC.setVisible(ok);
         DEV_INFO.setSelected(ok);

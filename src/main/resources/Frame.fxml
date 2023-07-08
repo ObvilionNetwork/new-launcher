@@ -5,6 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
+<?import ru.obvilion.launcher.config.Global?>
 
 <AnchorPane fx:id="root" prefHeight="660" prefWidth="1165" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ru.obvilion.launcher.controllers.FrameController">
     <!-- Background -->
@@ -157,7 +158,7 @@
             <Label fx:id="BALANCE" layoutX="${62 * root.width / 1165 + 38}" layoutY="${59 * root.height / 660 + 20}" text="Баланс: 0р." />
 
             <!-- Debug info -->
-            <Label fx:id="DEBUG_VERSION" id="SELECTED_SERVER_WIPE_DATE" layoutX="${31 * root.width / 1165 + 5}" layoutY="${17 * root.height / 660}" text="Бета версия 2.10.6" />
+            <Label fx:id="DEBUG_VERSION" id="SELECTED_SERVER_WIPE_DATE" layoutX="${31 * root.width / 1165 + 5}" layoutY="${17 * root.height / 660}" />
             <Label fx:id="DEBUG_MEMORY" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_VERSION.layoutX + DEBUG_VERSION.width + 20}" layoutY="${17 * root.height / 660}" text="0 MB" />
             <Label fx:id="DEBUG_LASTGC" id="SELECTED_SERVER_WIPE_DATE" layoutX="${DEBUG_MEMORY.layoutX + DEBUG_MEMORY.width + 20}" layoutY="${17 * root.height / 660}" text="00:00.000 (-0 MB)" />
 
