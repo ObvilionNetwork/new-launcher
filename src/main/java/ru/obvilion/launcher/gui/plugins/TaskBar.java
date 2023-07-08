@@ -21,6 +21,8 @@ public class TaskBar {
 
         String bit = System.getProperty("sun.arch.data.model");
 
+        Global.LAUNCHER_PLUGINS.mkdir();
+
         File native_lib = new File(Global.LAUNCHER_PLUGINS, "progress-bar-x" + bit + ".dll");
 
         if (!native_lib.exists()) {

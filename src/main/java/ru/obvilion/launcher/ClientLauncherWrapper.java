@@ -29,7 +29,7 @@ public class ClientLauncherWrapper {
             Log.err("Error set log file: {0}", e.getLocalizedMessage());
         }
 
-        Log.info("Starting launcher...");
+        Log.info("Starting launcher... Version " + Global.VERSION);
         Gui.load();
     }
 }
