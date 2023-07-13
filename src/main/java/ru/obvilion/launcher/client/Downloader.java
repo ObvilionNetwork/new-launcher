@@ -406,7 +406,13 @@ public class Downloader {
     }
 
     private File[] getFiles(String category) {
-        return new File(client_dir, category).listFiles();
+        File dir = new File(client_dir, category);
+
+        if (!dir.exists() || !dir.isDirectory()) {
+            return new File[0];
+        }
+
+        return dir.listFiles();
     }
 
     public void checkUnnecessaryFiles() {
