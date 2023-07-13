@@ -19,7 +19,7 @@ import java.util.List;
  *       Проверка через HEAD запрос?
  */
 public class CachingImageLoader {
-    public static List<CachingImageLoader> queue = new ArrayList<>();
+    public static final List<CachingImageLoader> queue = new ArrayList<>();
 
     public static Image LOADING_GIF = null;
 
@@ -97,10 +97,12 @@ public class CachingImageLoader {
     }
 
     private void next() {
-        queue.remove(this);
+        synchronized (queue) {
+            queue.remove(this);
 
-        if (queue.size() > 0) {
-            queue.get(0).start();
+            if (queue.size() > 0) {
+                queue.get(0).start();
+            }
         }
     }
 
@@ -155,13 +157,4 @@ public class CachingImageLoader {
         void run(Image img);
     }
 
-    // ???????????
-    public CachingImageLoader saveStrategy() {
-        return this;
-    }
-
-    public enum SaveStrategy {
-        SAVE_IMAGE,
-        IGNORE_CACHE,
-    }
 }
