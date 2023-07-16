@@ -13,6 +13,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
+import ru.obvilion.json.JSONArray;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.Vars;
 import ru.obvilion.launcher.config.Config;
@@ -25,6 +26,8 @@ import ru.obvilion.launcher.utils.StyleUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.obvilion.launcher.controllers.FrameController.loadModsList;
 
@@ -77,13 +80,25 @@ public class ServersController {
 
         c.selectedServerImage = server.getString("image");
 
-        if (server.getString("status").equals("IN_DEV")) {
+
+        List<String> permissions = new ArrayList<>();
+
+        if (Vars.userData != null) {
+            JSONArray arr = Vars.userData.getJSONArray("permissions");
+
+            for (int i = 0; i < arr.length(); i++) {
+                permissions.add( arr.getString(i) );
+            }
+        }
+
+
+        if (server.getString("status").equals("IN_DEV") && !permissions.contains("DEV_SERVERS")) {
             c.TO_GAME_TEXT.setText("В РАЗРАБОТКЕ");
             c.TO_GAME_TEXT.setOpacity(0.35);
             c.TO_GAME.setCursor(Cursor.DEFAULT);
             c.TO_GAME_ARROW.setVisible(false);
         }
-        else if (server.getString("status").equals("EARLY_ACCESS")) {
+        else if (server.getString("status").equals("EARLY_ACCESS") && !(permissions.contains("TEST_SERVERS") || permissions.contains("DEV_SERVERS"))) {
             c.TO_GAME_TEXT.setText("РАННИЙ ДОСТУП");
             c.TO_GAME_TEXT.setLayoutX(20);
             c.TO_GAME_TEXT.setOpacity(0.35);
