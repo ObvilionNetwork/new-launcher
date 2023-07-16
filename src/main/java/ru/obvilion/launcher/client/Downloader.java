@@ -101,7 +101,7 @@ public class Downloader {
                     Vars.optionalMods.add(mod);
                 }
             }
-            Log.info("Can't find default client mods. Using mods from API.");
+            Log.info("Can't find default client mods for Client[" + this.id + "]. Using mods from API.");
         }
 
         else {

@@ -600,7 +600,30 @@ public class FrameController implements Initializable {
         loadModsList(Vars.selectedServer);
     }
     public static void loadModsList(JSONObject server) {
-        if (server == null || server.isNull("clientId")) {
+        if (server == null) {
+            Pane mod = new Pane();
+            mod.setPrefHeight(64);
+            mod.setId("mod_item");
+
+            Label name = new Label("Упс... Не могу найти сервер для загрузки.");
+            name.setId("mod_item_name");
+            name.setLayoutX(26);
+            name.setLayoutY(14);
+
+            mod.getChildren().add(name);
+
+            Vars.frameController.MODS_LIST_BOX.getChildren().clear();
+            Vars.frameController.MODS_LIST_BOX.getChildren().add(mod);
+
+            Log.err("Error on loading mods list:");
+
+            new RuntimeException("Server is null")
+                    .printStackTrace();
+
+            return;
+        }
+
+        if (server.isNull("clientId")) {
             Pane mod = new Pane();
             mod.setPrefHeight(64);
             mod.setId("mod_item");
@@ -615,7 +638,7 @@ public class FrameController implements Initializable {
             Vars.frameController.MODS_LIST_BOX.getChildren().clear();
             Vars.frameController.MODS_LIST_BOX.getChildren().add(mod);
 
-            Log.err("Client id is not selected");
+            Log.err("Client id for server " + server.getString("name") + " is not specified");
             return;
         }
 

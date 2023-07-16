@@ -11,6 +11,7 @@ import ru.obvilion.launcher.utils.Log;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
