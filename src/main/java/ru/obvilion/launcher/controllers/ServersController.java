@@ -101,6 +101,7 @@ public class ServersController {
         new CachingImageLoader()
                 .load(c.selectedServerImage)
                 .useLoadingGif(true)
+                .setLifetime(1000 * 60 * 60 * 24 * 7)
                 .setCallback(img -> {
                     c.BG.setBackground(
                             new Background(
@@ -165,6 +166,7 @@ public class ServersController {
         new CachingImageLoader()
                 .load(c.selectedServerImage)
                 .useLoadingGif(true)
+                .setLifetime(1000 * 60 * 60 * 24 * 7)
                 .setCallback(img -> {
                     c.BG_TOP.setBackground(
                             new Background(new BackgroundImage(

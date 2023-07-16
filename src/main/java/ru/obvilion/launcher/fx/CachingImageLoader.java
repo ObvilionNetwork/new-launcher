@@ -1,5 +1,6 @@
 package ru.obvilion.launcher.fx;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.obvilion.launcher.Vars;
@@ -15,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * TODO: Автоматическое удаление файлов, которым больше недели
- *       Проверка через HEAD запрос?
+ * TODO: Проверка через HEAD запрос?
+ *       Проверять сначала изменения, потом уже перезаписывать?
  */
 public class CachingImageLoader {
     public static final List<CachingImageLoader> queue = new ArrayList<>();
 
     public static Image LOADING_GIF = null;
 
+    private long lifetime = 1000 * 60 * 60 * 24 * 3; // 3 дня
     private double requestedWidth = 0;
     private double requestedHeight = 0;
     private boolean preserveRatio = false;
@@ -79,6 +81,11 @@ public class CachingImageLoader {
         return this;
     }
 
+    public CachingImageLoader setLifetime(long lifetime) {
+        this.lifetime = lifetime;
+        return this;
+    }
+
     public void runRequest() {
         queue.add(this);
 
@@ -107,19 +114,27 @@ public class CachingImageLoader {
     }
 
     private void logic() {
+        long delta = System.currentTimeMillis() - this.toFile.lastModified();
+
         if (this.toFile.exists()) {
-            Image img = new Image("file:///" + this.toFile.getAbsolutePath(), this.requestedWidth, this.requestedHeight, this.preserveRatio, this.smooth, false);
-            callback.run(img);
-            next();
-            return;
+            if (delta < this.lifetime) {
+                Image img = new Image("file:///" + this.toFile.getAbsolutePath(), this.requestedWidth, this.requestedHeight, this.preserveRatio, this.smooth, false);
+
+                Platform.runLater(() -> callback.run(img));
+
+                next();
+                return;
+            }
+
+            Log.debug("Image lifetime is expired for " + this.toFile.getName());
         }
 
         if (this.useLoading && Vars.useAnimations) {
             if (LOADING_GIF == null) {
-                LOADING_GIF = new Image("loading.gif", false);
+                LOADING_GIF = new Image("loading.gif", this.requestedWidth, this.requestedHeight, this.preserveRatio, true, false);
             }
 
-            callback.run(LOADING_GIF);
+            Platform.runLater(() -> callback.run(LOADING_GIF));
         }
 
         try {
@@ -134,20 +149,27 @@ public class CachingImageLoader {
             saveImage(img);
             Log.debug("Cached image " + this.toFile.getName());
         } catch (Exception e) {
-            Log.err("Error on load image: ");
+            Log.err("Error on load image " + this.toFile.getName() + ": ");
             e.printStackTrace();
         }
 
-        callback.run(img);
+        Platform.runLater(() -> callback.run(img));
+
         next();
     }
 
     private void saveImage(Image image) {
         BufferedImage img = FXUtils.fromFXImage(image, null);
 
+        String ext = FileUtil.getExtension(this.toFile);
+
+        if (!ext.equals("png") && !ext.equals("jpg") && !ext.equals("jpeg")) {
+            ext = "png";
+        }
+
         try {
             assert img != null;
-            ImageIO.write(img, FileUtil.getExtension(this.toFile), this.toFile);
+            ImageIO.write(img, ext, this.toFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

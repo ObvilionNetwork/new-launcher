@@ -148,6 +148,7 @@ public class ClientMod extends VBox {
         new CachingImageLoader()
                 .load(Global.API_LINK + "files/" + mod_data.getString("icon"))
                 .useLoadingGif(true)
+                .setLifetime(1000 * 60 * 60 * 24 * 7)
                 .setCallback(image::setImage)
                 .setRequestedSize(40, 40)
                 .runRequest();

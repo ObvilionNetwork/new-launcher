@@ -77,6 +77,7 @@ public class Mod extends Region {
                 .load(Global.API_LINK + "files/" + data.getString("icon"))
                 .useLoadingGif(true)
                 .setCallback(image::setImage)
+                .setLifetime(1000 * 60 * 60 * 24 * 7)
                 .setRequestedSize(40, 40)
                 .runRequest();
     }
