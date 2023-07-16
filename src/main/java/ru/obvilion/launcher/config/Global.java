@@ -22,4 +22,8 @@ public class Global {
     public static String JAVA_BIN = JAVA_HOME +
             File.separator + "bin" +
             File.separator + "java";
+
+    public static String SSL_CERTS_PASSWORD = System.getProperty("javax.net.ssl.trustStorePassword") != null
+            ? System.getProperty("javax.net.ssl.trustStorePassword")
+            : "changeit";
 }

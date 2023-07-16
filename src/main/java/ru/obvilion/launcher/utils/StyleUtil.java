@@ -3,6 +3,7 @@ package ru.obvilion.launcher.utils;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.Transition;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextInputControl;
@@ -46,11 +47,21 @@ public class StyleUtil {
             return;
         }
 
-        FadeTransition ft = new FadeTransition(Duration.millis(fadeDuration), node);
+        final Animation animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(fadeDuration));
+            }
 
-        ft.setFromValue(node.getOpacity());
-        ft.setToValue(to);
-        ft.play();
+            final float ansOpasity = (float) node.getOpacity();
+            protected void interpolate(double f) {
+                float op = (float) (to * f + ansOpasity * (1 - f));
+
+                node.setOpacity(op);
+            }
+        };
+
+        animation.play();
+        Log.delay(fadeDuration, () -> node.setOpacity(to));
     }
 
     public static void createFadeAnimation(Stage stage, int fadeDuration, float to) {
