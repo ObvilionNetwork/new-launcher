@@ -1,5 +1,7 @@
 package ru.obvilion.launcher.config;
 
+import ru.obvilion.launcher.utils.DesktopUtil;
+
 import java.io.File;
 
 public class Global {
@@ -18,8 +20,10 @@ public class Global {
     public static File LAUNCHER_CLIENTS = LAUNCHER_HOME;
 
     public static final String OS = System.getProperty("os.name");
-    public static String JAVA_HOME = System.getProperty("java.home");
-    public static String JAVA_BIN = JAVA_HOME +
+
+    public static int    JAVA_VERSION = DesktopUtil.getJavaVersion();
+    public static String JAVA_HOME    = System.getProperty("java.home");
+    public static String JAVA_BIN     = JAVA_HOME +
             File.separator + "bin" +
             File.separator + "java";
 

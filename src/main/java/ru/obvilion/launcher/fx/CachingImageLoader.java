@@ -1,6 +1,7 @@
 package ru.obvilion.launcher.fx;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.obvilion.launcher.Vars;
@@ -20,6 +21,7 @@ import java.util.List;
  *       Проверять сначала изменения, потом уже перезаписывать?
  */
 public class CachingImageLoader {
+
     public static final List<CachingImageLoader> queue = new ArrayList<>();
 
     public static Image LOADING_GIF = null;
@@ -122,6 +124,11 @@ public class CachingImageLoader {
 
                 Platform.runLater(() -> callback.run(img));
 
+                if (img.isError()) {
+                    Log.err("Error on loading image " + this.toFile.getName() + ": ");
+                    img.getException().printStackTrace();
+                }
+
                 next();
                 return;
             }
@@ -145,11 +152,20 @@ public class CachingImageLoader {
 
         Image img = new Image(this.url, this.requestedWidth, this.requestedHeight, this.preserveRatio, this.smooth, false);
 
+        if (img.isError()) {
+            Platform.runLater(() -> callback.run(img));
+
+            Log.err("Error on downloading image " + this.toFile.getName() + ": ");
+            img.getException().printStackTrace();
+
+            return;
+        }
+
         try {
             saveImage(img);
             Log.debug("Cached image " + this.toFile.getName());
         } catch (Exception e) {
-            Log.err("Error on load image " + this.toFile.getName() + ": ");
+            Log.err("Error on save image " + this.toFile.getName() + ": ");
             e.printStackTrace();
         }
 
@@ -159,7 +175,7 @@ public class CachingImageLoader {
     }
 
     private void saveImage(Image image) {
-        BufferedImage img = FXUtils.fromFXImage(image, null);
+        BufferedImage img = SwingFXUtils.fromFXImage(image, null);
 
         String ext = FileUtil.getExtension(this.toFile);
 

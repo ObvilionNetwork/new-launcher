@@ -1,7 +1,6 @@
 package ru.obvilion.launcher.client;
 
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import ru.obvilion.json.JSONArray;
@@ -14,7 +13,6 @@ import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
 import ru.obvilion.launcher.fx.CachingImageLoader;
-import ru.obvilion.launcher.fx.FXUtils;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.*;
 
