@@ -1,11 +1,16 @@
 package ru.obvilion.launcher.utils;
 
+import ru.obvilion.launcher.ClientLauncherWrapper;
 import ru.obvilion.launcher.config.Global;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class DesktopUtil {
     public static String encodeValue(String value) {
@@ -65,5 +70,20 @@ public class DesktopUtil {
         th.start();
 
         return true;
+    }
+
+    public static File getExecutedFile() {
+        try {
+            return new File(
+                    ClientLauncherWrapper.class.getProtectionDomain()
+                            .getCodeSource()
+                            .getLocation().toURI()
+            );
+        } catch (Exception e) {
+            Log.err("I can't get executed file info:");
+            e.printStackTrace();
+
+            return Global.LAUNCHER_HOME;
+        }
     }
 }

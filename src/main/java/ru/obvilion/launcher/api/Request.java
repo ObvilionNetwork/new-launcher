@@ -3,15 +3,22 @@ package ru.obvilion.launcher.api;
 import ru.obvilion.json.JSONException;
 import ru.obvilion.json.JSONObject;
 import ru.obvilion.launcher.config.Global;
+import ru.obvilion.launcher.utils.Log;
 
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
 import java.util.ArrayList;
 
 public class Request {
+    static {
+        loadCerts();
+    }
+
     public RequestType requestType;
     public String link;
 
@@ -142,7 +149,7 @@ public class Request {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
@@ -152,6 +159,35 @@ public class Request {
         //Log.custom("N", "POST > {2} > {1}, {0}", http.getResponseCode(), http.getResponseMessage(), this.link);
 
         return response.toString();
+    }
+
+    public static void loadCerts() {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+            try (InputStream in = Request.class.getClassLoader().getResourceAsStream("cacerts")) {
+                keyStore.load(in, Global.SSL_CERTS_PASSWORD.toCharArray());
+            }
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+            kmf.init(keyStore, Global.SSL_CERTS_PASSWORD.toCharArray());
+            KeyManager[] keyManagers = kmf.getKeyManagers();
+
+            tmf.init(keyStore);
+            TrustManager[] trustManagers = tmf.getTrustManagers();
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagers, trustManagers, null);
+
+            SSLSocketFactory factory = sslContext.getSocketFactory();
+            HttpsURLConnection.setDefaultSSLSocketFactory(factory);
+
+        } catch (Exception e) {
+            Log.err("Error on certs initialization:");
+            e.printStackTrace();
+        }
     }
 }
 

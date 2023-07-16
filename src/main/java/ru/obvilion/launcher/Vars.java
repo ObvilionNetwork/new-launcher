@@ -13,8 +13,10 @@ import java.util.List;
 
 public class Vars {
     public static Application app;
+
     public static FrameController frameController;
     public static ServersController serversController;
+
     public static JSONArray servers;
 
     /* Последние данные о пользователе */
