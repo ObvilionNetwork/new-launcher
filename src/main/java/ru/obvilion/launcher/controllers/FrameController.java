@@ -279,10 +279,21 @@ public class FrameController implements Initializable {
             Config.setValue("login", result.getString("name"));
             BALANCE.setText("Баланс: " + result.getInt("money") + "p.");
 
-            Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar", 512, 512, true, false);
+            new CachingImageLoader()
+                    .load(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar")
+                    .useLoadingGif(true)
+                    .setLifetime(1000 * 60 * 60)
+                    .setCallback(img -> {
+                        if (img.isError()) {
+                            AVATAR.setFill(Color.valueOf("#192331"));
+                            return;
+                        }
 
-            if (!avatar.isError())
-                AVATAR.setFill(new ImagePattern(avatar));
+                        AVATAR.setFill(new ImagePattern(img));
+                    })
+                    .setRequestedSize(40, 40)
+                    .runRequest();
+
             NICKNAME.setText(Config.getValue("login"));
 
             Gui.openPane(MAIN_PANE);
@@ -323,17 +334,17 @@ public class FrameController implements Initializable {
         AUTH_PASSWORD.setText(Config.getPasswordValue("password"));
         BG_TOP.setStyle("-fx-background-image: url(\"images/bg.jpg\");");
 
-        // FIXME: при отстутствии инета долго грузит
-        Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar");
-
-        if (!avatar.isError()) {
-            AVATAR.setFill(new ImagePattern(avatar));
-        } else {
-            Log.err("Error loading user avatar:");
-            avatar.getException().printStackTrace();
-
-            AVATAR.setFill(Color.valueOf("#192331"));
-        }
+//        // FIXME: при отстутствии инета долго грузит
+//        Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar");
+//
+//        if (!avatar.isError()) {
+//            AVATAR.setFill(new ImagePattern(avatar));
+//        } else {
+//            Log.err("Error loading user avatar:");
+//            avatar.getException().printStackTrace();
+//
+//            AVATAR.setFill(Color.valueOf("#192331"));
+//        }
         NICKNAME.setText(Config.getValue("login"));
 
         openWebsite(REGISTER, "https://mc.obvilion.ru/auth/signup");

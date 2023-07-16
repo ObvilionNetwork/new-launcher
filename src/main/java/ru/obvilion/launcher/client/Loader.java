@@ -13,6 +13,8 @@ import ru.obvilion.launcher.config.Config;
 import ru.obvilion.launcher.config.Global;
 import ru.obvilion.launcher.controllers.FrameController;
 import ru.obvilion.launcher.controllers.ServersController;
+import ru.obvilion.launcher.fx.CachingImageLoader;
+import ru.obvilion.launcher.fx.FXUtils;
 import ru.obvilion.launcher.gui.Gui;
 import ru.obvilion.launcher.utils.*;
 
@@ -144,14 +146,20 @@ public class Loader {
             }
             lastChangedPosition = System.currentTimeMillis();
 
-            Image avatar = new Image(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar", 512, 512, true, false);
-            if (!avatar.isError()) {
-                c.AVATAR.setFill(new ImagePattern(avatar));
-            } else {
-                Log.err("Error loading user avatar:");
-                avatar.getException().printStackTrace();
-                c.AVATAR.setFill(Color.valueOf("#192331"));
-            }
+            new CachingImageLoader()
+                    .load(Global.API_LINK + "users/" + DesktopUtil.encodeValue(Config.getValue("login")) + "/avatar")
+                    .useLoadingGif(true)
+                    .setLifetime(1000 * 60 * 60)
+                    .setCallback(img -> {
+                        if (img.isError()) {
+                            c.AVATAR.setFill(Color.valueOf("#192331"));
+                            return;
+                        }
+
+                        c.AVATAR.setFill(new ImagePattern(img));
+                    })
+                    .setRequestedSize(40, 40)
+                    .runRequest();
 
             if (Vars.richPresence != null) {
                 Vars.richPresence.updateDescription("Игрок " + Config.getValue("login"));
@@ -161,9 +169,16 @@ public class Loader {
 
             Thread.currentThread().interrupt();
         } else {
-            c.NO_INTERNET_BG.setOpacity(0.35);
-            c.NO_INTERNET_TITLE.setText(customError);
-            c.NO_INTERNET_SUBTITLE.setText(customErrorSub);
+//            String finalCustomError = customError;
+//            String finalCustomErrorSub = customErrorSub;
+//
+//            Platform.runLater(() -> {
+//                c.NO_INTERNET_BG.setOpacity(0.35);
+//                c.NO_INTERNET_TITLE.setText(finalCustomError);
+//                c.NO_INTERNET_SUBTITLE.setText(finalCustomErrorSub);
+//
+//                c.NO_INTERNET_TITLE.getText();
+//            });
 
             if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
                 StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
@@ -261,14 +276,23 @@ public class Loader {
 
             Thread.currentThread().interrupt();
         } else {
-            if (c.NO_INTERNET.getLayoutY() != 0) {
+            String finalCustomError = customError;
+            String finalCustomErrorSub = customErrorSub;
+
+            Platform.runLater(() -> {
                 c.NO_INTERNET_BG.setOpacity(0.35);
-                c.NO_INTERNET_TITLE.setText(customError);
-                c.NO_INTERNET_SUBTITLE.setText(customErrorSub);
+                c.NO_INTERNET_TITLE.setText(finalCustomError);
+                c.NO_INTERNET_SUBTITLE.setText(finalCustomErrorSub);
+
+                c.NO_INTERNET_TITLE.getText();
+            });
+
+            if (c.NO_INTERNET.getLayoutY() != 0) {
 
                 if (lastChangedPosition + 1400 < System.currentTimeMillis()) {
                     StyleUtil.changePosition(c.NO_INTERNET, 0, 0, 1400);
                 }
+
                 lastChangedPosition = System.currentTimeMillis();
             }
 
